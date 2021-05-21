@@ -16,6 +16,7 @@ const Login = () => {
         try {
           const res = await fetcher(`/api/v1/user_login?k=${token}`, {
             method: 'GET',
+            credentials: 'include'
           })
           setLoggedIn(true)
           afterLogin()
