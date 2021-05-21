@@ -23,8 +23,8 @@ export default function Home() {
     const fetchUrls = async () => {
       try {
         const res = await fetcher('/api/_/url-priorities/list', {
-          credentials: 'include',
-          mode: 'cors'
+          // credentials: 'include',
+          // mode: 'cors'
         })
         console.log(res)
       } catch (e) {
