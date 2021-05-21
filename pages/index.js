@@ -22,7 +22,10 @@ export default function Home() {
   useEffect(() => {
     const fetchUrls = async () => {
       try {
-        const res = await fetcher('/api/_/url-priorities/list')
+        const res = await fetcher('/api/_/url-priorities/list', {
+          credentials: 'include',
+          mode: 'cors'
+        })
         console.log(res)
       } catch (e) {
         setError(e.message)

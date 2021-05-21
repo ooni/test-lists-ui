@@ -50,7 +50,7 @@ const Login = () => {
         }
         {error && 
           <>
-            <Heading h={2} my={2}> Error in {error.toString()} </Heading>
+            <Heading h={2} my={2}> Login failed: {error.toString()} </Heading>
           </>
         }
       </Flex>
