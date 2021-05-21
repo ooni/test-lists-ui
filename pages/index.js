@@ -27,6 +27,9 @@ export default function Home() {
           mode: 'cors'
         })
         console.log(res)
+        if (res.rules) {
+          setUrls(res.rules)
+        }
       } catch (e) {
         setError(e.message)
       }
@@ -45,13 +48,16 @@ export default function Home() {
     // }
   }, [])
 
+  console.log(urls)
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <Heading h={1} textAlign='center'>URL Priorities</Heading>
         {/* {isValidating && <Text>Loading...</Text>} */}
-        {urls && <ResultList urls={urls} />}
-        {error && <Flex justifyContent='center' p={4} bg='red1'> { error } </Flex>}
+        {/* {urls && <ResultList urls={urls} />} */}
+        {urls && <Box><pre>{JSON.stringify(urls, null, 2)}</pre></Box>}
+        {error && !urls && <Flex justifyContent='center' p={4} bg='red1'> { error } </Flex>}
       </Container>
     </ThemeProvider>
   )
