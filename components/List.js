@@ -16,10 +16,6 @@ const TableHeader = styled.thead`
   }
 `
 
-const DeleteButton = () => (
-  <MdDelete />
-)
-
 const TableCell = styled.td`
   padding: 12px;
 `
@@ -31,7 +27,7 @@ const getRowProps = row => {
   console.log(row)
   return ({
   style: {
-    'background-color': row.index % 2 === 0 ? EVEN_ROW_BG : ODD_ROW_BG
+    backgroundColor: row.index % 2 === 0 ? EVEN_ROW_BG : ODD_ROW_BG
   }
 })}
 
@@ -65,7 +61,7 @@ const List = ({ data }) => {
     {
       'id': 'deleteAction',
       'Header': '',
-      'Cell': ({ row }) => <DeleteButton />
+      'Cell': ({ row }) => <MdDelete size={18} />
     },
 
     // {

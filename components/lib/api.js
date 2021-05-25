@@ -5,8 +5,20 @@ const axios = Axios.create({
   withCredentials: true
 });
 
-export const fetcher = (url) => {
-  return axios.get(url).then(res => res.data)
+export const fetcher = async (url) => {
+  try {
+    const res = await axios.get(url)
+    return res.data
+  } catch (e) {
+    const error = new Error(e.response.data.error)
+    error.info = e.response.statusText
+    error.status = e.response.status
+    throw error
+  }
+}
+
+export const fetchUser = () => {
+  return axios.get('/api/_/account_metadata').then(res => res.data)
 }
 
 export const registerUser = (email, nickname) => {

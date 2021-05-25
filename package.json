@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "fontsource-fira-sans": "^4.0.0",
     "immutability-helper": "^3.1.1",
     "next": "^10.2.2",
     "ooni-components": "^0.4.6",
