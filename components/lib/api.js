@@ -5,20 +5,6 @@ const axios = Axios.create({
   withCredentials: true
 });
 
-const baseFetchConfig = {
-  credentials: 'include'
-}
-
-export const fetcherex = (url, ...args) =>
-  fetch(`${process.env.NEXT_PUBLIC_OONI_API}${url}`, ...args).then((res) => {
-    if (res.ok) {
-      return res.json()
-    } else {
-      console.log(res)
-      throw new Error(`Request Failed: ${res.statusText}`)
-    }
-  })
-
 export const fetcher = (url) => {
   return axios.get(url).then(res => res.data)
 }

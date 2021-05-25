@@ -4,8 +4,8 @@ import { Container, Flex, Box, Heading, Text, theme } from 'ooni-components'
 import useSWR from 'swr'
 import { ThemeProvider } from 'styled-components'
 
-import ResultList from '../components/ResultList'
 import { fetcher } from '../components/lib/api'
+import List from '../components/List'
 
 const swrOptions = {
   revalidateOnFocus: false,
@@ -20,14 +20,15 @@ export default function Home() {
     fetcher,
     swrOptions
   )
+
+  console.log(data)
   
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <Heading h={1} textAlign='center'>URL Priorities</Heading>
-        {/* {isValidating && <Text>Loading...</Text>} */}
-        {/* {data && <ResultList urls={data.rules} />} */}
-        {data && <pre> {JSON.stringify(data.rules, null, 2)} </pre>}
+        {isValidating && <Text>Loading...</Text>}
+        {data && <List data={data.rules} />}
         {error && !data && <Flex justifyContent='center' p={4} bg='red1'> { error } </Flex>}
       </Container>
     </ThemeProvider>
