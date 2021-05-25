@@ -21,7 +21,7 @@ const LoginForm = ({
           <input type='text' placeholder='Nickname' {...register('nickname', { required: true, maxLength: 16})} />
         </Box>
         <Box my={2}>
-          <button type='submit' disabled={submitting}> Register </button>
+          <button type='submit' disabled={submitting}> Login </button>
         </Box>
         <Box my={2} color='red5' as='small'>
           {errors?.email_address && <Text> Email: {errors?.email_address?.type} </Text>}

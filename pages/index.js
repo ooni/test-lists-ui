@@ -29,7 +29,7 @@ export default function Home() {
       {error && !data &&
         <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
           <Box>{error.status} {error.message}</Box> 
-          <Box><Link href='/register'> Login </Link></Box>
+          <Box><Link href='/login'> Login </Link></Box>
         </Flex>
       }
     </Container>

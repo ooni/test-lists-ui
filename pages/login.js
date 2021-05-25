@@ -65,7 +65,7 @@ const Login = () => {
         }
         {!token && submitted &&
           <Box>
-            Thank you registering. Please check your email for a link to activate and log in to your account.
+            Your login request has been submitted. Please check your email for a link to activate and log in to your account.
           </Box>
         }
         {token && !loggedIn && !error &&
