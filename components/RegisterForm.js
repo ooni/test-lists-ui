@@ -5,6 +5,7 @@ import Register from '../pages/register'
 
 const RegisterForm = ({
   onSubmit,
+  submitting,
 }) => {
   const { handleSubmit, register, formState: { errors } } = useForm()
   console.log(errors)
@@ -13,7 +14,7 @@ const RegisterForm = ({
       <Flex
         flexDirection={['column']}
         alignItems={'center'}
-        justifyContent="center"
+        justifyContent='center'
       >
         <Box my={2}>
           <input type='email' placeholder='Email' {...register('email_address', { required: true })} />
@@ -22,9 +23,9 @@ const RegisterForm = ({
           <input type='text' placeholder='Nickname' {...register('nickname', { required: true, maxLength: 16})} />
         </Box>
         <Box my={2}>
-          <button type='submit'> Register </button>
+          <button type='submit' disabled={submitting}> Register </button>
         </Box>
-        <Box my={2} color='red5'>
+        <Box my={2} color='red5' as='small'>
           {errors?.email_address && <Text> Email: {errors?.email_address?.type} </Text>}
           {errors?.nickname && <Text> Nickname: {errors?.nickname?.type} </Text>}
         </Box>

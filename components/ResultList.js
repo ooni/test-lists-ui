@@ -20,8 +20,10 @@ const Output = ({ urls }) => {
   )
 }
 
+const reshapeData = (data) => data.map((result, index) => ({...result, id: index}))
+
 const ResultList = ({ urls }) => {
-  const [cards, setCards] = useState(urls)
+  const [cards, setCards] = useState(reshapeData(urls))
 
   const moveCard = useCallback(
     (dragIndex, hoverIndex) => {

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Box, Container, Flex, Heading, Text } from 'ooni-components'
 import { useRouter } from 'next/router'
 
-import { fetcher } from '../components/lib/api'
+import { loginUser } from '../components/lib/api'
 
 const Login = () => {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -12,12 +12,9 @@ const Login = () => {
 
   useEffect(() => {
     if (token) {
-      const loginUser = async (token) => {
+      const login = async (token) => {
         try {
-          const res = await fetcher(`/api/v1/user_login?k=${token}`, {
-            method: 'GET',
-            credentials: 'include'
-          })
+          const res = await loginUser(token)
           setLoggedIn(true)
           afterLogin()
         } catch (e) {
@@ -25,7 +22,7 @@ const Login = () => {
           setError(e)
         }
       }
-      loginUser(token)
+      login(token)
     }
   }, [token])
 
