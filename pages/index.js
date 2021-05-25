@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { ThemeProvider } from 'styled-components'
 
 import { fetcher } from '../components/lib/api'
+import Layout from '../components/Layout'
 import List from '../components/List'
 
 const swrOptions = {
@@ -22,7 +23,7 @@ export default function Home() {
   )
 
   return (
-    <Container>
+    <Layout title='Dashboard'>
       <Heading h={1} textAlign='center'>URL Priorities</Heading>
       {isValidating && <Text>Loading...</Text>}
       {data && <List data={data.rules} />}
@@ -32,6 +33,6 @@ export default function Home() {
           <Box><Link href='/login'> Login </Link></Box>
         </Flex>
       }
-    </Container>
+    </Layout>
   )
 }

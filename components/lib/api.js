@@ -10,11 +10,11 @@ export const fetcher = async (url) => {
     const res = await axios.get(url)
     return res.data
   } catch (e) {
-    const error = new Error(e.response.data.error)
+    const error = new Error(e.response?.data?.error ?? e.message)
     error.info = e.response.statusText
     error.status = e.response.status
     throw error
-  }
+  } 
 }
 
 export const fetchUser = () => {

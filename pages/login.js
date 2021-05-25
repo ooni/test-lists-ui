@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Box, Container, Flex, Heading, Text } from 'ooni-components'
+import { Box, Flex, Heading, Text } from 'ooni-components'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
+import Layout from '../components/Layout'
 import LoginForm from '../components/LoginForm'
 import { loginUser, registerUser } from '../components/lib/api'
 
@@ -58,7 +59,7 @@ const Login = () => {
   })
 
   return (
-    <Container>
+    <Layout title='Login'>
       <Flex my={6} justifyContent='center' alignItems='center' flexDirection='column'>
         {!token && !submitted &&
           <LoginForm onSubmit={onLogin} submitting={submitting} />
@@ -87,7 +88,7 @@ const Login = () => {
         }
       </Flex>
 
-    </Container>
+    </Layout>
   )
 }
 
