@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Flex, Box, Text, Modal } from 'ooni-components'
+import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
 import styled from 'styled-components'
 
 import { useUser } from './lib/hooks'
@@ -17,6 +18,10 @@ const NavItem = styled(Box).attrs({
     text-decoration: none;
   }
 `
+
+const OONILogoRef = React.forwardRef((props, ref) => (
+  <OONILogo {...props} />
+))
 
 const NavBar = ({ title }) => {
   const router = useRouter()
@@ -34,8 +39,7 @@ const NavBar = ({ title }) => {
   return (
     <>
       <Flex bg='blue5' color='white' p={3} alignItems='center'>
-        <NavItem sx={{ position: 'absolute'}}><Link href='/'>OONI Logo</Link></NavItem>
-        <Box fontSize={3} mx='auto'> {title} </Box>
+        <NavItem><Link href='/'><OONILogoRef height='32px' /></Link></NavItem>
         <Box sx={{ position: 'absolute', right: 8 }}>
         {user ? (
           <Box> {user.nick} ({user.role}) </Box>

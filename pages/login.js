@@ -13,7 +13,7 @@ const Login = () => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [error, setError] = useState(null)
   const router = useRouter()
-  const { token } = router.query
+  const { token, returnTo = '/' } = router.query
 
   // If there is a `token` URL param, call the login API
   // This fetches and sets the authentication cookie
@@ -54,7 +54,7 @@ const Login = () => {
 
   const afterLogin = useCallback(() => {
     setTimeout(() => {
-      router.push('/')
+      router.push(returnTo)
     }, 3000)
   })
 

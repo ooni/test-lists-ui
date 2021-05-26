@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import useSWR from 'swr'
+import { useRouter } from 'next/router'
 
 import { fetcher } from './api'
 
@@ -8,7 +10,18 @@ const swrOptions = {
 }
 
 export function useUser() {
+  const router = useRouter()
   const { data, error, mutate } = useSWR('/api/_/account_metadata', fetcher, swrOptions)
+
+  // Automatically redirect to /login from anywhere the hook is called before logging in
+  // passing in the path to return to via `returnTo` query param
+  useEffect(() => {
+    if (!data && router.pathname !== '/login') {
+      console.log(encodeURIComponent(router.asPath))
+      router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
+    }
+  }, [data])
+
 
   const loading = !data && !error
   const loggedOut = error && error.status === 403

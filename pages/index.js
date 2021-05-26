@@ -7,6 +7,7 @@ import { ThemeProvider } from 'styled-components'
 import { fetcher } from '../components/lib/api'
 import Layout from '../components/Layout'
 import List from '../components/List'
+import { useUser } from '../components/lib/hooks'
 
 const swrOptions = {
   revalidateOnFocus: false,
@@ -15,9 +16,10 @@ const swrOptions = {
 
 export default function Home() {
   const [shouldFetch, setShouldFetch] = useState(true)
+  const { user } = useUser()
 
   const { data, error, isValidating } = useSWR(
-    '/api/_/url-priorities/list',
+    user ? '/api/_/url-priorities/list' : null,
     fetcher,
     swrOptions
   )
