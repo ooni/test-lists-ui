@@ -1,23 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState } from 'react-table'
 import { theme, Box, Flex } from 'ooni-components'
 import styled from 'styled-components'
 import { MdDelete, MdEdit, MdClose, MdCheck } from 'react-icons/md'
-import { ImCheckmark, ImCross } from 'react-icons/im'
-import { mutate } from 'swr'
 
 const BORDER_COLOR = theme.colors.gray6
+const ODD_ROW_BG = theme.colors.gray0
+const EVEN_ROW_BG = theme.colors.gray2
 
 const Table = styled.table`
   width: 100%;
-  & tbody tr {
-    :first-child {
-      border-top: 1px solid ${BORDER_COLOR};
-    }
-    :last-child {
-      border-bottom: 1px solid ${props => props.theme.colors.gray6};
-    }
-  }
 `
 
 const TableHeader = styled.thead`
@@ -25,6 +17,16 @@ const TableHeader = styled.thead`
   & th {
     text-align: start;
     padding: 12px;
+  }
+`
+
+const TableRow = styled.tr`
+  background-color: ${props => props.index % 2 === 0 ? EVEN_ROW_BG : ODD_ROW_BG};
+  :first-child {
+    border-top: 1px solid ${BORDER_COLOR};
+  }
+  :last-child {
+    border-bottom: 1px solid ${props => props.theme.colors.gray6};
   }
 `
 
@@ -46,25 +48,15 @@ const TableCell = styled.td`
     margin: 0;
     border: 0;
   }
+  /* TODO: Input validation styling */
 `
 
-const ODD_ROW_BG = theme.colors.gray0
-const EVEN_ROW_BG = theme.colors.gray2
-
-// Styles alternate rows with contrasting background colors
-const getRowProps = row => {
-  return ({
-    style: {
-      backgroundColor: row.index % 2 === 0 ? EVEN_ROW_BG : ODD_ROW_BG
-    }
-})}
-
-// Create an editable cell renderer
+// Dynamic Cell renderer shows either raw value or an editable HTMLInput element when editing the row
 const EditableCell = ({
   value: initialValue,
-  row: { index, original, state : { isEditing, updatedRow }, setState },
-  column: { id },
-  updateMyData, // This is a custom function that we supplied to our table instance
+  row: { index, original, state : { isEditing }, setState },
+  column: { id, inputAttrs = {} },
+  updateCellData,
 }) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = React.useState(initialValue)
@@ -73,16 +65,23 @@ const EditableCell = ({
     setValue(e.target.value)
   }
 
-  // Collect updates in the rowState under 
+  // Update table data onBlur and use row.values to send updates to API 
   const onBlur = () => {
-    // TODO: Record row update only if value changes
-    setState((prevState) => ({
-      ...prevState,
-      updatedRow: {
-        ...prevState.updatedRow,
-        [id]: value
-      }
-    }))
+    let inputValue = value
+
+    // Reformat values based on column type
+    switch (inputAttrs.type) {
+      case 'number':
+        inputValue = Number(value)
+        break
+    }
+    // Update table data only if value changes
+    if (inputValue !== original[id]) {
+      setState({ isEditing, dirty: true })
+      // TODO: This is not very optimal because it alters the table data before sending changes to the API.
+      // Technically, this means that it is possible that, at times, table state doesn't reflect backend state.
+      updateCellData(index, id, inputValue)
+    }
   }
 
   // If the initialValue is changed external, sync it up with our state
@@ -91,7 +90,7 @@ const EditableCell = ({
   }, [initialValue])
 
   if (isEditing) {
-    return <input value={value} onChange={onChange} onBlur={onBlur} />
+    return <input {...inputAttrs} value={value} onChange={onChange} onBlur={onBlur} />
   } else {
     return <Cell value={value} />
   }
@@ -102,20 +101,23 @@ const defaultColumn = {
   Cell: EditableCell,
 }
 
-const Button = styled(Box)`
-  cursor: pointer;
+const Button = styled.button`
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}
 `
 
 // Dynamic button
 // * Starts editing a row
 // * Switches to a two button component to confirm or cancel a row edit operation.
-const EditButton = ({ isEditing, onEdit, onCancel, onUpdate }) => (
+const EditButton = ({ isEditing, dirty, onEdit, onCancel, onUpdate }) => (
   <Flex flexDirection='row' justifyContent='space-around'>
     {!isEditing && <Button mx='auto'><MdEdit onClick={onEdit} size={20} /></Button>}
     {isEditing && (
       <>
-        <Button><MdClose onClick={onCancel} size={20} /></Button>
-        <Button><MdCheck onClick={onUpdate} size={20} /></Button>
+        <Button title='Discard Changes'><MdClose onClick={onCancel} size={20} /></Button>
+        <Button disabled={!dirty} title={dirty && 'Apply Changes'}><MdCheck onClick={onUpdate} size={20} /></Button>
       </>
     )}
   </Flex>
@@ -125,10 +127,11 @@ const DeleteButton = ({ onClick }) => (
   <Button onClick={onClick}><MdDelete size={18} /></Button>
 )
 
-const List = ({ initialData, mutateData }) => {
+const List = ({ initialData, mutateData, onUpdateRule }) => {
   const [data, setData] = useState(initialData)
-  // const [originalData] = useState(data)
-  // const resetData = () => setData(originalData)
+  const [originalData] = useState(data)
+  const resetData = () => setData(originalData)
+  const skipPageResetRef = React.useRef()
 
   const columns = useMemo(() => [
     {
@@ -136,34 +139,59 @@ const List = ({ initialData, mutateData }) => {
       'accessor': 'category_code',
       width: 50,
       // minWidth: 100,
+      inputAttrs: {
+        type: 'text',
+        maxLength: 5,
+        size: 10,
+        id: 'category_code',
+      }
     },
     {
       'Header': 'Country Code',
       'accessor': 'cc',
       width: 50,
+      inputAttrs: {
+        type: 'text',
+        maxLength: 2,
+        size: 4,
+      },
     },
     {
       'Header': 'Domain',
       'accessor': 'domain',
       width: 100,
+      inputAttrs: {
+        type: 'url',
+        size: 28
+      },
     },
     {
       'Header': 'URL',
       'accessor': 'url',
       // maxWidth: 400,
+      inputAttrs: {
+        type: 'url',
+        size: 44,
+      },
     },
     {
       'Header': 'Priority',
       'accessor': 'priority',
+      type: 'number',
       maxWidth: 40,
+      inputAttrs: {
+        type: 'number',
+        maxLength: 2,
+        min: 0,
+        size: 6
+      },
     },
-    // {
-    //   'Header': '',
-    //   'accessor': ''
-    // },
   ], [])
 
-  const updateMyData = useCallback((rowIndex, columnId, value) => {
+  // Called whenever a cell is changed so that the table data
+  // and controlled inputs are in sync
+  const updateCellData = useCallback((rowIndex, columnId, value) => {
+    skipPageResetRef.current = true
     setData(old =>
       old.map((row, index) => {
         if (index === rowIndex) {
@@ -177,26 +205,42 @@ const List = ({ initialData, mutateData }) => {
     )
   }, [data])
 
-  const updateRowInData = useCallback((rowIndex, updatedRow) => {
-    setData(old =>
+  // Called to reverse the changes by updateCellData for the whole row
+  // based on data stored in originalData received from API
+  const resetRow = useCallback(( rowIndex ) => {
+    skipPageResetRef.current = true
+    setData(old => 
       old.map((row, index) => {
         if (index === rowIndex) {
-          return updatedRow
+          return originalData[rowIndex]
         }
         return row
       })
     )
   }, [data])
 
-
   const deleteRow = useCallback((rowIndex) => {
     return (e) => {
+      skipPageResetRef.current = true
       console.log(rowIndex)
     }
   })
 
-  const tableInstance = useTable(
-    { columns, data, defaultColumn, updateMyData, updateRowInData, initialRowStateAccessor: () => ({ isEditing: false, updatedRow: null }) },
+  // This allows useTable to reset the table when data changes
+  // https://react-table.tanstack.com/docs/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes
+  // it should be set to true whenever table data is being altered
+  useEffect(() => {
+    skipPageResetRef.current = false
+  })
+
+  const tableInstance = useTable({
+    columns,
+    data,
+    defaultColumn,
+    updateCellData,
+    initialRowStateAccessor: () => ({ isEditing: false, dirty: false }),
+    autoResetRowState: !skipPageResetRef.current,
+  },
     useFlexLayout,
     useRowState,
     hooks => {
@@ -204,29 +248,24 @@ const List = ({ initialData, mutateData }) => {
         {
           id: 'edit',
           maxWidth: 32,
-          // Cell: ({ row }) => (
-          Cell: ({ row: { index, original, state : { isEditing, updatedRow }, setState } }) => (
+          Cell: ({ row: { index, values, state : { isEditing, dirty }, setState } }) => (
             <EditButton
               isEditing={isEditing}
+              dirty={dirty}
               onEdit={() => {
                 // TODO: Don't edit if another row is still being edited
                 setState({ isEditing: true })
               }}
               onCancel={() => {
                 // TODO: Ensure row state is reset before cancelling edit
+                resetRow(index)
                 setState({ isEditing: false, updatedRow: null })
               }}
               onUpdate={() => {
                 // TODO: Trigger update API call
-                console.log('send update to API')
-                const newEntry = {...original, ...updatedRow}
-                console.log({
-                  old_entry: original,
-                  new_entry: newEntry
-                })
+                const newEntry = values
+                onUpdateRule(originalData[index], newEntry)
                 // TODO: mutate data
-                // updateRowInData(index, newEntry)
-                // TODO: maybe reset row state if still needed
                 setState({ isEditing: false })
               }}
             />
@@ -283,7 +322,7 @@ const List = ({ initialData, mutateData }) => {
 
           return (
             // Apply the row props
-            <tr {...row.getRowProps(getRowProps(row))}>
+            <TableRow {...row.getRowProps()} index={row.index}>
               {// Loop over the rows cells
               row.cells.map(cell => {
 
@@ -295,7 +334,7 @@ const List = ({ initialData, mutateData }) => {
                   </TableCell>
                 )
               })}
-            </tr>
+            </TableRow>
           )
         })}
       </tbody>
