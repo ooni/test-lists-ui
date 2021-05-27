@@ -15,12 +15,12 @@ export function useUser() {
 
   // Automatically redirect to /login from anywhere the hook is called before logging in
   // passing in the path to return to via `returnTo` query param
-  useEffect(() => {
-    if (!data && router.pathname !== '/login') {
-      console.log(encodeURIComponent(router.asPath))
-      router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
-    }
-  }, [data])
+  // useEffect(() => {
+  //   if (!data && router.pathname !== '/login') {
+  //     console.log(encodeURIComponent(router.asPath))
+  //     router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
+  //   }
+  // }, [data])
 
 
   const loading = !data && !error

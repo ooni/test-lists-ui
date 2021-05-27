@@ -16,10 +16,10 @@ const swrOptions = {
 
 export default function Home() {
   const [shouldFetch, setShouldFetch] = useState(true)
-  const { user } = useUser()
+  // const { user } = useUser()
 
-  const { data, error, isValidating } = useSWR(
-    user ? '/api/_/url-priorities/list' : null,
+  const { data, error, isValidating, mutate } = useSWR(
+    '/api/_/url-priorities/list',
     fetcher,
     swrOptions
   )
@@ -28,7 +28,7 @@ export default function Home() {
     <Layout title='Dashboard'>
       <Heading h={1} textAlign='center'>URL Priorities</Heading>
       {isValidating && <Text>Loading...</Text>}
-      {data && <List data={data.rules} />}
+      {data && <List initialData={data.rules} mutateData={mutate} />}
       {error && !data &&
         <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
           <Box>{error.status} {error.message}</Box> 
