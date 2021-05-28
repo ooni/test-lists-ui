@@ -1,5 +1,9 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Flex, Box, Input, Button } from 'ooni-components'
+import { useRouter } from 'next/router'
+import { mutate } from 'swr'
+
+import { apiEndpoints, updateRule } from '../components/lib/api'
 
 const fields = [
   {
@@ -26,6 +30,9 @@ const fields = [
 
 const AddRule = ({ onAddRule }) => {
   const formRef = useRef()
+  const [error, setError] = useState(null)
+  const router = useRouter()
+
   const handleSubmit = useCallback((e) => {
     const formData = new FormData(e.target)
     const newEntry = {}
@@ -34,9 +41,14 @@ const AddRule = ({ onAddRule }) => {
 
       newEntry[key] = key === 'priority' ? Number(value) : value
     }
-    onAddRule(newEntry)
-    // TODO: This should be conditional. API errors should be transmitted back
-    // formRef.current.reset() // disabled because temporarily we reload page on success anyway
+    updateRule({}, newEntry).then(() => {
+      // formRef.current.reset() // disabled because temporarily we reload page on success anyway
+      // mutate(apiEndpoints.RULE_LIST, true)
+      router.reload()
+    }).catch(e => {
+      // TODO: Show this error somewhere. maybe where the action was performed
+      setError(`addRule failed: ${e.response.data.error}`)
+    })
   })
 
   return (
@@ -47,6 +59,7 @@ const AddRule = ({ onAddRule }) => {
         ))}
         <Button mx={3} p={3} type='submit'> Add Rule </Button>
       </Flex>
+      <Box as='small' color='red6'> {error || 'Page will be reloaded after successful submit'} </Box>
     </form>
   )
 }

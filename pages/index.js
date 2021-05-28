@@ -33,16 +33,6 @@ export default function Home() {
     })
   }, [mutate])
 
-  const onAddRule = useCallback((newEntry) => {
-    updateRule({}, newEntry).then(() => {
-      mutate()
-      router.reload()
-    }).catch(e => {
-      // TODO: Show this error somewhere. maybe where the action was performed
-      console.log(`addRule failed: ${e.response.data.error}`)
-    })
-  }, [mutate])
-
   return (
     <Layout title='Dashboard'>
       <Heading h={1} textAlign='center'>URL Priorities</Heading>
@@ -50,7 +40,7 @@ export default function Home() {
         <button onClick={() => mutate()}> Refresh Data </button>
         <Text ml={3}>Status: {isValidating ? 'Loading...' : 'Ready'}</Text>
       </Flex>
-      <AddRule onAddRule={onAddRule} />
+      <AddRule />
       
       {data && <List initialData={data.rules} mutateData={mutate} onUpdateRule={onUpdateRule} />}
       {error && !data &&
