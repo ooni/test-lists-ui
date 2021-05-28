@@ -3,6 +3,8 @@ import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState } from 'r
 import { theme, Box, Flex } from 'ooni-components'
 import styled from 'styled-components'
 import { MdDelete, MdEdit, MdClose, MdCheck } from 'react-icons/md'
+import { apiEndpoints } from './lib/api'
+import { mutate } from 'swr'
 
 const BORDER_COLOR = theme.colors.gray6
 const ODD_ROW_BG = theme.colors.gray0
@@ -117,7 +119,7 @@ const EditButton = ({ isEditing, dirty, onEdit, onCancel, onUpdate }) => (
     {isEditing && (
       <>
         <Button title='Discard Changes'><MdClose onClick={onCancel} size={20} /></Button>
-        <Button disabled={!dirty} title={dirty && 'Apply Changes'}><MdCheck onClick={onUpdate} size={20} /></Button>
+        <Button title={'Apply Changes'}><MdCheck onClick={onUpdate} size={20} /></Button>
       </>
     )}
   </Flex>
@@ -127,11 +129,14 @@ const DeleteButton = ({ onClick }) => (
   <Button onClick={onClick}><MdDelete size={18} /></Button>
 )
 
-const List = ({ initialData, mutateData, onUpdateRule }) => {
-  const [data, setData] = useState(initialData)
+const List = ({ data, mutateRules, onUpdateRule }) => {
   const [originalData] = useState(data)
   const resetData = () => setData(originalData)
   const skipPageResetRef = React.useRef()
+
+  useEffect(() => {
+    console.log(`originalData changed`, originalData)
+  }, [originalData])
 
   const columns = useMemo(() => [
     {
@@ -192,39 +197,47 @@ const List = ({ initialData, mutateData, onUpdateRule }) => {
   // and controlled inputs are in sync
   const updateCellData = useCallback((rowIndex, columnId, value) => {
     skipPageResetRef.current = true
-    setData(old =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          }
+    const locallyChangedData = data.map((row, index) => {
+      if (index === rowIndex) {
+        return {
+          ...data[rowIndex],
+          [columnId]: value,
         }
-        return row
-      })
-    )
-  }, [data])
+      }
+      return row
+    })
+    console.debug('locallyChanged row:', locallyChangedData[0])
+    // Update local swr cache, but do not fetch fresh data because editing must be in progress
+    mutateRules(locallyChangedData, false)
+  }, [data, mutateRules])
 
   // Called to reverse the changes by updateCellData for the whole row
   // based on data stored in originalData received from API
   const resetRow = useCallback(( rowIndex ) => {
+    console.debug('Restoring to: ', originalData[rowIndex])
     skipPageResetRef.current = true
-    setData(old => 
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return originalData[rowIndex]
-        }
-        return row
-      })
-    )
-  }, [data])
+    const restoredData = originalData.map((row, index) => {
+      if (index === rowIndex) {
+        return originalData[rowIndex]
+      }
+      return row
+    })
+    // Restore local swr cache, but also fetch fresh data
+    mutateRules(restoredData, false)
+  }, [originalData, mutateRules])
 
-  const deleteRow = useCallback((rowIndex) => {
-    return (e) => {
-      skipPageResetRef.current = true
-      console.log(rowIndex)
-    }
-  })
+  const onRowUpdate = useCallback((rowIndex, updatedEntry) => {
+    console.log('data[rowIndex]', data[rowIndex])
+    console.log('originalData[rowIndex]', originalData[rowIndex])
+    console.log('updatedEntry', updatedEntry)
+    onUpdateRule(originalData[rowIndex], updatedEntry)
+    // TODO: Do this only if API succeeds
+    mutateRules(originalData.map((rule, i) => (i === rowIndex) ? updatedEntry : rule), true)
+  }, [originalData, data])
+
+  const onRowDelete = useCallback((rowIndex) => {
+    onUpdateRule(originalData[rowIndex])
+  }, [originalData])
 
   // This allows useTable to reset the table when data changes
   // https://react-table.tanstack.com/docs/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes
@@ -254,19 +267,16 @@ const List = ({ initialData, mutateData, onUpdateRule }) => {
               dirty={dirty}
               onEdit={() => {
                 // TODO: Don't edit if another row is still being edited
-                setState({ isEditing: true })
+                setState(state => ({ ...state, isEditing: true }))
               }}
               onCancel={() => {
                 // TODO: Ensure row state is reset before cancelling edit
                 resetRow(index)
-                setState({ isEditing: false, updatedRow: null })
+                setState(state => ({...state, isEditing: false, dirty: false}))
               }}
               onUpdate={() => {
-                // TODO: Trigger update API call
-                const newEntry = values
-                onUpdateRule(originalData[index], newEntry)
-                // TODO: mutate data
-                setState({ isEditing: false })
+                onRowUpdate(index, values)
+                setState(state => ({...state, isEditing: false, dirty: false }))
               }}
             />
           )
@@ -275,8 +285,8 @@ const List = ({ initialData, mutateData, onUpdateRule }) => {
         {
           id: 'delete',
           maxWidth: 16,
-          Cell: ({ row: { values } }) => (
-            <DeleteButton onClick={() => onUpdateRule(values)} />
+          Cell: ({ row: { index } }) => (
+            <DeleteButton onClick={() => onRowDelete(index)} />
           )
         }
       ])

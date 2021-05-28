@@ -26,6 +26,18 @@ export const fetcher = async (url) => {
   } 
 }
 
+export const fetcherRules = async (url) => {
+  try {
+    const res = await axios.get(url)
+    return res.data.rules
+  } catch (e) {
+    const error = new Error(e.response?.data?.error ?? e.message)
+    error.info = e.response.statusText
+    error.status = e.response.status
+    throw error
+  } 
+}
+
 export const fetchUser = () => {
   return axios.get(apiEndpoints.ACCOUNT_METADATA).then(res => res.data)
 }
@@ -46,6 +58,7 @@ export const loginUser = (token) => {
 }
 
 export const updateRule = (oldEntry, newEntry) => {
+  console.debug('Called updateRule with old_entry', oldEntry, 'new_entry', newEntry)
   return axios.post(apiEndpoints.RULE_UPDATE, {
     old_entry: oldEntry,
     new_entry: newEntry
@@ -53,4 +66,7 @@ export const updateRule = (oldEntry, newEntry) => {
   .then(res => res.data)
 }
 
-export const deleteRule = (oldEntry) => updateRule(oldEntry, null)
+export const deleteRule = (oldEntry) => {
+  console.debug('Called deleteRule with old_entry', oldEntry)
+  return updateRule(oldEntry, {})
+}

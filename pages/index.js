@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { Flex, Box, Heading, Text } from 'ooni-components'
 import useSWR from 'swr'
 
-import { fetcher, apiEndpoints, updateRule } from '../components/lib/api'
+import { fetcherRules, apiEndpoints, updateRule } from '../components/lib/api'
 import Layout from '../components/Layout'
 import List from '../components/List'
 import { useUser } from '../components/lib/hooks'
@@ -16,11 +15,10 @@ const swrOptions = {
 
 export default function Home() {
   // const { user } = useUser()
-  const router = useRouter()
 
   const { data, error, isValidating, mutate } = useSWR(
     apiEndpoints.RULE_LIST,
-    fetcher,
+    fetcherRules,
     swrOptions
   )
 
@@ -42,7 +40,7 @@ export default function Home() {
       </Flex>
       <AddRule />
       
-      {data && <List initialData={data.rules} mutateData={mutate} onUpdateRule={onUpdateRule} />}
+      {data && <List data={data} mutateRules={mutate} onUpdateRule={onUpdateRule} />}
       {error && !data &&
         <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
           <Box>{error.status} {error.message}</Box> 
