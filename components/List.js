@@ -275,8 +275,8 @@ const List = ({ initialData, mutateData, onUpdateRule }) => {
         {
           id: 'delete',
           maxWidth: 16,
-          Cell: ({ row }) => (
-            <DeleteButton onClick={deleteRow(row.index)} />
+          Cell: ({ row: { values } }) => (
+            <DeleteButton onClick={() => onUpdateRule(values)} />
           )
         }
       ])
