@@ -43,7 +43,7 @@ const Login = () => {
         const res = await registerUser(email_address, nickname)
         setSubmitted(true)
       } catch (e) {
-        console.log(e)
+        console.error(e)
         setError(e.message)
       } finally {
         setSubmitting(false)

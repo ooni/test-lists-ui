@@ -17,19 +17,7 @@ const axios = Axios.create({
 export const fetcher = async (url) => {
   try {
     const res = await axios.get(url)
-    return res.data
-  } catch (e) {
-    const error = new Error(e.response?.data?.error ?? e.message)
-    error.info = e.response.statusText
-    error.status = e.response.status
-    throw error
-  } 
-}
-
-export const fetcherRules = async (url) => {
-  try {
-    const res = await axios.get(url)
-    return res.data.rules
+    return res.data.rules ?? res.data
   } catch (e) {
     const error = new Error(e.response?.data?.error ?? e.message)
     error.info = e.response.statusText

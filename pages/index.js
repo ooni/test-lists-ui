@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Flex, Box, Heading, Text } from 'ooni-components'
 import useSWR from 'swr'
 
-import { fetcherRules, apiEndpoints, updateRule } from '../components/lib/api'
+import { fetcher, apiEndpoints, updateRule } from '../components/lib/api'
 import Layout from '../components/Layout'
 import List from '../components/List'
 import { useUser } from '../components/lib/hooks'
@@ -18,18 +18,9 @@ export default function Home() {
 
   const { data, error, isValidating, mutate } = useSWR(
     apiEndpoints.RULE_LIST,
-    fetcherRules,
+    fetcher,
     swrOptions
   )
-
-  const onUpdateRule = useCallback((oldEntry = {}, newEntry = {}) => {
-    updateRule(oldEntry, newEntry).then(() => {
-      mutate()
-    }).catch(e => {
-      // TODO: Show this error somewhere. maybe where the action was performed
-      console.log(`updateRule failed: ${e.response.data.error}`)
-    })
-  }, [mutate])
 
   return (
     <Layout title='Dashboard'>
@@ -40,7 +31,7 @@ export default function Home() {
       </Flex>
       <AddRule />
       
-      {data && <List data={data} mutateRules={mutate} onUpdateRule={onUpdateRule} />}
+      {data && <List data={data} mutateRules={mutate} />}
       {error && !data &&
         <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
           <Box>{error.status} {error.message}</Box> 

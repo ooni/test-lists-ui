@@ -3,8 +3,8 @@ import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState } from 'r
 import { theme, Box, Flex } from 'ooni-components'
 import styled from 'styled-components'
 import { MdDelete, MdEdit, MdClose, MdCheck } from 'react-icons/md'
-import { apiEndpoints } from './lib/api'
-import { mutate } from 'swr'
+import { apiEndpoints, updateRule, deleteRule } from './lib/api'
+import { useRouter } from 'next/router'
 
 const BORDER_COLOR = theme.colors.gray6
 const ODD_ROW_BG = theme.colors.gray0
@@ -113,30 +113,48 @@ const Button = styled.button`
 // Dynamic button
 // * Starts editing a row
 // * Switches to a two button component to confirm or cancel a row edit operation.
-const EditButton = ({ isEditing, dirty, onEdit, onCancel, onUpdate }) => (
-  <Flex flexDirection='row' justifyContent='space-around'>
-    {!isEditing && <Button mx='auto'><MdEdit onClick={onEdit} size={20} /></Button>}
-    {isEditing && (
-      <>
-        <Button title='Discard Changes'><MdClose onClick={onCancel} size={20} /></Button>
-        <Button title={'Apply Changes'}><MdCheck onClick={onUpdate} size={20} /></Button>
-      </>
-    )}
-  </Flex>
-)
+const EditButton = ({ resetRow, onRowUpdate, row: { index, values, state : { isEditing, dirty }, setState } }) => {
+  const onEdit = useCallback(() => {
+    // TODO: Don't edit if another row is still being edited
+    setState(state => ({ ...state, isEditing: true }))
+  }, [setState])
+
+  const onCancel= useCallback(() => {
+    // TODO: Ensure row state is reset before cancelling edit
+    resetRow(index)
+    setState(state => ({...state, isEditing: false, dirty: false}))
+  }, [resetRow, index, setState])
+
+  const onUpdate = useCallback(() => {
+    async function updateRow() {
+      await onRowUpdate(index, values)
+      setState(state => ({...state, isEditing: false, dirty: false }))
+    }
+    updateRow()
+  }, [onRowUpdate, index, values, setState])
+
+  return (
+    <Flex flexDirection='row' justifyContent='space-around'>
+      {!isEditing && <Button mx='auto'><MdEdit onClick={onEdit} size={20} /></Button>}
+      {isEditing && (
+        <>
+          <Button title='Discard Changes'><MdClose onClick={onCancel} size={20} /></Button>
+          <Button title={'Apply Changes'}><MdCheck onClick={onUpdate} size={20} /></Button>
+        </>
+      )}
+    </Flex>
+  )
+}
 
 const DeleteButton = ({ onClick }) => (
   <Button onClick={onClick}><MdDelete size={18} /></Button>
 )
 
-const List = ({ data, mutateRules, onUpdateRule }) => {
-  const [originalData] = useState(data)
-  const resetData = () => setData(originalData)
+const List = ({ data, mutateRules }) => {
+  const [originalData, setOriginalData] = useState(data)
+  const updateOriginalData = useCallback(() => setOriginalData(data), [data])
   const skipPageResetRef = React.useRef()
-
-  useEffect(() => {
-    console.log(`originalData changed`, originalData)
-  }, [originalData])
+  const router = useRouter()
 
   const columns = useMemo(() => [
     {
@@ -227,17 +245,42 @@ const List = ({ data, mutateRules, onUpdateRule }) => {
   }, [originalData, mutateRules])
 
   const onRowUpdate = useCallback((rowIndex, updatedEntry) => {
-    console.log('data[rowIndex]', data[rowIndex])
-    console.log('originalData[rowIndex]', originalData[rowIndex])
-    console.log('updatedEntry', updatedEntry)
-    onUpdateRule(originalData[rowIndex], updatedEntry)
-    // TODO: Do this only if API succeeds
-    mutateRules(originalData.map((rule, i) => (i === rowIndex) ? updatedEntry : rule), true)
-  }, [originalData, data])
+    if (rowIndex in originalData) {
+      return updateRule(originalData[rowIndex], updatedEntry).then(async () => {
+        try {
+          await mutateRules(data, true)
+          updateOriginalData()
+        } catch (e) {
+          console.error(`Failed to mutate after successful update. Table state could be broken. Reloading page.`)
+          router.reload()
+        }
+      }).catch(e => {
+        // TODO: Update failed. Now what?
+        console.log(e.response.data.error)
+        router.reload()
+      })
+    }
+  }, [originalData, updateOriginalData, data, router])
 
+  // TODO: Maybe this can be merged with onRowUpdate
   const onRowDelete = useCallback((rowIndex) => {
-    onUpdateRule(originalData[rowIndex])
+    if (rowIndex in originalData) {
+      return deleteRule(originalData[rowIndex]).then(async () => {
+        try {
+          await mutateRules(originalData.filter((_, i) => i !== rowIndex), true)
+          updateOriginalData()
+        } catch (e) {
+          console.error(`Failed to mutate after successful delete. Table state could be broken. Reloading page.`)
+          router.reload()
+        }
+      }).catch(e => {
+        console.log(e.response.data.error)
+        router.reload()
+      })
+    }
+
   }, [originalData])
+
 
   // This allows useTable to reset the table when data changes
   // https://react-table.tanstack.com/docs/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes
@@ -251,6 +294,9 @@ const List = ({ data, mutateRules, onUpdateRule }) => {
     data,
     defaultColumn,
     updateCellData,
+    onRowUpdate,
+    onRowDelete,
+    resetRow,
     initialRowStateAccessor: () => ({ isEditing: false, dirty: false }),
     autoResetRowState: !skipPageResetRef.current,
   },
@@ -261,25 +307,7 @@ const List = ({ data, mutateRules, onUpdateRule }) => {
         {
           id: 'edit',
           maxWidth: 32,
-          Cell: ({ row: { index, values, state : { isEditing, dirty }, setState } }) => (
-            <EditButton
-              isEditing={isEditing}
-              dirty={dirty}
-              onEdit={() => {
-                // TODO: Don't edit if another row is still being edited
-                setState(state => ({ ...state, isEditing: true }))
-              }}
-              onCancel={() => {
-                // TODO: Ensure row state is reset before cancelling edit
-                resetRow(index)
-                setState(state => ({...state, isEditing: false, dirty: false}))
-              }}
-              onUpdate={() => {
-                onRowUpdate(index, values)
-                setState(state => ({...state, isEditing: false, dirty: false }))
-              }}
-            />
-          )
+          Cell: EditButton
         },
         ...columns,
         {
