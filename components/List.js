@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState } from 'react-table'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState, useSortBy } from 'react-table'
 import { theme, Box, Flex } from 'ooni-components'
 import styled from 'styled-components'
-import { MdDelete, MdEdit, MdClose, MdCheck } from 'react-icons/md'
+import { MdDelete, MdEdit, MdClose, MdCheck, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
 import { apiEndpoints, updateRule, deleteRule } from './lib/api'
 import { useRouter } from 'next/router'
 
 const BORDER_COLOR = theme.colors.gray6
-const ODD_ROW_BG = theme.colors.gray0
-const EVEN_ROW_BG = theme.colors.gray2
+const ODD_ROW_BG = theme.colors.gray2
+const EVEN_ROW_BG = theme.colors.gray0
 
 const Table = styled.table`
   width: 100%;
@@ -17,13 +17,20 @@ const Table = styled.table`
 const TableHeader = styled.thead`
   background-color: white;
   & th {
+    display: flex;
+    align-items: center;
     text-align: start;
     padding: 12px;
   }
 `
 
 const TableRow = styled.tr`
-  background-color: ${props => props.index % 2 === 0 ? EVEN_ROW_BG : ODD_ROW_BG};
+  :nth-child(odd) {
+    background-color: ${ODD_ROW_BG};
+  }
+  :nth-child(even) {
+    background-color: ${EVEN_ROW_BG};
+  }
   :first-child {
     border-top: 1px solid ${BORDER_COLOR};
   }
@@ -148,6 +155,16 @@ const EditButton = ({ resetRow, onRowUpdate, row: { index, values, state : { isE
 
 const DeleteButton = ({ onClick }) => (
   <Button onClick={onClick}><MdDelete size={18} /></Button>
+)
+
+const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
+  active ? (
+    direction === 'asc' ? (
+      <MdArrowUpward size={size} />
+    ) : (
+      <MdArrowDownward size={size} />
+    )
+  ): null
 )
 
 const List = ({ data, mutateRules }) => {
@@ -297,11 +314,21 @@ const List = ({ data, mutateRules }) => {
     onRowUpdate,
     onRowDelete,
     resetRow,
+    initialState: {
+      sortBy: [
+        {
+          id: 'priority',
+          desc: true
+        }
+      ]
+    },
     initialRowStateAccessor: () => ({ isEditing: false, dirty: false }),
     autoResetRowState: !skipPageResetRef.current,
+    autoResetSortBy: !skipPageResetRef.current
   },
     useFlexLayout,
     useRowState,
+    useSortBy,
     hooks => {
       hooks.visibleColumns.push(columns => [
         {
@@ -342,9 +369,10 @@ const List = ({ data, mutateRules }) => {
             {// Loop over the headers in each row
             headerGroup.headers.map(column => (
               // Apply the header cell props
-              <th {...column.getHeaderProps()}>
+              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                 {// Render the header
                 column.render('Header')}
+                <TableSortLabel active={column.isSorted} direction={column.isSortedDesc ? 'desc' : 'asc'} />
               </th>
             ))}
           </tr>
