@@ -61,7 +61,6 @@ const AddURL = ({ cc, onAddRule }) => {
 
     addURL(newEntry, cc, notes).then(() => {
       setError(null)
-      console.log('AddURL successful')
     }).catch(e => {
       // TODO: Show this error somewhere. maybe where the action was performed
       setError(`AddURL failed: ${e.response.data.error}`)

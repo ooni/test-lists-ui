@@ -72,10 +72,13 @@ const Button = styled.button`
 // Dynamic button
 // * Starts editing a row
 // * Switches to a two button component to confirm or cancel a row edit operation.
-const EditButton = ({ row: { index, values } }) => {
+const EditButton = ({ row: { index, values }, onEdit }) => {
+  const editRow = useCallback(() => {
+    onEdit(index)
+  })
   return (
     <Flex flexDirection='row' justifyContent='space-around'>
-      {<Button mx='auto'><MdEdit onClick={() => {}} size={20} /></Button>}
+      {<Button mx='auto'><MdEdit onClick={editRow} size={20} /></Button>}
     </Flex>
   )
 }
@@ -100,7 +103,7 @@ const Spinner = styled(Box)`
 
 const RefreshButton = ({ mutate, isValidating }) => (
   <Box mx='auto'>
-    <Button onClick={mutate} disabled={isValidating}>
+    <Button onClick={() => mutate()} disabled={isValidating}>
       <Spinner spin={isValidating}><MdRefresh size={20} /></Spinner>
     </Button>
   </Box>
@@ -117,7 +120,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
 )
 
 
-const TableView = ({ data, mutate, isValidating }) => {
+const TableView = ({ data, mutate, isValidating, onEdit }) => {
   const [originalData, setOriginalData] = useState(data)
   const updateOriginalData = useCallback(() => setOriginalData(data), [data])
   const skipPageResetRef = React.useRef()
@@ -172,6 +175,7 @@ const TableView = ({ data, mutate, isValidating }) => {
     data,
     mutate,
     isValidating,
+    onEdit
   },
     useFlexLayout,
     // useRowState,

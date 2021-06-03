@@ -10,6 +10,7 @@ export const apiEndpoints = {
   // Submissions
   SUBMISSION_LIST: '/api/v1/url-submission/test-list',
   SUBMISSION_ADD: '/api/v1/url-submission/add-url',
+  SUBMISSION_UPDATE: '/api/v1/url-submission/update-url',
   SUBMISSION_STATE: '/api/v1/url-submission/state',
 }
 
@@ -84,3 +85,15 @@ export const addURL = (newEntry, cc, notes) => {
   })
   .then(res => res.data)
 }
+
+export const updateURL = (cc, comment, oldEntry, newEntry) => {
+  console.debug('Called updateURL with old_entry', oldEntry, 'new_entry', newEntry)
+  return axios.post(apiEndpoints.SUBMISSION_UPDATE, {
+    country_code: cc,
+    comment: comment,
+    old_entry: oldEntry,
+    new_entry: newEntry
+  })
+  .then(res => res.data)
+}
+
