@@ -32,7 +32,6 @@ export const fetcher = async (url) => {
 export const fetchTestList = async (url, cc) => {
   try {
     const res = await axios.get(`${url}/${cc}`)
-    console.log('data', res.data)
     return res.data
   } catch (e) {
     const error = new Error(e.response?.data?.error ?? e.message)

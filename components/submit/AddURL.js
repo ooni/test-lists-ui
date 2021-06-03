@@ -18,6 +18,7 @@ import { mutate } from 'swr'
 
 import { addURL } from '../../components/lib/api'
 import CategoryList from './CategoryList'
+import categories from '../lib/category_codes.json'
 
 const fields = [
   {
@@ -44,14 +45,18 @@ const AddURL = ({ cc, onAddRule }) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const today = new Date().toLocaleDateString()
+    const categoryCode = formData.get('category_code')
+    const categoryDesc = categories[categoryCode]
     const newEntry = [
       formData.get('url'),
-      formData.get('category_code'),
-      'Ok to description?',
-      today
+      categoryCode,
+      categoryDesc,
+      today,
+      '',
+      formData.get('notes')
     ]
 
-    const notes = formData.get('notes')
+    const notes = formData.get('comment')
 
     addURL(newEntry, cc, notes).then(() => {
       console.log('AddURL successful')
@@ -67,8 +72,9 @@ const AddURL = ({ cc, onAddRule }) => {
         <input {...fields[0]} />
         <CategoryList name='category_code'  />
         <input {...fields[1]} />
-        <button mx={3} p={3} type='submit'> Add </button>
       </Flex>
+      <textarea name='comment' placeholder='Comment' />
+      <Box my={2}><button p={3} type='submit'> Add </button></Box>
       <Box as='small' color='red6'> Errors: {error || 'None'} </Box>
     </form>
   )

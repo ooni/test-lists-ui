@@ -5,6 +5,7 @@ import { theme, Box, Flex } from 'ooni-components'
 import styled from 'styled-components'
 import { MdDelete, MdEdit, MdClose, MdCheck, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
 
+import categories from '../lib/category_codes.json'
 
 const BORDER_COLOR = theme.colors.gray6
 const ODD_ROW_BG = theme.colors.gray2
@@ -112,21 +113,13 @@ const TableView = ({ data, mutate }) => {
       },
     },
     {
-      'Header': 'Category Code',
+      'Header': 'Category',
       'accessor': 'category_code',
+      'id': 'category_code',
+      Cell: ({ cell: { value }}) => {
+        return categories[value]
+      },
       width: 50,
-      inputAttrs: {
-        type: 'text',
-        maxLength: 5,
-        size: 10,
-        id: 'category_code',
-      }
-    },
-    {
-      'Header': 'Category Description',
-      'accessor': 'category_description',
-      width: 100,
-      // minWidth: 100,
       inputAttrs: {
         type: 'text',
         maxLength: 5,

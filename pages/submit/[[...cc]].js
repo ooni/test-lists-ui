@@ -9,10 +9,11 @@ import AddRule from '../../components/AddRule'
 export default function Submit() {
   const { query } = useRouter()
   const { cc } = query
+  console.log(cc)
   return (
     <Layout title='Url Submission'>
       <Heading h={1}>URLs for {cc}</Heading>
-      <AddURL cc={cc} />
+      {cc && <AddURL cc={cc[0]} />}
       <hr />
       {cc && <UrlList cc={cc} />}
     </Layout>
