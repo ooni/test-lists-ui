@@ -23,12 +23,15 @@ const fields = [
   {
     name: 'url',
     type: 'text',
+    placeholder: 'https://ooni.org',
     required: true
   },
   {
     name: 'notes',
-    type: 'text',
-    required: true
+    type: 'textarea',
+    required: true,
+    placeholder: 'Notes',
+    size: 60
   },
 ]
 
@@ -61,13 +64,12 @@ const AddURL = ({ cc, onAddRule }) => {
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
       <Flex alignItems='center' justifyContent='space-between' my={2}>
-        <CategoryList name='category_code' />
-        {fields.map((field, index) => (
-          <Input key={index} {...field} placeholder={field.name} />
-        ))}
-        <Button mx={3} p={3} type='submit'> Add URL </Button>
+        <input {...fields[0]} />
+        <CategoryList name='category_code'  />
+        <input {...fields[1]} />
+        <button mx={3} p={3} type='submit'> Add </button>
       </Flex>
-      <Box as='small' color='red6'> {error || 'Page will be reloaded after successful submit'} </Box>
+      <Box as='small' color='red6'> Errors: {error || 'None'} </Box>
     </form>
   )
 }

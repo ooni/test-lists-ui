@@ -8,12 +8,13 @@ import AddRule from '../../components/AddRule'
 
 export default function Submit() {
   const { query } = useRouter()
-  const { cc = 'global' } = query
+  const { cc } = query
   return (
     <Layout title='Url Submission'>
       <Heading h={1}>URLs for {cc}</Heading>
       <AddURL cc={cc} />
-      <UrlList cc={cc} />
+      <hr />
+      {cc && <UrlList cc={cc} />}
     </Layout>
   )
 }
