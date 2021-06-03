@@ -59,7 +59,7 @@ const AddRule = ({ onAddRule }) => {
         ))}
         <Button mx={3} p={3} type='submit'> Add Rule </Button>
       </Flex>
-      <Box as='small' color='red6'> {error || 'Page will be reloaded after successful submit'} </Box>
+      <Box as='small' color='red6'> {error || 'Note: Page may reload if add/update/delete operations behave unexpectedly.'} </Box>
     </form>
   )
 }
