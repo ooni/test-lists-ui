@@ -59,6 +59,7 @@ const AddURL = ({ cc, onAddRule }) => {
     const notes = formData.get('comment')
 
     addURL(newEntry, cc, notes).then(() => {
+      setError(null)
       console.log('AddURL successful')
     }).catch(e => {
       // TODO: Show this error somewhere. maybe where the action was performed
