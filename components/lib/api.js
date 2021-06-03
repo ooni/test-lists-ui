@@ -7,6 +7,9 @@ export const apiEndpoints = {
   RULE_LIST: '/api/_/url-priorities/list',
   RULE_UPDATE: '/api/_/url-priorities/update',
   COUNTRIES_LIST: '/api/_/countries',
+  // Submissions
+  SUBMISSION_LIST: '/api/v1/url-submission/test-list',
+  SUBMISSION_ADD: '/api/v1/url-submission/add-url'
 }
 
 const axios = Axios.create({
@@ -24,6 +27,18 @@ export const fetcher = async (url) => {
     error.status = e.response.status
     throw error
   } 
+}
+
+export const fetchTestList = async (url, cc) => {
+  try {
+    const res = await axios.get(`${url}/${cc}`)
+    return res.data
+  } catch (e) {
+    const error = new Error(e.response?.data?.error ?? e.message)
+    error.info = e.response.statusText
+    error.status = e.response.status
+    throw error
+  }
 }
 
 export const fetchUser = () => {
@@ -57,4 +72,14 @@ export const updateRule = (oldEntry, newEntry) => {
 export const deleteRule = (oldEntry) => {
   console.debug('Called deleteRule with old_entry', oldEntry)
   return updateRule(oldEntry, {})
+}
+
+export const addURL = (newEntry, cc, notes) => {
+  console.debug('Called SUBMISSION_ADD with new', newEntry)
+  return axios.post(apiEndpoints.SUBMISSION_ADD, {
+    country_code: cc,
+    new_entry: newEntry,
+    comment: notes
+  })
+  .then(res => res.data)
 }

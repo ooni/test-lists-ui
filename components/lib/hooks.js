@@ -11,16 +11,16 @@ const swrOptions = {
 
 export function useUser() {
   const router = useRouter()
-  const { data, error, mutate } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher, swrOptions)
+  const { data, error, mutate, isValidating } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher, swrOptions)
 
   // Automatically redirect to /login from anywhere the hook is called before logging in
   // passing in the path to return to via `returnTo` query param
-  // useEffect(() => {
-  //   if (!data && router.pathname !== '/login') {
-  //     console.log(encodeURIComponent(router.asPath))
-  //     router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
-  //   }
-  // }, [data])
+  useEffect(() => {
+    if (!isValidating && !data?.nick && router.pathname !== '/login') {
+      console.log(encodeURIComponent(router.asPath))
+      router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
+    }
+  }, [isValidating, data])
 
 
   const loading = !data && !error
