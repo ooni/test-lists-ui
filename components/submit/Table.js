@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState, useSortBy } from 'react-table'
 import { useRouter } from 'next/router'
 import { theme, Box, Flex } from 'ooni-components'
-import styled from 'styled-components'
-import { MdDelete, MdEdit, MdClose, MdCheck, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
+import styled, { keyframes } from 'styled-components'
+import { MdDelete, MdEdit, MdClose, MdCheck, MdArrowUpward, MdArrowDownward, MdRefresh } from 'react-icons/md'
 
 import categories from '../lib/category_codes.json'
+import { mutate } from 'swr'
 
 const BORDER_COLOR = theme.colors.gray6
 const ODD_ROW_BG = theme.colors.gray2
@@ -85,6 +86,26 @@ const DeleteButton = ({ row: { index, values } }) => {
   )
 }
 
+const spinAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+const Spinner = styled(Box)`
+  animation: ${props => props.spin ? spinAnimation : null} 1s linear infinite;
+`
+
+const RefreshButton = ({ mutate, isValidating }) => (
+  <Box mx='auto'>
+    <Button onClick={mutate} disabled={isValidating}>
+      <Spinner spin={isValidating}><MdRefresh size={20} /></Spinner>
+    </Button>
+  </Box>
+)
+
 const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
   active ? (
     direction === 'asc' ? (
@@ -96,7 +117,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
 )
 
 
-const TableView = ({ data, mutate }) => {
+const TableView = ({ data, mutate, isValidating }) => {
   const [originalData, setOriginalData] = useState(data)
   const updateOriginalData = useCallback(() => setOriginalData(data), [data])
   const skipPageResetRef = React.useRef()
@@ -149,7 +170,8 @@ const TableView = ({ data, mutate }) => {
   const tableInstance = useTable({
     columns,
     data,
-
+    mutate,
+    isValidating,
   },
     useFlexLayout,
     // useRowState,
@@ -160,12 +182,14 @@ const TableView = ({ data, mutate }) => {
         {
           id: 'edit',
           maxWidth: 32,
-          Cell: EditButton
+          Cell: EditButton,
+          Header: RefreshButton,
         },
         {
           id: 'delete',
-          maxWidth: 16,
-          Cell: DeleteButton
+          maxWidth: 24,
+          Cell: DeleteButton,
+          Header: ({ isValidating }) => (isValidating ? 'Fetching' : 'Ready')
         }
       ])
     }

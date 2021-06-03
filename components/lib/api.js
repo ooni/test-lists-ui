@@ -9,7 +9,8 @@ export const apiEndpoints = {
   COUNTRIES_LIST: '/api/_/countries',
   // Submissions
   SUBMISSION_LIST: '/api/v1/url-submission/test-list',
-  SUBMISSION_ADD: '/api/v1/url-submission/add-url'
+  SUBMISSION_ADD: '/api/v1/url-submission/add-url',
+  SUBMISSION_STATE: '/api/v1/url-submission/state',
 }
 
 const axios = Axios.create({
@@ -75,7 +76,7 @@ export const deleteRule = (oldEntry) => {
 }
 
 export const addURL = (newEntry, cc, notes) => {
-  console.debug('Called SUBMISSION_ADD with new', newEntry)
+  console.debug('Called SUBMISSION_ADD with new_entry', newEntry)
   return axios.post(apiEndpoints.SUBMISSION_ADD, {
     country_code: cc,
     new_entry: newEntry,

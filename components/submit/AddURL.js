@@ -19,6 +19,7 @@ import { mutate } from 'swr'
 import { addURL } from '../../components/lib/api'
 import CategoryList from './CategoryList'
 import categories from '../lib/category_codes.json'
+import State from './State'
 
 const fields = [
   {
@@ -76,7 +77,10 @@ const AddURL = ({ cc, onAddRule }) => {
       </Flex>
       <textarea name='comment' placeholder='Comment' />
       <Box my={2}><button p={3} type='submit'> Add </button></Box>
-      <Box as='small' color='red6'> Errors: {error || 'None'} </Box>
+      <Flex justifyContent='space-between' alignItems='center' p={3} bg='gray1'>
+        <Box as='small'> Errors: {error ? <Text color='red7'>{error}</Text> : 'None'} </Box>
+        <State />
+      </Flex>
     </form>
   )
 }

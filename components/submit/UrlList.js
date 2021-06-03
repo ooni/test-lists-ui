@@ -1,29 +1,21 @@
 import useSWR from 'swr'
-import { Box } from 'ooni-components'
+import { Flex, Box } from 'ooni-components'
 
 import { fetchTestList, apiEndpoints, updateRule } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 
-const DataBox = ({ data }) => (
-  <Box>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-  </Box>
-)
 const UrlList = ({ cc }) => {
-  const { data, error, mutate } = useSWR(
+  const { data, error, isValidating, mutate } = useSWR(
     [apiEndpoints.SUBMISSION_LIST, cc],
     fetchTestList,
-    // {
-    //   initialData: initalData
-    // }
   )
 
   return (
-    <>
-      {data && <Table data={data} mutate={mutate} />}
+    <Flex flexDirection='column' my={2}>
+      {data && <Table data={data} mutate={mutate} isValidating={isValidating} />}
       {error && <Error>{error.message}</Error>}
-    </>
+    </Flex>
   )
 }
 
