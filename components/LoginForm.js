@@ -1,17 +1,16 @@
 import React from 'react'
 
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Flex, Box, Input, Button, Text, Modal } from 'ooni-components'
 
-export const LoginModal = ({ isShowing, hide }) => 
+export const LoginModal = ({ isShowing, hide }) =>
   <Modal show={isShowing} onHideClick={hide}>
     <LoginForm />
   </Modal>
 
-
 export const LoginForm = ({
   onSubmit,
-  submitting,
+  submitting
 }) => {
   const { handleSubmit, register, formState: { errors } } = useForm()
   return (
@@ -25,7 +24,7 @@ export const LoginForm = ({
           <Input type='email' placeholder='Email' {...register('email_address', { required: true })} />
         </Box>
         <Box my={2}>
-          <Input type='text' placeholder='Nickname' {...register('nickname', { required: true, maxLength: 16})} />
+          <Input type='text' placeholder='Nickname' {...register('nickname', { required: true, maxLength: 16 })} />
         </Box>
         <Box my={2}>
           <Button type='submit' disabled={submitting}> Login </Button>

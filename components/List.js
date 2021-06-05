@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState, useSortBy } from 'react-table'
-import { theme, Box, Flex } from 'ooni-components'
+import { theme, Flex } from 'ooni-components'
 import styled from 'styled-components'
 import { MdDelete, MdEdit, MdClose, MdCheck, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
-import { apiEndpoints, updateRule, deleteRule } from './lib/api'
+import { updateRule, deleteRule } from './lib/api'
 import { useRouter } from 'next/router'
 
 const BORDER_COLOR = theme.colors.gray6
@@ -63,9 +63,9 @@ const TableCell = styled.td`
 // Dynamic Cell renderer shows either raw value or an editable HTMLInput element when editing the row
 const EditableCell = ({
   value: initialValue,
-  row: { index, original, state : { isEditing }, setState },
+  row: { index, original, state: { isEditing }, setState },
   column: { id, inputAttrs = {} },
-  updateCellData,
+  updateCellData
 }) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = React.useState(initialValue)
@@ -74,7 +74,7 @@ const EditableCell = ({
     setValue(e.target.value)
   }
 
-  // Update table data onBlur and use row.values to send updates to API 
+  // Update table data onBlur and use row.values to send updates to API
   const onBlur = () => {
     let inputValue = value
 
@@ -107,7 +107,7 @@ const EditableCell = ({
 
 // Set our editable cell renderer as the default Cell renderer
 const defaultColumn = {
-  Cell: EditableCell,
+  Cell: EditableCell
 }
 
 const Button = styled.button`
@@ -120,22 +120,22 @@ const Button = styled.button`
 // Dynamic button
 // * Starts editing a row
 // * Switches to a two button component to confirm or cancel a row edit operation.
-const EditButton = ({ resetRow, onRowUpdate, row: { index, values, state : { isEditing, dirty }, setState } }) => {
+const EditButton = ({ resetRow, onRowUpdate, row: { index, values, state: { isEditing, dirty }, setState } }) => {
   const onEdit = useCallback(() => {
     // TODO: Don't edit if another row is still being edited
     setState(state => ({ ...state, isEditing: true }))
   }, [setState])
 
-  const onCancel= useCallback(() => {
+  const onCancel = useCallback(() => {
     // TODO: Ensure row state is reset before cancelling edit
     resetRow(index)
-    setState(state => ({...state, isEditing: false, dirty: false}))
+    setState(state => ({ ...state, isEditing: false, dirty: false }))
   }, [resetRow, index, setState])
 
   const onUpdate = useCallback(() => {
-    async function updateRow() {
+    async function updateRow () {
       await onRowUpdate(index, values)
-      setState(state => ({...state, isEditing: false, dirty: false }))
+      setState(state => ({ ...state, isEditing: false, dirty: false }))
     }
     updateRow()
   }, [onRowUpdate, index, values, setState])
@@ -158,13 +158,17 @@ const DeleteButton = ({ onClick }) => (
 )
 
 const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
-  active ? (
-    direction === 'asc' ? (
+  active
+    ? (
+        direction === 'asc'
+          ? (
       <MdArrowUpward size={size} />
-    ) : (
+            )
+          : (
       <MdArrowDownward size={size} />
-    )
-  ): null
+            )
+      )
+    : null
 )
 
 const List = ({ data, mutateRules }) => {
@@ -175,48 +179,48 @@ const List = ({ data, mutateRules }) => {
 
   const columns = useMemo(() => [
     {
-      'Header': 'Category Code',
-      'accessor': 'category_code',
+      Header: 'Category Code',
+      accessor: 'category_code',
       width: 50,
       // minWidth: 100,
       inputAttrs: {
         type: 'text',
         maxLength: 5,
         size: 10,
-        id: 'category_code',
+        id: 'category_code'
       }
     },
     {
-      'Header': 'Country Code',
-      'accessor': 'cc',
+      Header: 'Country Code',
+      accessor: 'cc',
       width: 50,
       inputAttrs: {
         type: 'text',
         maxLength: 2,
-        size: 4,
-      },
+        size: 4
+      }
     },
     {
-      'Header': 'Domain',
-      'accessor': 'domain',
+      Header: 'Domain',
+      accessor: 'domain',
       width: 100,
       inputAttrs: {
         type: 'url',
         size: 28
-      },
+      }
     },
     {
-      'Header': 'URL',
-      'accessor': 'url',
+      Header: 'URL',
+      accessor: 'url',
       // maxWidth: 400,
       inputAttrs: {
         type: 'url',
-        size: 44,
-      },
+        size: 44
+      }
     },
     {
-      'Header': 'Priority',
-      'accessor': 'priority',
+      Header: 'Priority',
+      accessor: 'priority',
       type: 'number',
       maxWidth: 40,
       inputAttrs: {
@@ -224,8 +228,8 @@ const List = ({ data, mutateRules }) => {
         maxLength: 2,
         min: 0,
         size: 6
-      },
-    },
+      }
+    }
   ], [])
 
   // Called whenever a cell is changed so that the table data
@@ -236,7 +240,7 @@ const List = ({ data, mutateRules }) => {
       if (index === rowIndex) {
         return {
           ...data[rowIndex],
-          [columnId]: value,
+          [columnId]: value
         }
       }
       return row
@@ -248,7 +252,7 @@ const List = ({ data, mutateRules }) => {
 
   // Called to reverse the changes by updateCellData for the whole row
   // based on data stored in originalData received from API
-  const resetRow = useCallback(( rowIndex ) => {
+  const resetRow = useCallback((rowIndex) => {
     console.debug('Restoring to: ', originalData[rowIndex])
     skipPageResetRef.current = true
     const restoredData = originalData.map((row, index) => {
@@ -268,7 +272,7 @@ const List = ({ data, mutateRules }) => {
           await mutateRules(data, true)
           updateOriginalData()
         } catch (e) {
-          console.error(`Failed to mutate after successful update. Table state could be broken. Reloading page.`)
+          console.error('Failed to mutate after successful update. Table state could be broken. Reloading page.')
           router.reload()
         }
       }).catch(e => {
@@ -277,7 +281,7 @@ const List = ({ data, mutateRules }) => {
         router.reload()
       })
     }
-  }, [originalData, updateOriginalData, data, router])
+  }, [originalData, mutateRules, data, updateOriginalData, router])
 
   // TODO: Maybe this can be merged with onRowUpdate
   const onRowDelete = useCallback((rowIndex) => {
@@ -287,7 +291,7 @@ const List = ({ data, mutateRules }) => {
           await mutateRules(originalData.filter((_, i) => i !== rowIndex), true)
           updateOriginalData()
         } catch (e) {
-          console.error(`Failed to mutate after successful delete. Table state could be broken. Reloading page.`)
+          console.error('Failed to mutate after successful delete. Table state could be broken. Reloading page.')
           router.reload()
         }
       }).catch(e => {
@@ -295,9 +299,7 @@ const List = ({ data, mutateRules }) => {
         router.reload()
       })
     }
-
-  }, [originalData])
-
+  }, [mutateRules, originalData, router, updateOriginalData])
 
   // This allows useTable to reset the table when data changes
   // https://react-table.tanstack.com/docs/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes
@@ -326,26 +328,26 @@ const List = ({ data, mutateRules }) => {
     autoResetRowState: !skipPageResetRef.current,
     autoResetSortBy: !skipPageResetRef.current
   },
-    useFlexLayout,
-    useRowState,
-    useSortBy,
-    hooks => {
-      hooks.visibleColumns.push(columns => [
-        {
-          id: 'edit',
-          maxWidth: 32,
-          Cell: EditButton
-        },
-        ...columns,
-        {
-          id: 'delete',
-          maxWidth: 16,
-          Cell: ({ row: { index } }) => (
+  useFlexLayout,
+  useRowState,
+  useSortBy,
+  hooks => {
+    hooks.visibleColumns.push(columns => [
+      {
+        id: 'edit',
+        maxWidth: 32,
+        Cell: EditButton
+      },
+      ...columns,
+      {
+        id: 'delete',
+        maxWidth: 16,
+        Cell: ({ row: { index } }) => (
             <DeleteButton onClick={() => onRowDelete(index)} />
-          )
-        }
-      ])
-    }
+        )
+      }
+    ])
+  }
   )
 
   const {
@@ -353,7 +355,7 @@ const List = ({ data, mutateRules }) => {
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow,
+    prepareRow
   } = tableInstance
 
   return (
@@ -363,6 +365,7 @@ const List = ({ data, mutateRules }) => {
     >
       <TableHeader>
         {// Loop over the header rows
+        /* eslint-disable react/jsx-key */
         headerGroups.map(headerGroup => (
           // Apply the header row props
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -391,7 +394,6 @@ const List = ({ data, mutateRules }) => {
             <TableRow {...row.getRowProps()} index={row.index}>
               {// Loop over the rows cells
               row.cells.map(cell => {
-
                 // Apply the cell props
                 return (
                   <TableCell {...cell.getCellProps()}>
@@ -402,6 +404,7 @@ const List = ({ data, mutateRules }) => {
               })}
             </TableRow>
           )
+          /* eslint-enable react/jsx-key */
         })}
       </tbody>
     </Table>

@@ -15,13 +15,36 @@ const Login = () => {
   const router = useRouter()
   const { token, returnTo = '/' } = router.query
 
+  const onLogin = useCallback((data) => {
+    const { email_address, nickname } = data
+    setSubmitting(true)
+    const registerApi = async (email_address, nickname) => {
+      try {
+        await registerUser(email_address, nickname)
+        setSubmitted(true)
+      } catch (e) {
+        console.error(e)
+        setError(e.message)
+      } finally {
+        setSubmitting(false)
+      }
+    }
+    registerApi(email_address, nickname)
+  }, [])
+
+  const afterLogin = useCallback(() => {
+    setTimeout(() => {
+      router.push(returnTo)
+    }, 3000)
+  }, [returnTo, router])
+
   // If there is a `token` URL param, call the login API
   // This fetches and sets the authentication cookie
   useEffect(() => {
     if (token) {
       const login = async (token) => {
         try {
-          const res = await loginUser(token)
+          await loginUser(token)
           setLoggedIn(true)
           afterLogin()
         } catch (e) {
@@ -33,30 +56,7 @@ const Login = () => {
       // Reset any error messages from using invalid tokens
       setError(null)
     }
-  }, [token])
-
-  const onLogin = useCallback((data) => {
-    const { email_address, nickname } = data
-    setSubmitting(true)
-    const registerApi = async (email_address, nickname) => {
-      try {
-        const res = await registerUser(email_address, nickname)
-        setSubmitted(true)
-      } catch (e) {
-        console.error(e)
-        setError(e.message)
-      } finally {
-        setSubmitting(false)
-      }
-    }
-    registerApi(email_address, nickname)
-  })
-
-  const afterLogin = useCallback(() => {
-    setTimeout(() => {
-      router.push(returnTo)
-    }, 3000)
-  })
+  }, [afterLogin, token])
 
   return (
     <Layout title='Login'>
@@ -80,7 +80,7 @@ const Login = () => {
             <Heading h={2} my={2}> Logged in. Redicting to dashboard... </Heading>
           </>
         }
-        {error && 
+        {error &&
           <>
             <Box mb={3} p={4} bg='red1'>{error.response.status} {error.response.data.error}</Box>
             <Link href='/login'>Try logging in again</Link>

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Box, Button, Flex, Heading, Label as LLabel } from 'ooni-components'
+import { Box, Flex, Heading, Label as LLabel } from 'ooni-components'
 import { Container, Input } from 'ooni-components/dist/components'
 
 import CategoryList from './CategoryList'
@@ -26,7 +26,6 @@ const fields = [
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
 export const EditForm = ({ oldEntry, error, onSubmit, onCancel }) => {
-
   const handleSubmit = useCallback((e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
@@ -47,14 +46,14 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel }) => {
     const comment = formData.get('comment')
 
     onSubmit(newEntry, comment)
-  })
+  }, [oldEntry.date_added, oldEntry.source, onSubmit])
 
   return (
     <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} color='gray8'>
       <form onSubmit={handleSubmit}>
         <Flex flexDirection='column' my={2} mx={2}>
           <Heading h={4}>Editing {oldEntry.url}</Heading>
-          
+
           <Flex flexDirection='column' my={2}>
             <Label htmlFor='category_code'>Category</Label>
             <CategoryList name='category_code' defaultValue={oldEntry.category_code} />

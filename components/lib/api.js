@@ -11,13 +11,13 @@ export const apiEndpoints = {
   SUBMISSION_LIST: '/api/v1/url-submission/test-list',
   SUBMISSION_ADD: '/api/v1/url-submission/add-url',
   SUBMISSION_UPDATE: '/api/v1/url-submission/update-url',
-  SUBMISSION_STATE: '/api/v1/url-submission/state',
+  SUBMISSION_STATE: '/api/v1/url-submission/state'
 }
 
 const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_OONI_API,
   withCredentials: true
-});
+})
 
 export const fetcher = async (url) => {
   try {
@@ -28,7 +28,7 @@ export const fetcher = async (url) => {
     error.info = e.response.statusText
     error.status = e.response.status
     throw error
-  } 
+  }
 }
 
 export const fetchTestList = async (url, cc) => {
@@ -68,7 +68,7 @@ export const updateRule = (oldEntry, newEntry) => {
     old_entry: oldEntry,
     new_entry: newEntry
   })
-  .then(res => res.data)
+    .then(res => res.data)
 }
 
 export const deleteRule = (oldEntry) => {
@@ -83,7 +83,7 @@ export const addURL = (newEntry, cc, notes) => {
     new_entry: newEntry,
     comment: notes
   })
-  .then(res => res.data)
+    .then(res => res.data)
 }
 
 export const updateURL = (cc, comment, oldEntry, newEntry) => {
@@ -94,6 +94,5 @@ export const updateURL = (cc, comment, oldEntry, newEntry) => {
     old_entry: oldEntry,
     new_entry: newEntry
   })
-  .then(res => res.data.updated_entry)
+    .then(res => res.data.updated_entry)
 }
-

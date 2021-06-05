@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { Flex, Box, Text, Modal } from 'ooni-components'
+import { Flex, Box } from 'ooni-components'
 import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
 import styled from 'styled-components'
 
@@ -19,21 +19,15 @@ const NavItem = styled(Box).attrs({
   }
 `
 
-const OONILogoRef = React.forwardRef((props, ref) => (
+const OONILogoRef = React.forwardRef((props) => (
   <OONILogo {...props} />
 ))
 
-const NavBar = ({ title }) => {
+const NavBar = () => {
   const router = useRouter()
   const [showLoginModal, setShowLogin] = useState(false)
-  const {
-    loading,
-    loggedOut,
-    user,
-    mutate,
-  } = useUser()
+  const { user } = useUser()
 
-  const showLogin = useCallback(() => setShowLogin(true), [])
   const hideLogin = useCallback(() => setShowLogin(false), [])
 
   return (
@@ -41,15 +35,19 @@ const NavBar = ({ title }) => {
       <Flex bg='blue5' color='white' p={3} alignItems='center'>
         <NavItem><Link href='/'><OONILogoRef height='32px' /></Link></NavItem>
         <Box sx={{ position: 'absolute', right: 8 }}>
-        {user ? (
+        {user
+          ? (
           <Box> {user.nick} ({user.role}) </Box>
-        ):(
-          router.pathname !== '/login' ? (
+            )
+          : (
+              router.pathname !== '/login'
+                ? (
             <NavItem><Link href='/login'>
               Login
             </Link></NavItem>
-          ) : null
-        )}
+                  )
+                : null
+            )}
         </Box>
       </Flex>
       <LoginModal isShowing={showLoginModal} hide={hideLogin} />

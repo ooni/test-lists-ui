@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState, useSortBy } from 'react-table'
-import { useRouter } from 'next/router'
-import { theme, Box, Flex } from 'ooni-components'
-import styled, { keyframes } from 'styled-components'
+import React, { useCallback, useEffect, useMemo } from 'react'
+import { useTable, useFlexLayout, useSortBy } from 'react-table'
+import { theme, Flex } from 'ooni-components'
+import styled from 'styled-components'
 import { MdDelete, MdEdit, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
 
 import categories from '../lib/category_codes.json'
@@ -68,7 +67,7 @@ const Button = styled.button`
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}
 `
 
-const EditButton = ({ row: { index, values }, onEdit }) => {
+const EditButton = ({ row: { index }, onEdit }) => {
   const editRow = useCallback(() => {
     onEdit(index)
   }, [onEdit, index])
@@ -80,52 +79,42 @@ const EditButton = ({ row: { index, values }, onEdit }) => {
   )
 }
 
-const DeleteButton = ({ row: { index, values } }) => {
+const DeleteButton = () => {
   return (
     <Button onClick={() => {}}><MdDelete size={18} /></Button>
   )
 }
 
-const spinAnimation = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`
-const Spinner = styled(Box)`
-  animation: ${props => props.spin ? spinAnimation : null} 1s linear infinite;
-`
-
 const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
-  active ? (
-    direction === 'asc' ? (
+  active
+    ? (
+        direction === 'asc'
+          ? (
       <MdArrowUpward size={size} />
-    ) : (
+            )
+          : (
       <MdArrowDownward size={size} />
-    )
-  ): null
+            )
+      )
+    : null
 )
 
-
 const TableView = ({ data, onEdit, skipPageReset }) => {
-
   const columns = useMemo(() => [
     {
-      'Header': 'URL',
-      'accessor': 'url',
+      Header: 'URL',
+      accessor: 'url',
       minWidth: 100,
       inputAttrs: {
         type: 'url',
-        size: 44,
-      },
+        size: 44
+      }
     },
     {
-      'Header': 'Category',
-      'accessor': 'category_code',
-      'id': 'category_code',
-      Cell: ({ cell: { value }}) => {
+      Header: 'Category',
+      accessor: 'category_code',
+      id: 'category_code',
+      Cell: ({ cell: { value } }) => {
         return categories[value]
       },
       width: 50,
@@ -133,19 +122,19 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
         type: 'text',
         maxLength: 5,
         size: 10,
-        id: 'category_code',
+        id: 'category_code'
       }
     },
     {
-      'Header': 'Notes',
-      'accessor': 'notes',
+      Header: 'Notes',
+      accessor: 'notes',
       minWidth: 200,
       inputAttrs: {
         type: 'text',
         maxLength: 20,
         size: 32
-      },
-    },
+      }
+    }
   ], [])
 
   const tableInstance = useTable({
@@ -154,23 +143,23 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
     onEdit,
     autoResetSortBy: !skipPageReset
   },
-    useFlexLayout,
-    useSortBy,
-    hooks => {
-      hooks.visibleColumns.push(columns => [
-        ...columns,
-        {
-          id: 'edit',
-          maxWidth: 32,
-          Cell: EditButton,
-        },
-        {
-          id: 'delete',
-          maxWidth: 24,
-          Cell: DeleteButton,
-        }
-      ])
-    }
+  useFlexLayout,
+  useSortBy,
+  hooks => {
+    hooks.visibleColumns.push(columns => [
+      ...columns,
+      {
+        id: 'edit',
+        maxWidth: 32,
+        Cell: EditButton
+      },
+      {
+        id: 'delete',
+        maxWidth: 24,
+        Cell: DeleteButton
+      }
+    ])
+  }
   )
 
   const {
@@ -179,7 +168,7 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
     headerGroups,
     rows,
     prepareRow,
-    columns: [first],
+    columns: [first]
   } = tableInstance
 
   console.log(`is col0 sorted: ${first.isSorted}`)
@@ -201,6 +190,7 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
     >
       <TableHeader>
         {// Loop over the header rows
+        /* eslint-disable react/jsx-key */
         headerGroups.map(headerGroup => (
           // Apply the header row props
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -229,7 +219,6 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
             <TableRow {...row.getRowProps()} index={row.index}>
               {// Loop over the rows cells
               row.cells.map(cell => {
-
                 // Apply the cell props
                 return (
                   <TableCell {...cell.getCellProps()}>
@@ -240,6 +229,7 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
               })}
             </TableRow>
           )
+          /* eslint-enable */
         })}
       </tbody>
     </Table>

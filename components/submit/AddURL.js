@@ -12,9 +12,7 @@
 // }
 
 import React, { useCallback, useRef, useState } from 'react'
-import { Flex, Box, Input, Button } from 'ooni-components'
-import { useRouter } from 'next/router'
-import { mutate } from 'swr'
+import { Flex, Box, Text } from 'ooni-components'
 
 import { addURL } from '../../components/lib/api'
 import CategoryList from './CategoryList'
@@ -34,13 +32,12 @@ const fields = [
     required: true,
     placeholder: 'Notes',
     size: 60
-  },
+  }
 ]
 
-const AddURL = ({ cc, onAddRule }) => {
+const AddURL = ({ cc }) => {
   const formRef = useRef()
   const [error, setError] = useState(null)
-  const router = useRouter()
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault()
@@ -65,13 +62,13 @@ const AddURL = ({ cc, onAddRule }) => {
       // TODO: Show this error somewhere. maybe where the action was performed
       setError(`AddURL failed: ${e.response.data.error}`)
     })
-  })
+  }, [cc])
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
       <Flex alignItems='center' justifyContent='space-between' my={2}>
         <input {...fields[0]} />
-        <CategoryList name='category_code'  />
+        <CategoryList name='category_code' />
         <input {...fields[1]} />
       </Flex>
       <textarea name='comment' placeholder='Comment' />

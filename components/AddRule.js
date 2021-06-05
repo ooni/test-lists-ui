@@ -1,31 +1,30 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { Flex, Box, Input, Button } from 'ooni-components'
 import { useRouter } from 'next/router'
-import { mutate } from 'swr'
 
-import { apiEndpoints, updateRule } from '../components/lib/api'
+import { updateRule } from '../components/lib/api'
 
 const fields = [
   {
     name: 'category_code',
-    type: 'text',
+    type: 'text'
   },
   {
     name: 'cc',
-    type: 'text',
+    type: 'text'
   },
   {
     name: 'domain',
-    type: 'text',
+    type: 'text'
   },
   {
     name: 'url',
-    type: 'text',
+    type: 'text'
   },
   {
     name: 'priority',
-    type: 'number',
-  },
+    type: 'number'
+  }
 ]
 
 const AddRule = ({ onAddRule }) => {
@@ -37,8 +36,7 @@ const AddRule = ({ onAddRule }) => {
     const formData = new FormData(e.target)
     const newEntry = {}
     e.preventDefault()
-    for (let [key, value] of formData.entries()) {
-
+    for (const [key, value] of formData.entries()) {
       newEntry[key] = key === 'priority' ? Number(value) : value
     }
     updateRule({}, newEntry).then(() => {
@@ -49,7 +47,7 @@ const AddRule = ({ onAddRule }) => {
       // TODO: Show this error somewhere. maybe where the action was performed
       setError(`addRule failed: ${e.response.data.error}`)
     })
-  })
+  }, [router])
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>

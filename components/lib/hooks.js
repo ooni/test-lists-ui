@@ -1,17 +1,14 @@
-import { useEffect } from 'react'
 import useSWR from 'swr'
-import { useRouter } from 'next/router'
 
 import { fetcher, apiEndpoints } from './api'
 
 const swrOptions = {
   revalidateOnFocus: false,
-  dedupingInterval: 10 * 60 * 1000,
+  dedupingInterval: 10 * 60 * 1000
 }
 
-export function useUser() {
-  const router = useRouter()
-  const { data, error, mutate, isValidating } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher, swrOptions)
+export function useUser () {
+  const { data, error, mutate } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher, swrOptions)
 
   // Automatically redirect to /login from anywhere the hook is called before logging in
   // passing in the path to return to via `returnTo` query param
@@ -22,7 +19,6 @@ export function useUser() {
   //   }
   // }, [isValidating, data])
 
-
   const loading = !data && !error
   const loggedOut = error && error.status === 403
 
@@ -30,10 +26,9 @@ export function useUser() {
     loading,
     loggedOut,
     user: data?.nick ? data : null,
-    mutate,
+    mutate
   }
 }
-
 
 // export function useUser({ redirectTo, redirectIfFound } = {}) {
 //   const { data, error } = useSWR('/api/user', fetcher)

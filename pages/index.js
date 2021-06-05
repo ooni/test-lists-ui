@@ -1,19 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Flex, Box, Heading, Text } from 'ooni-components'
 import useSWR from 'swr'
 
-import { fetcher, apiEndpoints, updateRule } from '../components/lib/api'
+import { fetcher, apiEndpoints } from '../components/lib/api'
 import Layout from '../components/Layout'
 import List from '../components/List'
-import { useUser } from '../components/lib/hooks'
 import AddRule from '../components/AddRule'
 
 const swrOptions = {
   // dedupingInterval: 10 * 60 * 1000,
 }
 
-export default function Home() {
+export default function Home () {
   // const { user } = useUser()
 
   const { data, error, isValidating, mutate } = useSWR(
@@ -30,11 +28,11 @@ export default function Home() {
         <Text ml={3}>Status: {isValidating ? 'Loading...' : 'Ready'}</Text>
       </Flex>
       <AddRule />
-      
+
       {data && <List data={data} mutateRules={mutate} />}
       {error && !data &&
         <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
-          <Box>{error.status} {error.message}</Box> 
+          <Box>{error.status} {error.message}</Box>
           <Box><Link href='/login'> Login </Link></Box>
         </Flex>
       }

@@ -31,7 +31,7 @@ const UrlList = ({ cc }) => {
   const entryToEdit = useMemo(() => {
     if (data && editIndex > -1) {
       return {
-        ...data[editIndex],
+        ...data[editIndex]
       }
     } else {
       return {}
@@ -45,12 +45,11 @@ const UrlList = ({ cc }) => {
   }, [])
 
   const handleSubmit = useCallback((newEntry, comment) => {
-
     const keys = ['url', 'category_code', 'category_description', 'date_added', 'source', 'notes']
     const oldEntryValues = keys.map(k => entryToEdit[k])
 
     updateURL(cc, comment, oldEntryValues, newEntry).then((updatedEntry) => {
-      const updatedEntryObj = updatedEntry.reduce((o, v, i) => {o[keys[i]] = v; return o;}, {}) 
+      const updatedEntryObj = updatedEntry.reduce((o, v, i) => { o[keys[i]] = v; return o }, {})
       const updatedData = data.map((v, i) => editIndex === i ? updatedEntryObj : v)
       mutate(updatedData, true)
       setEditIndex(-1)
@@ -58,8 +57,7 @@ const UrlList = ({ cc }) => {
     }).catch(e => {
       setFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
     })
-
-  }, [entryToEdit, cc])
+  }, [cc, entryToEdit, data, mutate, editIndex])
 
   const onCancel = () => {
     setEditIndex(-1)
@@ -84,5 +82,3 @@ const UrlList = ({ cc }) => {
 }
 
 export default UrlList
-
-
