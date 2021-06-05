@@ -94,6 +94,6 @@ export const updateURL = (cc, comment, oldEntry, newEntry) => {
     old_entry: oldEntry,
     new_entry: newEntry
   })
-  .then(res => res.data)
+  .then(res => res.data.updated_entry)
 }
 

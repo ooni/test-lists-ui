@@ -3,10 +3,9 @@ import { useTable, defaultRenderer as Cell, useFlexLayout, useRowState, useSortB
 import { useRouter } from 'next/router'
 import { theme, Box, Flex } from 'ooni-components'
 import styled, { keyframes } from 'styled-components'
-import { MdDelete, MdEdit, MdClose, MdCheck, MdArrowUpward, MdArrowDownward, MdRefresh } from 'react-icons/md'
+import { MdDelete, MdEdit, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
 
 import categories from '../lib/category_codes.json'
-import { mutate } from 'swr'
 
 const BORDER_COLOR = theme.colors.gray6
 const ODD_ROW_BG = theme.colors.gray2
@@ -69,13 +68,11 @@ const Button = styled.button`
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}
 `
 
-// Dynamic button
-// * Starts editing a row
-// * Switches to a two button component to confirm or cancel a row edit operation.
 const EditButton = ({ row: { index, values }, onEdit }) => {
   const editRow = useCallback(() => {
     onEdit(index)
-  })
+  }, [onEdit, index])
+
   return (
     <Flex flexDirection='row' justifyContent='space-around'>
       {<Button mx='auto'><MdEdit onClick={editRow} size={20} /></Button>}
@@ -101,14 +98,6 @@ const Spinner = styled(Box)`
   animation: ${props => props.spin ? spinAnimation : null} 1s linear infinite;
 `
 
-const RefreshButton = ({ mutate, isValidating }) => (
-  <Box mx='auto'>
-    <Button onClick={() => mutate()} disabled={isValidating}>
-      <Spinner spin={isValidating}><MdRefresh size={20} /></Spinner>
-    </Button>
-  </Box>
-)
-
 const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
   active ? (
     direction === 'asc' ? (
@@ -120,11 +109,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
 )
 
 
-const TableView = ({ data, mutate, isValidating, onEdit }) => {
-  const [originalData, setOriginalData] = useState(data)
-  const updateOriginalData = useCallback(() => setOriginalData(data), [data])
-  const skipPageResetRef = React.useRef()
-  const router = useRouter()
+const TableView = ({ data, onEdit, skipPageReset }) => {
 
   const columns = useMemo(() => [
     {
@@ -163,22 +148,13 @@ const TableView = ({ data, mutate, isValidating, onEdit }) => {
     },
   ], [])
 
-  // This allows useTable to reset the table when data changes
-  // https://react-table.tanstack.com/docs/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes
-  // it should be set to true whenever table data is being altered
-  useEffect(() => {
-    skipPageResetRef.current = false
-  })
-
   const tableInstance = useTable({
     columns,
     data,
-    mutate,
-    isValidating,
-    onEdit
+    onEdit,
+    autoResetSortBy: !skipPageReset
   },
     useFlexLayout,
-    // useRowState,
     useSortBy,
     hooks => {
       hooks.visibleColumns.push(columns => [
@@ -187,13 +163,11 @@ const TableView = ({ data, mutate, isValidating, onEdit }) => {
           id: 'edit',
           maxWidth: 32,
           Cell: EditButton,
-          Header: RefreshButton,
         },
         {
           id: 'delete',
           maxWidth: 24,
           Cell: DeleteButton,
-          Header: ({ isValidating }) => (isValidating ? 'Fetching' : 'Ready')
         }
       ])
     }
@@ -205,7 +179,20 @@ const TableView = ({ data, mutate, isValidating, onEdit }) => {
     headerGroups,
     rows,
     prepareRow,
+    columns: [first],
   } = tableInstance
+
+  console.log(`is col0 sorted: ${first.isSorted}`)
+
+  useEffect(() => {
+    console.log('data changed')
+  }, [data])
+
+  useEffect(() => {
+    return () => {
+      console.log('TableView is being unmounted')
+    }
+  }, [])
 
   return (
     // apply the table props
