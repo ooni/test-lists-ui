@@ -1,3 +1,4 @@
+// import '../scripts/wdyr' // eslint-disable-line no-unused-vars
 import { theme } from 'ooni-components'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import 'fontsource-fira-sans/latin.css'
