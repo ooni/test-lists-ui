@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import { Box, Button, Flex, Modal } from 'ooni-components'
+import { Box, Button, Flex, Modal, Container } from 'ooni-components'
 
 import { fetchTestList, apiEndpoints, updateURL, addURL } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
+import ModalWithEsc from './ModalWithEsc'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -14,6 +15,7 @@ import { EditForm } from './EditForm'
 const UrlList = ({ cc }) => {
   // holds rowIndex of row being edited
   const [editIndex, setEditIndex] = useState(null)
+  const [showAddForm, setShowAddForm] = useState(false)
   // controls when table state can be reset
   const [skipPageReset, setSkipPageResest] = useState(false)
   // error to show when the edit form modal is on
@@ -29,7 +31,7 @@ const UrlList = ({ cc }) => {
   )
 
   const entryToEdit = useMemo(() => {
-    if (data && editIndex !== null) {
+    if (data && editIndex > -1) {
       return {
         ...data[editIndex]
       }
@@ -49,6 +51,10 @@ const UrlList = ({ cc }) => {
     setFormError(null)
   }, [])
 
+  const toggleShowAddForm = useCallback(() => {
+    setShowAddForm(state => !state)
+  }, [])
+
   const handleSubmit = useCallback((newEntry, comment) => {
     const keys = ['url', 'category_code', 'category_description', 'date_added', 'source', 'notes']
     const oldEntryValues = editIndex > -1 ? keys.map(k => entryToEdit[k]) : []
@@ -57,6 +63,7 @@ const UrlList = ({ cc }) => {
       // Add
       addURL(newEntry, cc, comment).then(() => {
         setEditIndex(null)
+        setShowAddForm(false)
         setFormError(null)
       }).catch(e => {
         setFormError(`AddURL failed: ${e?.response?.data?.error ?? e}`)
@@ -86,13 +93,23 @@ const UrlList = ({ cc }) => {
 
   return (
     <Flex flexDirection='column' my={2}>
-      <Box ml='auto'><Button onClick={onAdd}> Add </Button></Box>
+      <Flex my={1}>
+        <Box ml='auto'><Button onClick={onAdd}> Add Modal </Button></Box>
+        <Box mx={3}><Button onClick={toggleShowAddForm}> {showAddForm ? 'Hide' : 'Show'} Add Form</Button></Box>
+      </Flex>
+      {showAddForm && (
+        <Box bg='gray0' p={2}>
+          <EditForm layout='row' onSubmit={handleSubmit} onCancel={() => setShowAddForm(false)} oldEntry={{}} error={formError} />
+        </Box>
+      )}
       {data && <Table data={data} onEdit={onEdit} skipPageReset={skipPageReset} />}
       {error && <Error>{error.message}</Error>}
       {data && editIndex !== null && (
-        <Modal show={editIndex !== null} onHideClick={onCancel}>
-          <EditForm onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={formError} />
-        </Modal>
+        <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
+          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} color='gray8'>
+            <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={formError} />
+          </Container>
+        </ModalWithEsc>
       )}
     </Flex>
   )
