@@ -42,7 +42,7 @@ const AddURL = ({ cc }) => {
   const handleSubmit = useCallback((e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
-    const today = new Date().toLocaleDateString()
+    const today = new Date().toISOString().split('T')[0]
     const categoryCode = formData.get('category_code')
     const categoryDesc = categories[categoryCode]
     const newEntry = [

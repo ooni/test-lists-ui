@@ -21,6 +21,6 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     "camelcase": "off",
-    "react/prop-types": "warn"
+    "react/prop-types": "off"
   }
 }

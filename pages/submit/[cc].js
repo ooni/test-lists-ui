@@ -10,7 +10,6 @@ export default function Submit () {
   return (
     <Layout title='Url Submission'>
       <Heading h={1}>URLs for {cc}</Heading>
-      {cc && <AddURL cc={cc} />}
       {cc && <UrlList cc={cc} />}
     </Layout>
   )

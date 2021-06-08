@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTable, useFlexLayout, useSortBy } from 'react-table'
 import { theme, Flex } from 'ooni-components'
 import styled from 'styled-components'
@@ -167,21 +167,8 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow,
-    columns: [first]
+    prepareRow
   } = tableInstance
-
-  console.log(`is col0 sorted: ${first.isSorted}`)
-
-  useEffect(() => {
-    console.log('data changed')
-  }, [data])
-
-  useEffect(() => {
-    return () => {
-      console.log('TableView is being unmounted')
-    }
-  }, [])
 
   return (
     // apply the table props
