@@ -96,3 +96,14 @@ export const updateURL = (cc, comment, oldEntry, newEntry) => {
   })
     .then(res => res.data.updated_entry)
 }
+
+export const deleteURL = (cc, comment, oldEntry) => {
+  console.debug('Called deleteURL with oldEntry', oldEntry)
+  return axios.post(apiEndpoints.SUBMISSION_UPDATE, {
+    country_code: cc,
+    comment: comment,
+    old_entry: oldEntry,
+    new_entry: []
+  })
+    .then(res => res.data)
+}

@@ -79,9 +79,13 @@ const EditButton = ({ row: { index }, onEdit }) => {
   )
 }
 
-const DeleteButton = () => {
+const DeleteButton = ({ row: { index }, onDelete }) => {
+  const deleteRow = useCallback(() => {
+    onDelete(index)
+  }, [onDelete, index])
+
   return (
-    <Button onClick={() => {}}><MdDelete size={18} /></Button>
+    <Button onClick={deleteRow}><MdDelete size={18} /></Button>
   )
 }
 
@@ -99,7 +103,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
     : null
 )
 
-const TableView = ({ data, onEdit, skipPageReset }) => {
+const TableView = ({ data, onEdit, onDelete, skipPageReset }) => {
   const columns = useMemo(() => [
     {
       Header: 'URL',
@@ -141,6 +145,7 @@ const TableView = ({ data, onEdit, skipPageReset }) => {
     columns,
     data,
     onEdit,
+    onDelete,
     autoResetSortBy: !skipPageReset
   },
   useFlexLayout,

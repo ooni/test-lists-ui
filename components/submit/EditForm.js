@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Box, Button, Flex, Heading, Label as LLabel } from 'ooni-components'
-import { Container, Input } from 'ooni-components/dist/components'
+import { Input } from 'ooni-components/dist/components'
 
 import CategoryList from './CategoryList'
 import categories from '../lib/category_codes.json'
@@ -10,8 +10,7 @@ const fields = [
     name: 'url',
     type: 'text',
     label: 'URL',
-    required: true,
-    pattern: '[0-9]'
+    required: true
   },
   {
     name: 'notes',

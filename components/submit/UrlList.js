@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import { Box, Button, Flex, Modal, Container } from 'ooni-components'
+import { Box, Button, Flex, Container } from 'ooni-components'
 
-import { fetchTestList, apiEndpoints, updateURL, addURL } from '../lib/api'
+import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
 import ModalWithEsc from './ModalWithEsc'
+import DeleteForm from './DeleteForm'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -16,6 +17,7 @@ const UrlList = ({ cc }) => {
   // holds rowIndex of row being edited
   const [editIndex, setEditIndex] = useState(null)
   const [showAddForm, setShowAddForm] = useState(false)
+  const [deleteIndex, setDeleteIndex] = useState(null)
   // controls when table state can be reset
   const [skipPageReset, setSkipPageResest] = useState(false)
   // error to show when the edit form modal is on
@@ -31,14 +33,16 @@ const UrlList = ({ cc }) => {
   )
 
   const entryToEdit = useMemo(() => {
-    if (data && editIndex > -1) {
-      return {
-        ...data[editIndex]
+    if (data) {
+      if (editIndex !== null && editIndex > -1) {
+        return data[editIndex]
       }
-    } else {
-      return {}
+      if (deleteIndex !== null) {
+        return data[deleteIndex]
+      }
     }
-  }, [data, editIndex])
+    return {}
+  }, [data, editIndex, deleteIndex])
 
   const onEdit = useCallback((index) => {
     setSkipPageResest(true)
@@ -66,7 +70,15 @@ const UrlList = ({ cc }) => {
         setShowAddForm(false)
         setFormError(null)
       }).catch(e => {
-        setFormError(`AddURL failed: ${e?.response?.data?.error ?? e}`)
+        setFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
+      })
+    } else if (deleteIndex > -1) {
+      // Delete
+      deleteURL(cc, comment, oldEntryValues).then(() => {
+        setDeleteIndex(null)
+        setFormError(null)
+      }).catch(e => {
+        setFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
       })
     } else {
       // Update
@@ -80,11 +92,19 @@ const UrlList = ({ cc }) => {
         setFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
       })
     }
-  }, [cc, entryToEdit, data, mutate, editIndex])
+  }, [editIndex, deleteIndex, entryToEdit, cc, data, mutate])
 
   const onCancel = () => {
     setEditIndex(null)
     setFormError(null)
+  }
+
+  const onDelete = useCallback((index) => {
+    setDeleteIndex(index)
+  }, [])
+
+  const onCancelDelete = () => {
+    setDeleteIndex(null)
   }
 
   useEffect(() => {
@@ -102,12 +122,19 @@ const UrlList = ({ cc }) => {
           <EditForm layout='row' onSubmit={handleSubmit} onCancel={() => setShowAddForm(false)} oldEntry={{}} error={formError} />
         </Box>
       )}
-      {data && <Table data={data} onEdit={onEdit} skipPageReset={skipPageReset} />}
+      {data && <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} />}
       {error && <Error>{error.message}</Error>}
       {data && editIndex !== null && (
         <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
           <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} color='gray8'>
             <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={formError} />
+          </Container>
+        </ModalWithEsc>
+      )}
+      {data && deleteIndex !== null && (
+        <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
+          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} color='gray8'>
+            <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={formError} />
           </Container>
         </ModalWithEsc>
       )}
