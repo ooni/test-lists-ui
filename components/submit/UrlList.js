@@ -63,7 +63,15 @@ const UrlList = ({ cc }) => {
     const keys = ['url', 'category_code', 'category_description', 'date_added', 'source', 'notes']
     const oldEntryValues = editIndex > -1 ? keys.map(k => entryToEdit[k]) : []
 
-    if (editIndex === -1) {
+    if (deleteIndex !== null) {
+      // Delete
+      deleteURL(cc, comment, oldEntryValues).then(() => {
+        setDeleteIndex(null)
+        setFormError(null)
+      }).catch(e => {
+        setFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
+      })
+    } else if (editIndex === -1) {
       // Add
       addURL(newEntry, cc, comment).then(() => {
         setEditIndex(null)
@@ -71,14 +79,6 @@ const UrlList = ({ cc }) => {
         setFormError(null)
       }).catch(e => {
         setFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
-      })
-    } else if (deleteIndex > -1) {
-      // Delete
-      deleteURL(cc, comment, oldEntryValues).then(() => {
-        setDeleteIndex(null)
-        setFormError(null)
-      }).catch(e => {
-        setFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
       })
     } else {
       // Update
