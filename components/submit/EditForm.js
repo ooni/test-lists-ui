@@ -34,19 +34,16 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     e.preventDefault()
     const formData = new FormData(e.target)
     const categoryCode = formData.get('category_code')
-    const categoryDesc = categories[categoryCode]
+    // const categoryDesc = categories[categoryCode]
     const today = new Date().toISOString().split('T')[0]
 
-    const keys = ['url', 'category_code', 'category_description', 'date_added', 'source', 'notes']
-    const newEntryObj = {
+    const newEntry = {
       url: formData.get('url'),
       category_code: categoryCode,
-      category_description: categoryDesc,
       date_added: oldEntry.date_added ?? today,
       source: oldEntry.source ?? '',
       notes: formData.get('notes')
     }
-    const newEntry = keys.map(k => newEntryObj[k])
 
     const comment = formData.get('comment')
 

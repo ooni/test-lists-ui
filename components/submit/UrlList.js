@@ -33,15 +33,17 @@ const UrlList = ({ cc }) => {
   )
 
   const entryToEdit = useMemo(() => {
+    let entry = {}
     if (data) {
       if (editIndex !== null && editIndex > -1) {
-        return data[editIndex]
+        entry = data[editIndex]
       }
       if (deleteIndex !== null) {
-        return data[deleteIndex]
+        entry = data[deleteIndex]
       }
     }
-    return {}
+    delete entry.category_description
+    return entry
   }, [data, editIndex, deleteIndex])
 
   const onEdit = useCallback((index) => {
@@ -61,11 +63,10 @@ const UrlList = ({ cc }) => {
 
   const handleSubmit = useCallback((newEntry, comment) => {
     const keys = ['url', 'category_code', 'category_description', 'date_added', 'source', 'notes']
-    const oldEntryValues = editIndex > -1 ? keys.map(k => entryToEdit[k]) : []
 
     if (deleteIndex !== null) {
       // Delete
-      deleteURL(cc, comment, oldEntryValues).then(() => {
+      deleteURL(cc, comment, entryToEdit).then(() => {
         setDeleteIndex(null)
         setFormError(null)
       }).catch(e => {
@@ -82,7 +83,7 @@ const UrlList = ({ cc }) => {
       })
     } else {
       // Update
-      updateURL(cc, comment, oldEntryValues, newEntry).then((updatedEntry) => {
+      updateURL(cc, comment, entryToEdit, newEntry).then((updatedEntry) => {
         const updatedEntryObj = updatedEntry.reduce((o, v, i) => { o[keys[i]] = v; return o }, {})
         const updatedData = data.map((v, i) => editIndex === i ? updatedEntryObj : v)
         mutate(updatedData, true)
