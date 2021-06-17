@@ -10,7 +10,7 @@ const Diff = () => {
   return (
     <Flex flexDirection='column'>
       <Heading h={4}>Changes to be submitted</Heading>
-      <Box as='code'>{data ? data.state : (error ? error.toString() : 'Loading...')}</Box>
+      <Box as='pre'>{data ? JSON.stringify(data?.diff, null, 2) : (error ? error.toString() : 'Loading...')}</Box>
     </Flex>
   )
 }
