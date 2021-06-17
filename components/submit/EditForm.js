@@ -3,33 +3,10 @@ import { Box, Button, Flex, Heading, Label as LLabel } from 'ooni-components'
 import { Input } from 'ooni-components/dist/components'
 
 import CategoryList from './CategoryList'
-import categories from '../lib/category_codes.json'
-
-const fields = [
-  {
-    name: 'url',
-    type: 'text',
-    label: 'URL',
-    required: true
-  },
-  {
-    name: 'notes',
-    type: 'textarea',
-    rows: 2,
-    label: 'Notes',
-    required: true
-  },
-  {
-    name: 'comment',
-    type: 'text',
-    label: 'Reason for edit',
-    required: true
-  }
-]
 
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
-export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
+export const EditForm = ({ oldEntry, error, onSubmit, layout = 'column' }) => {
   const handleSubmit = useCallback((e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
@@ -55,25 +32,33 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
   return (
     <form onSubmit={handleSubmit}>
       <Heading h={4}>{oldEntry.url ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
-      <Flex flexDirection={layout} my={2} mx={2}>
+      <Flex flexDirection={layout} my={2} mx={2} alignItems='center'>
+
+        <Flex flexDirection='column' my={2} width={width} px={3}>
+          <Label htmlFor='url'>URL</Label>
+          <Input name='url' type='text' required={true} placeholder='https://example.com/' defaultValue={oldEntry.url} />
+        </Flex>
 
         <Flex flexDirection='column' my={2} width={width}>
           <Label htmlFor='category_code'>Category</Label>
-          <CategoryList name='category_code' defaultValue={oldEntry.category_code} required/>
+          <CategoryList name='category_code' defaultValue={oldEntry.category_code} required={true} />
         </Flex>
 
-        {fields.map((field, index) => (
-          <Flex flexDirection='column' my={2} key={index} width={width} px={3}>
-            <Label htmlFor={field.name}>{field.label}</Label>
-            <Input {...field} placeholder={field.name} defaultValue={oldEntry[field.name]} />
-          </Flex>
-        ))}
+        <Flex flexDirection='column' my={2} width={width} px={3}>
+          <Label htmlFor='notes'>Notes</Label>
+          <Input name='notes' type='text' required={true} placeholder='' defaultValue={oldEntry.notes} />
+        </Flex>
+
+        <Flex flexDirection='column' my={2} width={width} px={3}>
+          <Label htmlFor='comment'>Comment</Label>
+          <Input name='comment' type='text' required={true} placeholder='Reason' defaultValue={oldEntry.comment} />
+        </Flex>
+
+        <Box>
+          <Button type='submit'> Add  </Button>
+        </Box>
+
       </Flex>
-
-        <Flex justifyContent='space-between' width={1} my={3}>
-          <Button hollow onClick={onCancel}> Cancel </Button>
-          <Button type='submit'> Save </Button>
-        </Flex>
       <Box as='small' color='red6'> {error} </Box>
     </form>
   )

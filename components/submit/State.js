@@ -6,7 +6,7 @@ import { Box } from 'ooni-components'
 const State = () => {
   const { data, error } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher)
   return (
-    <Box>State: {data ? data.state : (error ? error.toString() : 'Loading...')}</Box>
+    <Box>Current State: {data ? data.state : (error ? error.toString() : 'Loading...')}</Box>
   )
 }
 

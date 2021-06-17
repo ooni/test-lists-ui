@@ -5,7 +5,7 @@ import { Box, Flex, Heading } from 'ooni-components'
 import Layout from '../../components/Layout'
 import CountryList from '../../components/submit/CountryList'
 import UrlList from '../../components/submit/UrlList'
-import State from '../../components/submit/State'
+import WorkflowState from '../../components/submit/WorkflowState'
 
 export default function Submit () {
   const router = useRouter()
@@ -20,8 +20,8 @@ export default function Submit () {
     <Layout title='Url Submission'>
       <Flex alignItems='center'>
         <Heading h={1}>Test List <CountryList defaultValue={cc} onChange={onCountryChange} /></Heading>
-        <Box ml='auto'><State /></Box>
       </Flex>
+      <WorkflowState />
       {cc && <UrlList cc={cc} />}
     </Layout>
   )

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import { Box, Button, Flex, Container } from 'ooni-components'
+import { Box, Flex, Container } from 'ooni-components'
 
 import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL } from '../lib/api'
 import Error from './Error'
@@ -16,7 +16,6 @@ import DeleteForm from './DeleteForm'
 const UrlList = ({ cc }) => {
   // holds rowIndex of row being edited
   const [editIndex, setEditIndex] = useState(null)
-  const [showAddForm, setShowAddForm] = useState(false)
   const [deleteIndex, setDeleteIndex] = useState(null)
   // controls when table state can be reset
   const [skipPageReset, setSkipPageResest] = useState(false)
@@ -52,15 +51,6 @@ const UrlList = ({ cc }) => {
     setFormError(null)
   }, [])
 
-  const onAdd = useCallback(() => {
-    setEditIndex(-1)
-    setFormError(null)
-  }, [])
-
-  const toggleShowAddForm = useCallback(() => {
-    setShowAddForm(state => !state)
-  }, [])
-
   const handleSubmit = useCallback((newEntry, comment) => {
     const keys = ['url', 'category_code', 'category_description', 'date_added', 'source', 'notes']
 
@@ -76,7 +66,6 @@ const UrlList = ({ cc }) => {
       // Add
       addURL(newEntry, cc, comment).then(() => {
         setEditIndex(null)
-        setShowAddForm(false)
         setFormError(null)
       }).catch(e => {
         setFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
@@ -114,15 +103,9 @@ const UrlList = ({ cc }) => {
 
   return (
     <Flex flexDirection='column' my={2}>
-      <Flex my={1}>
-        <Box ml='auto'><Button onClick={onAdd}> Add Modal </Button></Box>
-        <Box mx={3}><Button onClick={toggleShowAddForm}> {showAddForm ? 'Hide' : 'Show'} Add Form</Button></Box>
-      </Flex>
-      {showAddForm && (
-        <Box bg='gray0' p={2}>
-          <EditForm layout='row' onSubmit={handleSubmit} onCancel={() => setShowAddForm(false)} oldEntry={{}} error={formError} />
-        </Box>
-      )}
+      <Box p={2}>
+        <EditForm layout='row' onSubmit={handleSubmit} onCancel={() => setShowAddForm(false)} oldEntry={{}} error={formError} />
+      </Box>
       {data && <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} />}
       {error && <Error>{error.message}</Error>}
       {data && editIndex !== null && (

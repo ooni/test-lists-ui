@@ -11,7 +11,9 @@ export const apiEndpoints = {
   SUBMISSION_LIST: '/api/v1/url-submission/test-list',
   SUBMISSION_ADD: '/api/v1/url-submission/add-url',
   SUBMISSION_UPDATE: '/api/v1/url-submission/update-url',
-  SUBMISSION_STATE: '/api/v1/url-submission/state'
+  SUBMISSION_STATE: '/api/v1/url-submission/state',
+  SUBMISSION_DIFF: '/api/v1/url-submission/diff',
+  SUBMISSION_SUBMIT: '/api/v1/url-submission/submit'
 }
 
 const axios = Axios.create({
@@ -105,5 +107,11 @@ export const deleteURL = (cc, comment, oldEntry) => {
     old_entry: oldEntry,
     new_entry: null
   })
+    .then(res => res.data)
+}
+
+export const submitChanges = () => {
+  console.debug('Called submitChanges')
+  return axios.post(apiEndpoints.SUBMISSION_SUBMIT)
     .then(res => res.data)
 }
