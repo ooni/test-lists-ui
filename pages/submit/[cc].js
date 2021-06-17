@@ -19,7 +19,7 @@ export default function Submit () {
   return (
     <Layout title='Url Submission'>
       <Flex alignItems='center'>
-        <Heading h={1}>Test List <CountryList defaultValue={cc.toUpperCase()} onChange={onCountryChange} /></Heading>
+        <Heading h={1}>Test List <CountryList defaultValue={cc} onChange={onCountryChange} /></Heading>
       </Flex>
       <WorkflowState />
       {cc && <UrlList cc={cc} />}
