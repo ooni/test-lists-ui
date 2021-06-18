@@ -110,14 +110,14 @@ const UrlList = ({ cc }) => {
       {error && <Error>{error.message}</Error>}
       {data && editIndex !== null && (
         <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
-          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} color='gray8'>
+          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
             <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={formError} />
           </Container>
         </ModalWithEsc>
       )}
       {data && deleteIndex !== null && (
         <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
-          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} color='gray8'>
+          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
             <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={formError} />
           </Container>
         </ModalWithEsc>

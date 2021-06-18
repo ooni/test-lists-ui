@@ -6,12 +6,13 @@ import CategoryList from './CategoryList'
 
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
-export const EditForm = ({ oldEntry, error, onSubmit, layout = 'column' }) => {
+export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
+  const isEdit = 'url' in oldEntry
+
   const handleSubmit = useCallback((e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const categoryCode = formData.get('category_code')
-    // const categoryDesc = categories[categoryCode]
     const today = new Date().toISOString().split('T')[0]
 
     const newEntry = {
@@ -31,7 +32,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, layout = 'column' }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Heading h={4}>{oldEntry.url ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
+      <Heading h={4}>{isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
       <Flex flexDirection={layout} my={2} mx={2} alignItems='center'>
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
@@ -54,10 +55,12 @@ export const EditForm = ({ oldEntry, error, onSubmit, layout = 'column' }) => {
           <Input name='comment' type='text' required={true} placeholder='Reason' defaultValue={oldEntry.comment} />
         </Flex>
 
-        <Box>
-          <Button type='submit'> Add  </Button>
-        </Box>
-
+        <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
+          {isEdit && (
+            <Button inverted onClick={onCancel} mr={3}>Cancel</Button>
+          )}
+          <Button type='submit'>{isEdit ? 'Done' : 'Add'}</Button>
+        </Flex>
       </Flex>
       <Box as='small' color='red6'> {error} </Box>
     </form>
