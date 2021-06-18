@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Flex, Button } from 'ooni-components'
+import { Flex, Button } from 'ooni-components'
 import State from './State'
 import Diff from './Diff'
 import Error from './Error'
