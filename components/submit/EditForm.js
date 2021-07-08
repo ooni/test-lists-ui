@@ -55,12 +55,14 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
           <Input name='comment' type='text' required={true} placeholder='Reason' defaultValue={oldEntry.comment} />
         </Flex>
 
-        <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
-          {isEdit && (
-            <Button inverted onClick={onCancel} mr={3}>Cancel</Button>
-          )}
-          <Button type='submit'>{isEdit ? 'Done' : 'Add'}</Button>
-        </Flex>
+        {isEdit && (
+          <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
+              <Button inverted onClick={onCancel} mr={3}>Cancel</Button>
+              <Button type='submit'>Done</Button>
+          </Flex>
+        )}
+
+        {!isEdit && <Button type='submit' hollow>Add</Button>}
       </Flex>
       <Box as='small' color='red6'> {error} </Box>
     </form>
