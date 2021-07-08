@@ -20,7 +20,9 @@ const UrlList = ({ cc }) => {
   // controls when table state can be reset
   const [skipPageReset, setSkipPageResest] = useState(false)
   // error to show when the edit form modal is on
-  const [formError, setFormError] = useState(null)
+  const [editFormError, setEditFormError] = useState(null)
+  // error to show when add action fails
+  const [addFormError, setAddFormError] = useState(null)
 
   const { data, error, mutate } = useSWR(
     [apiEndpoints.SUBMISSION_LIST, cc],
@@ -48,7 +50,7 @@ const UrlList = ({ cc }) => {
   const onEdit = useCallback((index) => {
     setSkipPageResest(true)
     setEditIndex(index)
-    setFormError(null)
+    setEditFormError(null)
   }, [])
 
   const handleSubmit = useCallback((newEntry, comment) => {
@@ -58,17 +60,17 @@ const UrlList = ({ cc }) => {
       // Delete
       deleteURL(cc, comment, entryToEdit).then(() => {
         setDeleteIndex(null)
-        setFormError(null)
+        setEditFormError(null)
       }).catch(e => {
-        setFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
+        setEditFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
       })
     } else if (editIndex === -1) {
       // Add
       addURL(newEntry, cc, comment).then(() => {
         setEditIndex(null)
-        setFormError(null)
+        setAddFormError(null)
       }).catch(e => {
-        setFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
+        setAddFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
       })
     } else {
       // Update
@@ -77,16 +79,16 @@ const UrlList = ({ cc }) => {
         const updatedData = data.map((v, i) => editIndex === i ? updatedEntryObj : v)
         mutate(updatedData, true)
         setEditIndex(null)
-        setFormError(null)
+        setEditFormError(null)
       }).catch(e => {
-        setFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
+        setEditFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
       })
     }
   }, [editIndex, deleteIndex, entryToEdit, cc, data, mutate])
 
   const onCancel = () => {
     setEditIndex(null)
-    setFormError(null)
+    setEditFormError(null)
   }
 
   const onDelete = useCallback((index) => {
@@ -95,6 +97,7 @@ const UrlList = ({ cc }) => {
 
   const onCancelDelete = () => {
     setDeleteIndex(null)
+    setEditFormError(null)
   }
 
   useEffect(() => {
@@ -104,21 +107,21 @@ const UrlList = ({ cc }) => {
   return (
     <Flex flexDirection='column' my={2}>
       <Box p={2}>
-        <EditForm layout='row' onSubmit={handleSubmit} onCancel={() => setShowAddForm(false)} oldEntry={{}} error={formError} />
+        <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
       </Box>
       {data && <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} />}
       {error && <Error>{error.message}</Error>}
       {data && editIndex !== null && (
         <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
           <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-            <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={formError} />
+            <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} />
           </Container>
         </ModalWithEsc>
       )}
       {data && deleteIndex !== null && (
         <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
           <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-            <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={formError} />
+            <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={editFormError} />
           </Container>
         </ModalWithEsc>
       )}
