@@ -11,12 +11,12 @@ const StyledSelect = styled.select`
 
 const CountryList = ({ name, defaultValue, ...rest }) => {
   return (
-    <StyledSelect name={name} {...rest}>
+    <select name={name} {...rest}>
       <option value='global' selected>Global</option>
       {countryUtil.countryList.map(({ iso3166_alpha2, name }, index) => (
         <option key={index} value={iso3166_alpha2} selected={defaultValue === iso3166_alpha2}>{name}</option>
       ))}
-    </StyledSelect>
+    </select>
   )
 }
 

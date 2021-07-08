@@ -20,9 +20,8 @@ export default function Submit () {
 
   return (
     <Layout title='Url Submission'>
-      <Flex alignItems='center'>
-        <Heading h={1}>Test List <CountryList defaultValue={countryCode} onChange={onCountryChange} /></Heading>
-      </Flex>
+      <Heading h={1}>Test List</Heading>
+      <CountryList defaultValue={countryCode} onChange={onCountryChange} />
       <SubmitButton />
       {countryCode && <UrlList cc={countryCode} />}
     </Layout>
