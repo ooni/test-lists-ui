@@ -54,8 +54,6 @@ const UrlList = ({ cc }) => {
   }, [])
 
   const handleSubmit = useCallback((newEntry, comment) => {
-    const keys = ['url', 'category_code', 'category_description', 'date_added', 'source', 'notes']
-
     if (deleteIndex !== null) {
       // Delete
       deleteURL(cc, comment, entryToEdit).then(() => {
@@ -75,8 +73,7 @@ const UrlList = ({ cc }) => {
     } else {
       // Update
       updateURL(cc, comment, entryToEdit, newEntry).then((updatedEntry) => {
-        const updatedEntryObj = updatedEntry.reduce((o, v, i) => { o[keys[i]] = v; return o }, {})
-        const updatedData = data.map((v, i) => editIndex === i ? updatedEntryObj : v)
+        const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
         mutate(updatedData, true)
         setEditIndex(null)
         setEditFormError(null)
