@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Box, Flex, Container } from 'ooni-components'
 
-import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL } from '../lib/api'
+import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
@@ -32,6 +32,8 @@ const UrlList = ({ cc }) => {
       // dedupingInterval: 60 * 60 * 1000
     }
   )
+
+  const { data: { state: submissionState } } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher)
 
   const entryToEdit = useMemo(() => {
     let entry = {}
@@ -104,9 +106,11 @@ const UrlList = ({ cc }) => {
   return (
     <Flex flexDirection='column' my={2}>
       <Box p={2}>
-        <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
+        {submissionState !== 'PR_OPEN' &&
+          <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
+        }
       </Box>
-      {data && <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} />}
+      {data && <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />}
       {error && <Error>{error.message}</Error>}
       {data && editIndex !== null && (
         <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>

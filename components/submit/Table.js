@@ -67,25 +67,25 @@ const Button = styled.button`
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}
 `
 
-const EditButton = ({ row: { index }, onEdit }) => {
+const EditButton = ({ row: { index }, onEdit, submissionState }) => {
   const editRow = useCallback(() => {
     onEdit(index)
   }, [onEdit, index])
 
   return (
     <Flex flexDirection='row' justifyContent='space-around'>
-      {<Button mx='auto'><MdEdit onClick={editRow} size={20} /></Button>}
+      {<Button mx='auto' disabled={submissionState === 'PR_OPEN'}><MdEdit onClick={editRow} size={20} /></Button>}
     </Flex>
   )
 }
 
-const DeleteButton = ({ row: { index }, onDelete }) => {
+const DeleteButton = ({ row: { index }, onDelete, submissionState }) => {
   const deleteRow = useCallback(() => {
     onDelete(index)
   }, [onDelete, index])
 
   return (
-    <Button onClick={deleteRow}><MdDelete size={18} /></Button>
+    <Button onClick={deleteRow} disabled={submissionState === 'PR_OPEN'}><MdDelete size={18} /></Button>
   )
 }
 
@@ -103,7 +103,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
     : null
 )
 
-const TableView = ({ data, onEdit, onDelete, skipPageReset }) => {
+const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) => {
   const columns = useMemo(() => [
     {
       Header: 'URL',
@@ -146,6 +146,7 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset }) => {
     data,
     onEdit,
     onDelete,
+    submissionState,
     autoResetSortBy: !skipPageReset
   },
   useFlexLayout,
