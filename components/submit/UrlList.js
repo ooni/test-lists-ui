@@ -33,7 +33,11 @@ const UrlList = ({ cc }) => {
     }
   )
 
-  const { data: { state: submissionState } } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher)
+  const { data: { state: submissionState } } = useSWR(
+    apiEndpoints.SUBMISSION_STATE,
+    fetcher,
+    { initialData: { state: null } }
+  )
 
   const entryToEdit = useMemo(() => {
     let entry = {}

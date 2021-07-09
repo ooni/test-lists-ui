@@ -4,6 +4,10 @@ import { Input } from 'ooni-components/dist/components'
 
 import CategoryList from './CategoryList'
 
+// Regular expression to test for valid URLs based on
+// https://github.com/citizenlab/test-lists/blob/master/scripts/lint-lists.py#L18
+const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
+
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
 export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
@@ -37,7 +41,18 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
           <Label htmlFor='url'>URL</Label>
-          <Input name='url' type='text' required={true} placeholder='https://example.com/' defaultValue={oldEntry.url} />
+          <Input
+            name='url'
+            type='url'
+            required={true}
+            pattern={urlRegex}
+            placeholder='https://example.com/'
+            defaultValue={oldEntry.url}
+            onInvalid={(e) => {
+              e.target.validity.patternMismatch &&
+              e.target.setCustomValidity('Must be a full URL e.g https:://ooni.org/')
+            }}
+          />
         </Flex>
 
         <Flex flexDirection='column' my={2} width={width}>
