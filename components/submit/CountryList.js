@@ -1,18 +1,12 @@
+import React from 'react'
 import countryUtil from 'country-util'
-import styled from 'styled-components'
-
-const StyledSelect = styled.select`
-  font-size: inherit;
-  border: 0;
-  & > option {
-    font-size: initial;
-  }
-`
 
 const CountryList = ({ name, defaultValue, ...rest }) => {
   return (
-    <select name={name} {...rest}>
-      <option value='global' selected>Global</option>
+    <select name={name} {...rest} placeholder='Placeholder'>
+      {/* First option shows up only on home page (when defaultValue is not passed) */}
+      <option value='' hidden disabled selected={defaultValue == null}>Select a country</option>
+      <option value='global'>Global</option>
       {countryUtil.countryList.map(({ iso3166_alpha2, name }, index) => (
         <option key={index} value={iso3166_alpha2} selected={defaultValue === iso3166_alpha2}>{name}</option>
       ))}

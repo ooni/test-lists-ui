@@ -2,10 +2,10 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Box, Flex, Heading } from 'ooni-components'
 
-import Layout from '../../components/Layout'
-import CountryList from '../../components/submit/CountryList'
-import UrlList from '../../components/submit/UrlList'
-import SubmitButton from '../../components/submit/SubmitButton'
+import Layout from '../components/Layout'
+import CountryList from '../components/submit/CountryList'
+import UrlList from '../components/submit/UrlList'
+import SubmitButton from '../components/submit/SubmitButton'
 
 export default function Submit () {
   const router = useRouter()
@@ -15,7 +15,7 @@ export default function Submit () {
 
   const onCountryChange = useCallback((e) => {
     const selectedCountry = e.target.value
-    router.push(`/submit/${selectedCountry}`, undefined, { shallow: true })
+    router.push(`/${selectedCountry}`, undefined, { shallow: true })
   }, [router])
 
   return (

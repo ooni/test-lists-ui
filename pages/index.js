@@ -1,41 +1,29 @@
-import Link from 'next/link'
-import { Flex, Box, Heading, Text } from 'ooni-components'
-import useSWR from 'swr'
+import { useCallback } from 'react'
+import { useRouter } from 'next/router'
+import { Flex, Box, Heading } from 'ooni-components'
 
-import { fetcher, apiEndpoints } from '../components/lib/api'
 import Layout from '../components/Layout'
-import List from '../components/List'
-import AddRule from '../components/AddRule'
+import CountryList from '../components/submit/CountryList'
 
-const swrOptions = {
-  // dedupingInterval: 10 * 60 * 1000,
-}
+const Home = () => {
+  const router = useRouter()
 
-export default function Home () {
-  // const { user } = useUser()
-
-  const { data, error, isValidating, mutate } = useSWR(
-    apiEndpoints.RULE_LIST,
-    fetcher,
-    swrOptions
-  )
+  const onCountryChange = useCallback((e) => {
+    const selectedCountry = e.target.value
+    router.push(`/${selectedCountry}`, undefined, { shallow: true })
+  }, [router])
 
   return (
-    <Layout title='Dashboard'>
-      <Heading h={1} textAlign='center'>URL Priorities</Heading>
-      <Flex alignItems='center' mb={3}>
-        <button onClick={() => mutate()}> Refresh Data </button>
-        <Text ml={3}>Status: {isValidating ? 'Loading...' : 'Ready'}</Text>
+    <Layout title='OONI Test List Platform'>
+      <Flex sx={{ height: '70vh' }} alignItems='center' justifyContent='center' flexDirection='column'>
+        <Heading h={1}>OONI Test List platform</Heading>
+        <Heading h={4} my={4}>Which country&apos;s test list would you like to contribute to?</Heading>
+        <Box my={2}>
+          <CountryList onChange={onCountryChange} />
+        </Box>
       </Flex>
-      <AddRule />
-
-      {data && <List data={data} mutateRules={mutate} />}
-      {error && !data &&
-        <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
-          <Box>{error.status} {error.message}</Box>
-          <Box><Link href='/login'> Login </Link></Box>
-        </Flex>
-      }
     </Layout>
   )
 }
+
+export default Home
