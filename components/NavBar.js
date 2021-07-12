@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { useUser } from './lib/hooks'
 import { LoginModal } from './LoginForm'
+import Loading from './Loading'
 
 const NavItem = styled(Box).attrs({
   fontSize: 2
@@ -19,35 +20,29 @@ const NavItem = styled(Box).attrs({
   }
 `
 
-const OONILogoRef = React.forwardRef((props) => (
-  <OONILogo {...props} />
-))
-
 const NavBar = () => {
   const router = useRouter()
   const [showLoginModal, setShowLogin] = useState(false)
-  const { user } = useUser()
+  const { user, loading } = useUser()
 
   const hideLogin = useCallback(() => setShowLogin(false), [])
 
   return (
     <>
       <Flex bg='blue5' color='white' p={3} alignItems='center'>
-        <NavItem><Link href='/'><OONILogoRef height='32px' /></Link></NavItem>
+        <NavItem><Link href='/'><OONILogo height='32px' /></Link></NavItem>
         <Box sx={{ position: 'absolute', right: 8 }}>
-        {user
-          ? (
-          <Box> {user.nick} ({user.role}) </Box>
-            )
-          : (
-              router.pathname !== '/login'
-                ? (
+        {!loading && user && 'nick' in user && <Box> {user.nick} ({user.role}) </Box>}
+        {!loading && !user && (
+          router.pathname !== '/login'
+            ? (
             <NavItem><Link href='/login'>
               Login
             </Link></NavItem>
-                  )
-                : null
-            )}
+              )
+            : null
+        )}
+        {loading && <Loading size={32} />}
         </Box>
       </Flex>
       <LoginModal isShowing={showLoginModal} hide={hideLogin} />
