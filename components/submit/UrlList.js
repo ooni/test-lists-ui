@@ -8,6 +8,7 @@ import Table from './Table'
 import { EditForm } from './EditForm'
 import ModalWithEsc from './ModalWithEsc'
 import DeleteForm from './DeleteForm'
+import Loading from '../Loading'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -109,27 +110,32 @@ const UrlList = ({ cc }) => {
 
   return (
     <Flex flexDirection='column' my={2}>
-      <Box p={2}>
-        {submissionState !== 'PR_OPEN' &&
-          <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
-        }
-      </Box>
-      {data && <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />}
+      {data && !error && (
+        <>
+          <Box p={2}>
+            {submissionState !== 'PR_OPEN' &&
+              <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
+            }
+          </Box>
+          <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
+          {editIndex !== null && (
+            <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
+              <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
+                <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} />
+              </Container>
+            </ModalWithEsc>
+          )}
+          {deleteIndex !== null && (
+            <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
+              <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
+                <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={editFormError} />
+              </Container>
+            </ModalWithEsc>
+          )}
+        </>
+      )}
+      {!data && !error && <Loading size={200} />}
       {error && <Error>{error.message}</Error>}
-      {data && editIndex !== null && (
-        <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
-          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-            <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} />
-          </Container>
-        </ModalWithEsc>
-      )}
-      {data && deleteIndex !== null && (
-        <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
-          <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-            <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={editFormError} />
-          </Container>
-        </ModalWithEsc>
-      )}
     </Flex>
   )
 }

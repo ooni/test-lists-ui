@@ -57,7 +57,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         <Flex flexDirection='column' my={2} width={width}>
           <Label htmlFor='category_code'>Category</Label>
-          <CategoryList name='category_code' defaultValue={oldEntry.category_code} required={true} />
+          <CategoryList name='category_code' defaultValue={oldEntry.category_code || ''} required={true} />
         </Flex>
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
