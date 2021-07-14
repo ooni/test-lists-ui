@@ -45,7 +45,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
             name='url'
             type='url'
             required={true}
-            pattern={urlRegex}
+            // pattern={urlRegex}
             placeholder='https://example.com/'
             defaultValue={oldEntry.url}
             onInvalid={(e) => {
