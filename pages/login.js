@@ -17,7 +17,7 @@ const Login = () => {
   const router = useRouter()
   const { token, returnTo = '/' } = router.query
 
-  const { user, loading } = useUser
+  const { user, loading } = useUser()
 
   useEffect(() => {
     if (!loading && user !== null) {
