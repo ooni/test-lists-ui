@@ -1,9 +1,15 @@
 import React from 'react'
 import NextHead from 'next/head'
+import styled from 'styled-components'
+import { Container, Flex } from 'ooni-components'
 
 import NavBar from './NavBar'
 import Footer from './Footer'
-import { Container } from 'ooni-components'
+
+const PageWrapper = styled(Flex)`
+  flex-direction: column;
+  min-height: 100vh;
+`
 
 const Layout = ({ title = '', children }) => {
   return (
@@ -11,11 +17,13 @@ const Layout = ({ title = '', children }) => {
       <NextHead>
         <title>{title}</title>
       </NextHead>
-      <NavBar title={title} />
-      <Container>
-        {children}
-      </Container>
-      <Footer />
+      <PageWrapper>
+        <NavBar title={title} />
+        <Container sx={{ flex: '1 1 0' }}>
+          {children}
+        </Container>
+        <Footer mt='auto' />
+      </PageWrapper>
     </>
   )
 }
