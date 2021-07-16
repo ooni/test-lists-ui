@@ -28,12 +28,6 @@ const Home = () => {
             <CountryList onChange={onCountryChange} />
           </Box>
         </>}
-
-        {!loading && user === null && <>
-          <Heading h={4} my={4}>Please login to start contributing</Heading>
-          <LoginForm />
-        </>}
-
         {loading && <Loading size={96} />}
       </Flex>
     </Layout>
