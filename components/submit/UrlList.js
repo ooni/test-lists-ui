@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { mutate as globalMutate } from 'swr'
 import { Box, Flex, Container } from 'ooni-components'
 
 import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
@@ -68,6 +68,8 @@ const UrlList = ({ cc }) => {
     if (deleteIndex !== null) {
       // Delete
       deleteURL(cc, comment, entryToEdit).then(() => {
+        // Revalidate the submission state to show the submit button
+        globalMutate(apiEndpoints.SUBMISSION_STATE)
         setDeleteIndex(null)
         setEditFormError(null)
       }).catch(e => {
@@ -76,6 +78,8 @@ const UrlList = ({ cc }) => {
     } else if (editIndex === null) {
       // Add
       addURL(newEntry, cc, comment).then(() => {
+        // Revalidate the submission state to show the submit button
+        globalMutate(apiEndpoints.SUBMISSION_STATE)
         setEditIndex(null)
         setAddFormError(null)
       }).catch(e => {
@@ -86,6 +90,8 @@ const UrlList = ({ cc }) => {
       updateURL(cc, comment, entryToEdit, newEntry).then((updatedEntry) => {
         const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
         mutate(updatedData, true)
+        // Revalidate the submission state to show the submit button
+        globalMutate(apiEndpoints.SUBMISSION_STATE)
         setEditIndex(null)
         setEditFormError(null)
       }).catch(e => {
