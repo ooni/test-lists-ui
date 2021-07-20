@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Heading } from 'ooni-components'
+import countryUtil from 'country-util'
 
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
@@ -12,6 +13,7 @@ export default function Submit () {
   const { query: { cc } } = router
 
   const countryCode = typeof cc === 'string' ? cc.toUpperCase() : cc
+  const country = countryUtil.countryList.find(x => x.iso3166_alpha2 === countryCode)
 
   const onCountryChange = useCallback((e) => {
     const selectedCountry = e.target.value
@@ -19,7 +21,7 @@ export default function Submit () {
   }, [router])
 
   return (
-    <Layout title='Url Submission'>
+    <Layout title={`Test list for ${country.name}`}>
       <Heading h={1}>Test List</Heading>
       <CountryList defaultValue={countryCode} onChange={onCountryChange} />
       <SubmitButton />
