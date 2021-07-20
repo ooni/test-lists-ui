@@ -62,7 +62,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
           <Label htmlFor='notes'>Notes</Label>
-          <Input name='notes' type='text' required={true} placeholder='' defaultValue={oldEntry.notes} />
+          <Input name='notes' type='text' placeholder='' defaultValue={oldEntry.notes} />
         </Flex>
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
