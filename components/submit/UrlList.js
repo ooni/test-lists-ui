@@ -9,6 +9,7 @@ import { EditForm } from './EditForm'
 import ModalWithEsc from './ModalWithEsc'
 import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
+import SubmitButton from './SubmitButton'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -123,6 +124,7 @@ const UrlList = ({ cc }) => {
               <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
             }
           </Box>
+          <SubmitButton />
           <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
           {editIndex !== null && (
             <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>

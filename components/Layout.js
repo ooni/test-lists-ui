@@ -19,10 +19,10 @@ const Layout = ({ title = '', children }) => {
       </NextHead>
       <PageWrapper>
         <NavBar title={title} />
-        <Container sx={{ flex: '1 1 0' }}>
+        <Container sx={{ flex: 1, width: '100%', border: '1px solid red' }}>
           {children}
         </Container>
-        <Footer mt='auto' />
+        <Footer />
       </PageWrapper>
     </>
   )

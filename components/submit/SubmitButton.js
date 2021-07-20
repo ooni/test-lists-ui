@@ -1,16 +1,14 @@
 import React, { useCallback, useState } from 'react'
-import { Button } from 'ooni-components'
+import { Box, Button } from 'ooni-components'
 import styled from 'styled-components'
 import useSWR from 'swr'
-import { MdSend } from 'react-icons/md'
 
 import { apiEndpoints, fetcher, submitChanges } from '../lib/api'
 
-const FloatingButton = styled(Button)`
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  box-shadow: 2px 2px 2px black;
+const FloatingBox = styled(Box)`
+  position: sticky;
+  margin-left: auto;
+  top: 10px;
 `
 
 const SubmitButton = () => {
@@ -23,7 +21,7 @@ const SubmitButton = () => {
     }).catch(e => {
       console.error('Submission failed')
       console.error(e)
-      setError(`submitting changes failed: ${e?.response?.data?.error ?? e}`)
+      setError(`Submission failed: ${e?.response?.data?.error ?? e}`)
     })
   }, [])
 
@@ -31,7 +29,16 @@ const SubmitButton = () => {
 
   if (data && data.state === 'IN_PROGRESS') {
     return (
-      <FloatingButton fontSize={2} ml={3} onClick={onSubmit} title={`Current state: ${data.state}`}>Submit</FloatingButton>
+      <FloatingBox>
+        <Button
+          fontSize={2}
+          ml='auto'
+          onClick={onSubmit}
+          title={error || `Current state: ${data.state}`}
+        >
+          Submit
+        </Button>
+      </FloatingBox>
     )
   } else {
     return null
