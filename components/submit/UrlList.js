@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR, { mutate as globalMutate } from 'swr'
-import { Box, Flex, Container } from 'ooni-components'
+import { Box, Flex, Container, Heading } from 'ooni-components'
 
 import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
 import Error from './Error'
@@ -151,6 +151,11 @@ const UrlList = ({ cc }) => {
           )}
         </>
       )}
+      {!data && error && error.message === 'Country not supported' &&
+        <Heading h={4} px={[1, 5]} py={4} my={4} bg='blue5' color='white'>
+          We do not currently have a test list for this country and we do not support creating new ones. If you would like to contribute to this country test list, send an email to <em>contact@openobservatory.org</em>
+        </Heading>
+      }
       {!data && !error && <Loading size={200} />}
       {error && <Error>{error.message}</Error>}
     </Flex>
