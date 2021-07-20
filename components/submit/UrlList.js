@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR, { mutate as globalMutate } from 'swr'
-import { Box, Flex, Container, Heading } from 'ooni-components'
+import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
 import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
 import Error from './Error'
@@ -128,12 +128,12 @@ const UrlList = ({ cc }) => {
     <Flex flexDirection='column' my={2}>
       {data && !error && (
         <>
+          <SubmitButton />
           <Box p={2}>
             {submissionState !== 'PR_OPEN' &&
               <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
             }
           </Box>
-          <SubmitButton />
           <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
           {editIndex !== null && (
             <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
@@ -152,8 +152,10 @@ const UrlList = ({ cc }) => {
         </>
       )}
       {!data && error && error.message === 'Country not supported' &&
-        <Heading h={4} px={[1, 5]} py={4} my={4} bg='blue5' color='white'>
-          We do not currently have a test list for this country and we do not support creating new ones. If you would like to contribute to this country test list, send an email to <em>contact@openobservatory.org</em>
+        <Heading h={4} px={[1, 5]} py={4} my={4} bg='white' color='gray9'>
+          We do not currently have a test list for this country and we do not support creating new ones here yet.
+          If you would like to contribute to this country test list, send an email
+          to <Link href='mailto:contact@openobservatoyr.org'><em>contact@openobservatory.org</em></Link>
         </Heading>
       }
       {!data && !error && <Loading size={200} />}

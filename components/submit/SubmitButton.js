@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Button } from 'ooni-components'
+import { Box, Button, Heading, Link, Flex } from 'ooni-components'
 import styled from 'styled-components'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
+import Lottie from 'react-lottie-player'
 
 import { apiEndpoints, customErrorRetry, fetcher, submitChanges } from '../lib/api'
+import reviewAnimation from './review-animation.json'
 
 const FloatingBox = styled(Box)`
   position: sticky;
@@ -14,8 +16,14 @@ const FloatingBox = styled(Box)`
 const SubmitButton = () => {
   const [error, setError] = useState(null)
 
+  const { data } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher, {
+    errorRetryCount: 2,
+    onErrorRetry: customErrorRetry
+  })
+
   const onSubmit = useCallback(() => {
     submitChanges().then(() => {
+      mutate(apiEndpoints.SUBMISSION_STATE, true)
       console.log('Submission done!')
       setError(null)
     }).catch(e => {
@@ -24,11 +32,6 @@ const SubmitButton = () => {
       setError(`Submission failed: ${e?.response?.data?.error ?? e}`)
     })
   }, [])
-
-  const { data } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher, {
-    errorRetryCount: 2,
-    onErrorRetry: customErrorRetry
-  })
 
   if (data && data.state === 'IN_PROGRESS') {
     return (
@@ -42,6 +45,26 @@ const SubmitButton = () => {
           Submit
         </Button>
       </FloatingBox>
+    )
+  } else if (data && data.state === 'PR_OPEN') {
+    return (
+      <Flex flexDirection={['column', 'row']} alignItems='center' color='gray9' bg='white' px={2} py={4} my={4}>
+        <Box width={[1, 1 / 5]} px={[5, 0]}>
+          <Lottie
+            loop
+            animationData={reviewAnimation}
+            play
+          />
+        </Box>
+        <Box width={[1, 4 / 5]}>
+          <Heading h={3}>Submitted!</Heading>
+          <Heading h={4}>
+            Thank you for contributing to improve to the test lists. Your
+            changes are being reviewed <Link href={data.pr_id}>here.</Link> You
+            will be able to make further changes after this contribution has been processed by our team.
+          </Heading>
+        </Box>
+      </Flex>
     )
   } else {
     return null
