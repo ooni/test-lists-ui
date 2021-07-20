@@ -116,3 +116,16 @@ export const submitChanges = () => {
   return axios.post(apiEndpoints.SUBMISSION_SUBMIT)
     .then(res => res.data)
 }
+
+export const customErrorRetry = (error, key, config, revalidate, opts) => {
+  // This overrides the default exponential backoff algorithm
+  // Instead it uses the `errorRetryInterval` and `errorRetryCount` configuration to
+  // limit the retries
+  const maxRetryCount = config.errorRetryCount
+  if (maxRetryCount !== undefined && opts.retryCount > maxRetryCount) return
+
+  // Never retry on 4xx errors
+  if (Math.floor(error.status / 100) === 4) return
+
+  setTimeout(revalidate, config.errorRetryInterval, opts)
+}

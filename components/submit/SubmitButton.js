@@ -3,7 +3,7 @@ import { Box, Button } from 'ooni-components'
 import styled from 'styled-components'
 import useSWR from 'swr'
 
-import { apiEndpoints, fetcher, submitChanges } from '../lib/api'
+import { apiEndpoints, customErrorRetry, fetcher, submitChanges } from '../lib/api'
 
 const FloatingBox = styled(Box)`
   position: sticky;
@@ -25,7 +25,10 @@ const SubmitButton = () => {
     })
   }, [])
 
-  const { data } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher)
+  const { data } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher, {
+    errorRetryCount: 2,
+    onErrorRetry: customErrorRetry
+  })
 
   if (data && data.state === 'IN_PROGRESS') {
     return (

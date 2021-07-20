@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Box, Flex, Container } from 'ooni-components'
 
-import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL } from '../lib/api'
+import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
@@ -30,8 +30,11 @@ const UrlList = ({ cc }) => {
     [apiEndpoints.SUBMISSION_LIST, cc],
     fetchTestList,
     {
-      // initialData: mockData,
-      // dedupingInterval: 60 * 60 * 1000
+      revalidateOnFocus: false,
+      dedupingInterval: 6000,
+      errorRetryInterval: 1000,
+      errorRetryCount: 2,
+      onErrorRetry: customErrorRetry
     }
   )
 
