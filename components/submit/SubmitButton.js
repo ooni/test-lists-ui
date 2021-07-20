@@ -13,6 +13,13 @@ const FloatingBox = styled(Box)`
   top: 10px;
 `
 
+const AttributionBox = styled(Box)`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: 0.5;
+`
+
 const SubmitButton = () => {
   const [error, setError] = useState(null)
 
@@ -48,7 +55,7 @@ const SubmitButton = () => {
     )
   } else if (data && data.state === 'PR_OPEN') {
     return (
-      <Flex flexDirection={['column', 'row']} alignItems='center' color='gray9' bg='white' px={2} py={4} my={4}>
+      <Flex flexDirection={['column', 'row']} alignItems='center' color='gray9' bg='white' px={2} py={4} my={4} sx={{ position: 'relative' }}>
         <Box width={[1, 1 / 5]} px={[5, 0]}>
           <Lottie
             loop
@@ -64,6 +71,9 @@ const SubmitButton = () => {
             will be able to make further changes after this contribution has been processed by our team.
           </Heading>
         </Box>
+        <AttributionBox>
+          <Link href='https://lottiefiles.com/68761-preview-animation'>Animation by Kyunghwan Lee</Link>
+        </AttributionBox>
       </Flex>
     )
   } else {
