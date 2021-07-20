@@ -78,12 +78,13 @@ export const deleteRule = (oldEntry) => {
   return updateRule(oldEntry, {})
 }
 
-export const addURL = (newEntry, cc, notes) => {
-  console.debug('Called SUBMISSION_ADD with new_entry', newEntry)
-  return axios.post(apiEndpoints.SUBMISSION_ADD, {
+export const addURL = (newEntry, cc, comment) => {
+  console.debug('Called addURL with new_entry', newEntry)
+  return axios.post(apiEndpoints.SUBMISSION_UPDATE, {
     country_code: cc,
+    comment: comment,
     new_entry: newEntry,
-    comment: notes
+    old_entry: {}
   })
     .then(res => res.data)
 }

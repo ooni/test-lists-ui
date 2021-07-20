@@ -69,7 +69,7 @@ const UrlList = ({ cc }) => {
       }).catch(e => {
         setEditFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
       })
-    } else if (editIndex === -1) {
+    } else if (editIndex === null) {
       // Add
       addURL(newEntry, cc, comment).then(() => {
         setEditIndex(null)
@@ -107,6 +107,12 @@ const UrlList = ({ cc }) => {
   useEffect(() => {
     setSkipPageResest(false)
   }, [data])
+
+  useEffect(() => {
+    // NOTE: addFormError isn't reset even when the page navigates to another country list
+    // This manually removes the error message under the "Add new URL" section when a new `{cc}` is selected
+    setAddFormError(null)
+  }, [cc])
 
   return (
     <Flex flexDirection='column' my={2}>
