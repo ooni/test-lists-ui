@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Box, Button, Flex, Heading, Label as LLabel } from 'ooni-components'
 import { Input } from 'ooni-components/dist/components'
 
@@ -12,10 +12,13 @@ import CategoryList from './CategoryList'
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
 export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
+  const [submitting, setSubmitting] = useState(false)
   const isEdit = 'url' in oldEntry
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
+    setSubmitting(true)
+
     const formData = new FormData(e.target)
     const categoryCode = formData.get('category_code')
     const today = new Date().toISOString().split('T')[0]
@@ -36,6 +39,8 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     } catch (e) {
       // Submit failed, don't change form state yet
       console.log(`Submit failed: ${e.message}`)
+    } finally {
+      setSubmitting(false)
     }
   }, [oldEntry.date_added, oldEntry.source, onSubmit])
 
@@ -80,7 +85,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
           </Flex>
         )}
 
-        {!isEdit && <Button type='submit' hollow>Add</Button>}
+        {!isEdit && <Button type='submit' hollow disabled={submitting}>Add</Button>}
       </Flex>
       <Box as='small' color='red6'> {error} </Box>
     </form>

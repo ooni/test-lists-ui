@@ -6,7 +6,8 @@ const FooterWrapper = styled(Flex).attrs({
   bg: 'blue9',
   color: 'gray2',
   px: [1, 4],
-  py: 3
+  py: 3,
+  mt: 4
 })``
 
 const FooterColumn = styled(Flex).attrs({
