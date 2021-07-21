@@ -31,6 +31,8 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     const comment = formData.get('comment')
 
     onSubmit(newEntry, comment)
+    // TODO: This can be improved by waiting for a successful submit before clearing the form
+    e.target.reset()
   }, [oldEntry.date_added, oldEntry.source, onSubmit])
 
   const width = layout === 'row' ? (1 / 4) : 1

@@ -68,32 +68,38 @@ const UrlList = ({ cc }) => {
     if (deleteIndex !== null) {
       // Delete
       deleteURL(cc, comment, entryToEdit).then(() => {
-        // Revalidate the submission state to show the submit button
-        globalMutate(apiEndpoints.SUBMISSION_STATE)
         setDeleteIndex(null)
         setEditFormError(null)
+        const updatedData = data.filter(i => i.url !== entryToEdit.url)
+        mutate(updatedData, true)
+
+        // Revalidate the submission state to show the submit button
+        globalMutate(apiEndpoints.SUBMISSION_STATE)
       }).catch(e => {
         setEditFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
       })
     } else if (editIndex === null) {
       // Add
       addURL(newEntry, cc, comment).then(() => {
-        // Revalidate the submission state to show the submit button
-        globalMutate(apiEndpoints.SUBMISSION_STATE)
         setEditIndex(null)
         setAddFormError(null)
+        const updatedData = [...data, newEntry]
+        mutate(updatedData, true)
+
+        // Revalidate the submission state to show the submit button
+        globalMutate(apiEndpoints.SUBMISSION_STATE)
       }).catch(e => {
         setAddFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
       })
     } else {
       // Update
       updateURL(cc, comment, entryToEdit, newEntry).then((updatedEntry) => {
+        setEditIndex(null)
+        setEditFormError(null)
         const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
         mutate(updatedData, true)
         // Revalidate the submission state to show the submit button
         globalMutate(apiEndpoints.SUBMISSION_STATE)
-        setEditIndex(null)
-        setEditFormError(null)
       }).catch(e => {
         setEditFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
       })

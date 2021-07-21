@@ -106,7 +106,7 @@ export const deleteURL = (cc, comment, oldEntry) => {
     country_code: cc,
     comment: comment,
     old_entry: oldEntry,
-    new_entry: null
+    new_entry: {}
   })
     .then(res => res.data)
 }
