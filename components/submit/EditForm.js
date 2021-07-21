@@ -14,7 +14,7 @@ const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{c
 export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
   const isEdit = 'url' in oldEntry
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const categoryCode = formData.get('category_code')
@@ -29,10 +29,14 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     }
 
     const comment = formData.get('comment')
-
-    onSubmit(newEntry, comment)
-    // TODO: This can be improved by waiting for a successful submit before clearing the form
-    e.target.reset()
+    try {
+      await onSubmit(newEntry, comment)
+      console.log('onSubmit succeeded')
+      e.target.reset()
+    } catch (e) {
+      // Submit failed, don't change form state yet
+      console.log(`Submit failed: ${e.message}`)
+    }
   }, [oldEntry.date_added, oldEntry.source, onSubmit])
 
   const width = layout === 'row' ? (1 / 4) : 1
