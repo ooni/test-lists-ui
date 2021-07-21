@@ -8,9 +8,10 @@ import { apiEndpoints, customErrorRetry, fetcher, submitChanges } from '../lib/a
 import reviewAnimation from './review-animation.json'
 
 const FloatingBox = styled(Box)`
-  position: sticky;
+  position: fixed;
   margin-left: auto;
-  top: 10px;
+  bottom: 30px;
+  right: 100px;
 `
 
 const AttributionBox = styled(Box)`
@@ -67,7 +68,7 @@ const SubmitButton = () => {
           <Heading h={3}>Submitted!</Heading>
           <Heading h={4}>
             Thank you for contributing to improve to the test lists. Your
-            changes are being reviewed <Link href={data.pr_id}>here.</Link> You
+            changes are being reviewed <Link href={data.pr_url}>here.</Link> You
             will be able to make further changes after this contribution has been processed by our team.
           </Heading>
         </Box>

@@ -128,12 +128,12 @@ const UrlList = ({ cc }) => {
     <Flex flexDirection='column' my={2}>
       {data && !error && (
         <>
-          <SubmitButton />
           <Box p={2}>
             {submissionState !== 'PR_OPEN' &&
               <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
             }
           </Box>
+          <SubmitButton />
           <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
           {editIndex !== null && (
             <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
