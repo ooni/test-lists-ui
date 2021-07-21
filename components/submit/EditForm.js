@@ -6,7 +6,8 @@ import CategoryList from './CategoryList'
 
 // Regular expression to test for valid URLs based on
 // https://github.com/citizenlab/test-lists/blob/master/scripts/lint-lists.py#L18
-const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
+// FIX: This regex works at https://regexr.com/629v6 but not here. Using a generic regex in the URL input below
+// const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
 
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
@@ -43,15 +44,11 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
           <Label htmlFor='url'>URL</Label>
           <Input
             name='url'
-            type='url'
+            type='text'
             required={true}
-            // pattern={urlRegex}
+            pattern='https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
             placeholder='https://example.com/'
             defaultValue={oldEntry.url}
-            onInvalid={(e) => {
-              e.target.validity.patternMismatch &&
-              e.target.setCustomValidity('Must be a full URL e.g https:://ooni.org/')
-            }}
           />
         </Flex>
 
