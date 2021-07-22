@@ -5,7 +5,6 @@ import { Flex, Box, Heading } from 'ooni-components'
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
 import { useUser } from '../components/lib/hooks'
-import LoginForm from '../components/LoginForm'
 import Loading from '../components/Loading'
 
 const Home = () => {

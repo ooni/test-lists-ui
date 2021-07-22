@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Box, Button, Flex, Heading, Label as LLabel } from 'ooni-components'
 import { Input } from 'ooni-components/dist/components'
 
@@ -6,15 +6,19 @@ import CategoryList from './CategoryList'
 
 // Regular expression to test for valid URLs based on
 // https://github.com/citizenlab/test-lists/blob/master/scripts/lint-lists.py#L18
-const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
+// FIX: This regex works at https://regexr.com/629v6 but not here. Using a generic regex in the URL input below
+// const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
 
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
 export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
+  const [submitting, setSubmitting] = useState(false)
   const isEdit = 'url' in oldEntry
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
+    setSubmitting(true)
+
     const formData = new FormData(e.target)
     const categoryCode = formData.get('category_code')
     const today = new Date().toISOString().split('T')[0]
@@ -28,8 +32,16 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     }
 
     const comment = formData.get('comment')
-
-    onSubmit(newEntry, comment)
+    try {
+      await onSubmit(newEntry, comment)
+      console.log('onSubmit succeeded')
+      e.target.reset()
+    } catch (e) {
+      // Submit failed, don't change form state yet
+      console.log(`Submit failed: ${e.message}`)
+    } finally {
+      setSubmitting(false)
+    }
   }, [oldEntry.date_added, oldEntry.source, onSubmit])
 
   const width = layout === 'row' ? (1 / 4) : 1
@@ -43,15 +55,11 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
           <Label htmlFor='url'>URL</Label>
           <Input
             name='url'
-            type='url'
+            type='text'
             required={true}
-            // pattern={urlRegex}
+            pattern='https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
             placeholder='https://example.com/'
             defaultValue={oldEntry.url}
-            onInvalid={(e) => {
-              e.target.validity.patternMismatch &&
-              e.target.setCustomValidity('Must be a full URL e.g https:://ooni.org/')
-            }}
           />
         </Flex>
 
@@ -62,7 +70,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
           <Label htmlFor='notes'>Notes</Label>
-          <Input name='notes' type='text' required={true} placeholder='' defaultValue={oldEntry.notes} />
+          <Input name='notes' type='text' placeholder='' defaultValue={oldEntry.notes} />
         </Flex>
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
@@ -77,7 +85,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
           </Flex>
         )}
 
-        {!isEdit && <Button type='submit' hollow>Add</Button>}
+        {!isEdit && <Button type='submit' hollow disabled={submitting}>Add</Button>}
       </Flex>
       <Box as='small' color='red6'> {error} </Box>
     </form>

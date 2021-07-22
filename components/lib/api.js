@@ -78,12 +78,13 @@ export const deleteRule = (oldEntry) => {
   return updateRule(oldEntry, {})
 }
 
-export const addURL = (newEntry, cc, notes) => {
-  console.debug('Called SUBMISSION_ADD with new_entry', newEntry)
-  return axios.post(apiEndpoints.SUBMISSION_ADD, {
+export const addURL = (newEntry, cc, comment) => {
+  console.debug('Called addURL with new_entry', newEntry)
+  return axios.post(apiEndpoints.SUBMISSION_UPDATE, {
     country_code: cc,
+    comment: comment,
     new_entry: newEntry,
-    comment: notes
+    old_entry: {}
   })
     .then(res => res.data)
 }
@@ -105,7 +106,7 @@ export const deleteURL = (cc, comment, oldEntry) => {
     country_code: cc,
     comment: comment,
     old_entry: oldEntry,
-    new_entry: null
+    new_entry: {}
   })
     .then(res => res.data)
 }
@@ -114,4 +115,17 @@ export const submitChanges = () => {
   console.debug('Called submitChanges')
   return axios.post(apiEndpoints.SUBMISSION_SUBMIT)
     .then(res => res.data)
+}
+
+export const customErrorRetry = (error, key, config, revalidate, opts) => {
+  // This overrides the default exponential backoff algorithm
+  // Instead it uses the `errorRetryInterval` and `errorRetryCount` configuration to
+  // limit the retries
+  const maxRetryCount = config.errorRetryCount
+  if (maxRetryCount !== undefined && opts.retryCount > maxRetryCount) return
+
+  // Never retry on 4xx errors
+  if (Math.floor(error.status / 100) === 4) return
+
+  setTimeout(revalidate, config.errorRetryInterval, opts)
 }

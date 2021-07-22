@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import useSWR from 'swr'
-import { Box, Flex, Container } from 'ooni-components'
+import useSWR, { mutate as globalMutate } from 'swr'
+import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
-import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL } from '../lib/api'
+import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
 import ModalWithEsc from './ModalWithEsc'
 import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
+import SubmitButton from './SubmitButton'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -29,8 +30,11 @@ const UrlList = ({ cc }) => {
     [apiEndpoints.SUBMISSION_LIST, cc],
     fetchTestList,
     {
-      // initialData: mockData,
-      // dedupingInterval: 60 * 60 * 1000
+      revalidateOnFocus: false,
+      dedupingInterval: 6000,
+      errorRetryInterval: 1000,
+      errorRetryCount: 2,
+      onErrorRetry: customErrorRetry
     }
   )
 
@@ -61,33 +65,56 @@ const UrlList = ({ cc }) => {
   }, [])
 
   const handleSubmit = useCallback((newEntry, comment) => {
-    if (deleteIndex !== null) {
-      // Delete
-      deleteURL(cc, comment, entryToEdit).then(() => {
-        setDeleteIndex(null)
-        setEditFormError(null)
-      }).catch(e => {
-        setEditFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
-      })
-    } else if (editIndex === -1) {
-      // Add
-      addURL(newEntry, cc, comment).then(() => {
-        setEditIndex(null)
-        setAddFormError(null)
-      }).catch(e => {
-        setAddFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
-      })
-    } else {
-      // Update
-      updateURL(cc, comment, entryToEdit, newEntry).then((updatedEntry) => {
-        const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
-        mutate(updatedData, true)
-        setEditIndex(null)
-        setEditFormError(null)
-      }).catch(e => {
-        setEditFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
-      })
-    }
+    return new Promise((resolve, reject) => {
+      if (deleteIndex !== null) {
+        // Delete
+        deleteURL(cc, comment, entryToEdit).then(() => {
+          setDeleteIndex(null)
+          setEditFormError(null)
+          const updatedData = data.filter(i => i.url !== entryToEdit.url)
+          mutate(updatedData, true)
+
+          // Revalidate the submission state to show the submit button
+          globalMutate(apiEndpoints.SUBMISSION_STATE)
+
+          resolve()
+        }).catch(e => {
+          setEditFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
+          reject(e?.response?.data?.error ?? e)
+        })
+      } else if (editIndex === null) {
+        // Add
+        addURL(newEntry, cc, comment).then(() => {
+          setEditIndex(null)
+          setAddFormError(null)
+          const updatedData = [...data, newEntry]
+          mutate(updatedData, true)
+
+          // Revalidate the submission state to show the submit button
+          globalMutate(apiEndpoints.SUBMISSION_STATE)
+
+          resolve()
+        }).catch(e => {
+          setAddFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
+          reject(e?.response?.data?.error ?? e)
+        })
+      } else {
+        // Update
+        updateURL(cc, comment, entryToEdit, newEntry).then((updatedEntry) => {
+          setEditIndex(null)
+          setEditFormError(null)
+          const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
+          mutate(updatedData, true)
+          // Revalidate the submission state to show the submit button
+          globalMutate(apiEndpoints.SUBMISSION_STATE)
+
+          resolve()
+        }).catch(e => {
+          setEditFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
+          reject(e?.response?.data?.error ?? e)
+        })
+      }
+    })
   }, [editIndex, deleteIndex, entryToEdit, cc, data, mutate])
 
   const onCancel = () => {
@@ -108,6 +135,12 @@ const UrlList = ({ cc }) => {
     setSkipPageResest(false)
   }, [data])
 
+  useEffect(() => {
+    // NOTE: addFormError isn't reset even when the page navigates to another country list
+    // This manually removes the error message under the "Add new URL" section when a new `{cc}` is selected
+    setAddFormError(null)
+  }, [cc])
+
   return (
     <Flex flexDirection='column' my={2}>
       {data && !error && (
@@ -117,6 +150,7 @@ const UrlList = ({ cc }) => {
               <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
             }
           </Box>
+          <SubmitButton />
           <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
           {editIndex !== null && (
             <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
@@ -134,6 +168,13 @@ const UrlList = ({ cc }) => {
           )}
         </>
       )}
+      {!data && error && error.message === 'Country not supported' &&
+        <Heading h={4} px={[1, 5]} py={4} my={4} bg='white' color='gray9'>
+          We do not currently have a test list for this country and we do not support creating new ones here yet.
+          If you would like to contribute to this country test list, send an email
+          to <Link href='mailto:contact@openobservatoyr.org'><em>contact@openobservatory.org</em></Link>
+        </Heading>
+      }
       {!data && !error && <Loading size={200} />}
       {error && <Error>{error.message}</Error>}
     </Flex>

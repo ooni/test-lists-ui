@@ -21,7 +21,7 @@ export default function Home () {
   )
 
   return (
-    <Layout title='Dashboard'>
+    <Layout title='URL Prioritization'>
       <Heading h={1} textAlign='center'>URL Priorities</Heading>
       <Flex alignItems='center' mb={3}>
         <button onClick={() => mutate()}> Refresh Data </button>
