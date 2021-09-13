@@ -316,14 +316,6 @@ const List = ({ data, mutateRules }) => {
     onRowUpdate,
     onRowDelete,
     resetRow,
-    initialState: {
-      sortBy: [
-        {
-          id: 'priority',
-          desc: true
-        }
-      ]
-    },
     initialRowStateAccessor: () => ({ isEditing: false, dirty: false }),
     autoResetRowState: !skipPageResetRef.current,
     autoResetSortBy: !skipPageResetRef.current
