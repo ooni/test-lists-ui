@@ -44,12 +44,12 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     }
   }, [oldEntry.date_added, oldEntry.source, onSubmit])
 
-  const width = layout === 'row' ? (1 / 4) : 1
+  const width = layout === 'row' ? (1 / 3) : 1
 
   return (
     <form onSubmit={handleSubmit}>
       <Heading h={4}>{isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
-      <Flex flexDirection={layout} my={2} mx={2} alignItems='center'>
+      <Flex flexDirection={layout} my={2} mx={2} alignItems='center' flexWrap='wrap'>
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
           <Label htmlFor='url'>URL</Label>
@@ -70,12 +70,12 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         <Flex flexDirection='column' my={2} width={width} px={3}>
           <Label htmlFor='notes'>Notes</Label>
-          <Input name='notes' type='text' placeholder='' defaultValue={oldEntry.notes} />
+          <Input name='notes' type='text' placeholder='Document any useful context for this URL' defaultValue={oldEntry.notes} />
         </Flex>
 
-        <Flex flexDirection='column' my={2} width={width} px={3}>
+        <Flex flexDirection='column' my={2} width={width} px={3} flexGrow={'auto'}>
           <Label htmlFor='comment'>Comment</Label>
-          <Input name='comment' type='text' required={true} placeholder='Reason' defaultValue={oldEntry.comment} />
+          <Input name='comment' type='text' required={true} placeholder="Please share why you are updating this URL" defaultValue={oldEntry.comment} />
         </Flex>
 
         {isEdit && (
