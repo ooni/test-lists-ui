@@ -44,7 +44,7 @@ const AddURL = ({ cc }) => {
     const formData = new FormData(e.target)
     const today = new Date().toISOString().split('T')[0]
     const categoryCode = formData.get('category_code')
-    const categoryDesc = categories[categoryCode]
+    const [categoryDesc, fullDescription] = categories[categoryCode]
     const newEntry = [
       formData.get('url'),
       categoryCode,
