@@ -10,6 +10,7 @@ import ModalWithEsc from './ModalWithEsc'
 import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
 import SubmitButton from './SubmitButton'
+import { getPrettyErrorMessage } from '../lib/translateErrors'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -95,7 +96,8 @@ const UrlList = ({ cc }) => {
 
           resolve()
         }).catch(e => {
-          setAddFormError(`addURL failed: ${e?.response?.data?.error ?? e}`)
+          const prettyErrorMessage = getPrettyErrorMessage(e?.response?.data?.error ?? e, 'add')
+          setAddFormError(prettyErrorMessage)
           reject(e?.response?.data?.error ?? e)
         })
       } else {
@@ -110,7 +112,8 @@ const UrlList = ({ cc }) => {
 
           resolve()
         }).catch(e => {
-          setEditFormError(`Update URL failed: ${e?.response?.data?.error ?? e}`)
+          const prettyErrorMessage = getPrettyErrorMessage(e?.response?.data?.error ?? e, 'add')
+          setEditFormError(prettyErrorMessage)
           reject(e?.response?.data?.error ?? e)
         })
       }
@@ -150,8 +153,11 @@ const UrlList = ({ cc }) => {
               <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
             }
           </Box>
+
           <SubmitButton />
+
           <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
+
           {editIndex !== null && (
             <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
               <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
@@ -159,6 +165,7 @@ const UrlList = ({ cc }) => {
               </Container>
             </ModalWithEsc>
           )}
+
           {deleteIndex !== null && (
             <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
               <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
