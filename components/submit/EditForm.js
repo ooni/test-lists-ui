@@ -34,11 +34,11 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     const comment = formData.get('comment')
     try {
       await onSubmit(newEntry, comment)
-      console.log('onSubmit succeeded')
+      console.debug('onSubmit succeeded')
       e.target.reset()
     } catch (e) {
       // Submit failed, don't change form state yet
-      console.log(`Submit failed: ${e.message}`)
+      console.debug(`Submit failed: ${e}`)
     } finally {
       setSubmitting(false)
     }
@@ -87,7 +87,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         {!isEdit && <Button type='submit' hollow disabled={submitting}>Add</Button>}
       </Flex>
-      <Box as='small' color='red6'> {error} </Box>
+      <Box color='red6'> {error} </Box>
     </form>
   )
 }
