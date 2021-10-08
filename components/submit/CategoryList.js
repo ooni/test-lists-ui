@@ -6,7 +6,9 @@ const CategoryList = ({ name, defaultValue, ...rest }) => (
     {Object.entries(categories)
       .sort((c1, c2) => c1[1] > c2[1] ? 1 : -1)
       .map(([code, [description, fullDescription]], index) => (
-        <option key={index} value={code} selected={defaultValue === code}>{description}</option>
+        <option key={index} value={code} selected={defaultValue === code} title={fullDescription}>
+          {description}
+        </option>
       ))
     }
   </select>
