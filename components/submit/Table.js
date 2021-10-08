@@ -103,6 +103,25 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
     : null
 )
 
+const StyledCategoryCell = styled.span`
+  position: relative;
+  > span {
+    position: absolute;
+    font-size: medium;
+    top: -5px;
+    right: -10px;
+    cursor: help;
+  }
+`
+
+const CategoryCell = React.memo(({ cell: { value } }) => (
+  <StyledCategoryCell>
+    {categories[value][0]}<span title={categories[value][1]}>ℹ</span>
+  </StyledCategoryCell>
+))
+
+CategoryCell.displayName = CategoryCell
+
 const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) => {
   const columns = useMemo(() => [
     {
@@ -118,9 +137,7 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
       Header: 'Category',
       accessor: 'category_code',
       id: 'category_code',
-      Cell: ({ cell: { value } }) => {
-        return categories[value]
-      },
+      Cell: CategoryCell,
       width: 50,
       inputAttrs: {
         type: 'text',
