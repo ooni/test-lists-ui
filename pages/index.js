@@ -6,7 +6,7 @@ import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
 import { useUser } from '../components/lib/hooks'
 import Loading from '../components/Loading'
-import instructions from '../components/submit/quick_start_guide.json'
+import QuickStartGuide from '../components/submit/QuickStartGuide'
 
 const Home = () => {
   const router = useRouter()
@@ -33,18 +33,8 @@ const Home = () => {
 
         {loading && <Loading size={96} />}
 
-        <Flex flexDirection='column' bg='blue1' px={5} py={4}>
-          <Heading id='quickstart' h={4} textAlign='center'>
-            Quick Start Guide
-            <Link href='#quickstart' mx={1} fontSize={1}><sup>#</sup></Link>
-          </Heading>
-          <Box as='ol' fontSize={1} pl={3}>
-            {instructions.map((line, index) =>
-              <Text as='li' key={index} my={2}>
-                {line}
-              </Text>
-            )}
-          </Box>
+        <Flex flexDirection='column' px={5} py={4}>
+          <QuickStartGuide />
         </Flex>
       </Flex>
     </Layout>

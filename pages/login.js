@@ -9,6 +9,7 @@ import { apiEndpoints, loginUser } from '../components/lib/api'
 import { mutate } from 'swr'
 import Loading from '../components/Loading'
 import { useUser } from '../components/lib/hooks'
+import QuickStartGuide from '../components/submit/QuickStartGuide'
 
 const Login = () => {
   const [submitted, setSubmitted] = useState(false)
@@ -90,6 +91,7 @@ const Login = () => {
             <Link href='/login'>Try logging in again</Link>
           </>
         }
+        <QuickStartGuide mt={5} />
       </Flex>
 
     </Layout>
