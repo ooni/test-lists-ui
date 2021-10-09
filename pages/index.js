@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
-import { Flex, Box, Heading } from 'ooni-components'
+import { Flex, Box, Heading, Text, Link } from 'ooni-components'
 
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
 import { useUser } from '../components/lib/hooks'
 import Loading from '../components/Loading'
+import QuickStartGuide from '../components/submit/QuickStartGuide'
 
 const Home = () => {
   const router = useRouter()
@@ -18,16 +19,23 @@ const Home = () => {
 
   return (
     <Layout title='OONI Test List Platform'>
-      <Flex sx={{ height: '70vh' }} alignItems='center' justifyContent='center' flexDirection='column'>
-        <Heading h={1}>OONI Test List platform</Heading>
+      <Flex sx={{ height: '80vh' }} alignItems='center' justifyContent='center' flexDirection='column'>
+        <Heading h={1} mt={3}>OONI Test List platform</Heading>
 
-        {!loading && user !== null && <>
-          <Heading h={4} my={4}>Which country&apos;s test list would you like to contribute to?</Heading>
-          <Box my={2}>
-            <CountryList onChange={onCountryChange} />
-          </Box>
-        </>}
+        {!loading && user !== null &&
+          <Flex alignItems='center' justifyContent='center' flexDirection='column' my='auto'>
+            <Heading h={4} my={4}>Which country&apos;s test list would you like to contribute to?</Heading>
+            <Box my={2}>
+              <CountryList onChange={onCountryChange} />
+            </Box>
+          </Flex>
+        }
+
         {loading && <Loading size={96} />}
+
+        <Flex flexDirection='column' px={5} py={4}>
+          <QuickStartGuide />
+        </Flex>
       </Flex>
     </Layout>
   )
