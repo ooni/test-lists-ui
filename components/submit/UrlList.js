@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import useSWR, { mutate as globalMutate } from 'swr'
 import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
-import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
+import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
@@ -11,6 +11,7 @@ import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
 import SubmitButton from './SubmitButton'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
+import { SubmissionContext } from './SubmissionContext'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -39,11 +40,7 @@ const UrlList = ({ cc }) => {
     }
   )
 
-  const { data: { state: submissionState } } = useSWR(
-    apiEndpoints.SUBMISSION_STATE,
-    fetcher,
-    { initialData: { state: null } }
-  )
+  const { submissionState, mutate: mutateSubmissionState } = useContext(SubmissionContext)
 
   const entryToEdit = useMemo(() => {
     let entry = {}
@@ -76,7 +73,7 @@ const UrlList = ({ cc }) => {
           mutate(updatedData, true)
 
           // Revalidate the submission state to show the submit button
-          globalMutate(apiEndpoints.SUBMISSION_STATE)
+          mutateSubmissionState()
 
           resolve()
         }).catch(e => {
@@ -92,7 +89,7 @@ const UrlList = ({ cc }) => {
           mutate(updatedData, true)
 
           // Revalidate the submission state to show the submit button
-          globalMutate(apiEndpoints.SUBMISSION_STATE)
+          mutateSubmissionState()
 
           resolve()
         }).catch(e => {
@@ -108,7 +105,7 @@ const UrlList = ({ cc }) => {
           const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
           mutate(updatedData, true)
           // Revalidate the submission state to show the submit button
-          globalMutate(apiEndpoints.SUBMISSION_STATE)
+          mutateSubmissionState()
 
           resolve()
         }).catch(e => {
@@ -118,7 +115,7 @@ const UrlList = ({ cc }) => {
         })
       }
     })
-  }, [editIndex, deleteIndex, entryToEdit, cc, data, mutate])
+  }, [deleteIndex, editIndex, cc, entryToEdit, data, mutate, mutateSubmissionState])
 
   const onCancel = () => {
     setEditIndex(null)

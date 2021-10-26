@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { Box, Button, Heading, Link, Flex } from 'ooni-components'
 import styled from 'styled-components'
-import useSWR, { mutate } from 'swr'
 import Lottie from 'react-lottie-player'
 
-import { apiEndpoints, customErrorRetry, fetcher, submitChanges } from '../lib/api'
+import { submitChanges } from '../lib/api'
 import reviewAnimation from './review-animation.json'
+import { SubmissionContext } from './SubmissionContext'
 
 const FloatingBox = styled(Box)`
   position: fixed;
@@ -24,14 +24,11 @@ const AttributionBox = styled(Box)`
 const SubmitButton = () => {
   const [error, setError] = useState(null)
 
-  const { data } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher, {
-    errorRetryCount: 2,
-    onErrorRetry: customErrorRetry
-  })
+  const { submissionState, linkToPR, mutate } = useContext(SubmissionContext)
 
   const onSubmit = useCallback(() => {
-    submitChanges().then(() => {
-      mutate(apiEndpoints.SUBMISSION_STATE, true)
+    submitChanges().then(({ pr_id }) => {
+      mutate({ state: 'PR_OPEN', pr_url: pr_id }, true)
       console.log('Submission done!')
       setError(null)
     }).catch(e => {
@@ -39,22 +36,22 @@ const SubmitButton = () => {
       console.error(e)
       setError(`Submission failed: ${e?.response?.data?.error ?? e}`)
     })
-  }, [])
+  }, [mutate])
 
-  if (data && data.state === 'IN_PROGRESS') {
+  if (submissionState === 'IN_PROGRESS') {
     return (
       <FloatingBox>
         <Button
           fontSize={2}
           ml='auto'
           onClick={onSubmit}
-          title={error || `Current state: ${data.state}`}
+          title={error || `Current state: ${submissionState}`}
         >
           Submit
         </Button>
       </FloatingBox>
     )
-  } else if (data && data.state === 'PR_OPEN') {
+  } else if (submissionState === 'PR_OPEN') {
     return (
       <Flex flexDirection={['column', 'row']} alignItems='center' color='gray9' bg='white' px={2} py={4} my={4} sx={{ position: 'relative' }}>
         <Box width={[1, 1 / 5]} px={[5, 0]}>
@@ -68,7 +65,7 @@ const SubmitButton = () => {
           <Heading h={3}>Submitted!</Heading>
           <Heading h={4}>
             Thank you for contributing to improve to the test lists. Your
-            changes are being reviewed <Link href={data.pr_url}>here.</Link> You
+            changes are being reviewed <Link href={linkToPR}>here.</Link> You
             will be able to make further changes after this contribution has been processed by our team.
           </Heading>
         </Box>
