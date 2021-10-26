@@ -73,9 +73,7 @@ const EditButton = ({ row: { index }, onEdit, submissionState }) => {
   }, [onEdit, index])
 
   return (
-    <Flex flexDirection='row' justifyContent='space-around'>
-      {<Button mx='auto' disabled={submissionState === 'PR_OPEN'}><MdEdit onClick={editRow} size={20} /></Button>}
-    </Flex>
+    <Button title='Edit' mx='auto' disabled={submissionState === 'PR_OPEN'}><MdEdit onClick={editRow} size={20} /></Button>
   )
 }
 
@@ -85,7 +83,7 @@ const DeleteButton = ({ row: { index }, onDelete, submissionState }) => {
   }, [onDelete, index])
 
   return (
-    <Button onClick={deleteRow} disabled={submissionState === 'PR_OPEN'}><MdDelete size={18} /></Button>
+    <Button title='Delete' onClick={deleteRow} disabled={submissionState === 'PR_OPEN'}><MdDelete size={18} /></Button>
   )
 }
 
@@ -120,7 +118,14 @@ const CategoryCell = React.memo(({ cell: { value } }) => (
   </StyledCategoryCell>
 ))
 
-CategoryCell.displayName = CategoryCell
+CategoryCell.displayName = 'CategoryCell'
+
+const DateCell = React.memo(({ cell: { value } }) => {
+  const date = new Date(value)
+  const formattedDate = new Intl.DateTimeFormat([], { dateStyle: 'medium' }).format(date)
+  return formattedDate
+})
+DateCell.displayName = 'DateCell'
 
 const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) => {
   const columns = useMemo(() => [
@@ -149,12 +154,23 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
     {
       Header: 'Notes',
       accessor: 'notes',
-      minWidth: 200,
+      minWidth: 100,
       inputAttrs: {
         type: 'text',
         maxLength: 20,
         size: 32
       }
+    },
+    {
+      Header: 'Date Added',
+      accessor: 'date_added',
+      maxWidth: 50,
+      Cell: DateCell,
+    },
+    {
+      Header: 'Source',
+      accessor: 'source',
+      maxWidth: 50
     }
   ], [])
 
@@ -173,12 +189,12 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
       ...columns,
       {
         id: 'edit',
-        maxWidth: 32,
+        maxWidth: 16,
         Cell: EditButton
       },
       {
         id: 'delete',
-        maxWidth: 24,
+        maxWidth: 16,
         Cell: DeleteButton
       }
     ])
