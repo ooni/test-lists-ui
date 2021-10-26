@@ -20,7 +20,8 @@ const TableHeader = styled.thead`
     display: flex;
     align-items: center;
     text-align: start;
-    padding: 12px;
+    margin: 0;
+    padding: 0.5rem;
   }
 `
 
