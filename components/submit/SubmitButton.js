@@ -6,6 +6,7 @@ import Lottie from 'react-lottie-player'
 import { submitChanges } from '../lib/api'
 import reviewAnimation from './review-animation.json'
 import { SubmissionContext } from './SubmissionContext'
+import { useNotifier } from '../lib/notifier'
 
 const FloatingBox = styled(Box)`
   position: fixed;
@@ -22,21 +23,22 @@ const AttributionBox = styled(Box)`
 `
 
 const SubmitButton = () => {
-  const [error, setError] = useState(null)
-
+  const { notify } = useNotifier()
   const { submissionState, linkToPR, mutate } = useContext(SubmissionContext)
 
   const onSubmit = useCallback(() => {
+    const loadingNotification = notify.loading('Submitting...')
     submitChanges().then(({ pr_id }) => {
       mutate({ state: 'PR_OPEN', pr_url: pr_id }, true)
-      console.log('Submission done!')
-      setError(null)
+      notify.dismiss(loadingNotification)
+      notify.success('Submitted!')
     }).catch(e => {
+      notify.dismiss(loadingNotification)
+      notify.error(`Submission failed. Reason: ${e?.response?.data?.error ?? String(e)}`, { duration: 8000 })
       console.error('Submission failed')
       console.error(e)
-      setError(`Submission failed: ${e?.response?.data?.error ?? e}`)
     })
-  }, [mutate])
+  }, [mutate, notify])
 
   if (submissionState === 'IN_PROGRESS') {
     return (
@@ -45,7 +47,7 @@ const SubmitButton = () => {
           fontSize={2}
           ml='auto'
           onClick={onSubmit}
-          title={error || `Current state: ${submissionState}`}
+          title={`Current state: ${submissionState}`}
         >
           Submit
         </Button>

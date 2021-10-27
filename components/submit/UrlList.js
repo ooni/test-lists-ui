@@ -12,12 +12,14 @@ import Loading from '../Loading'
 import SubmitButton from './SubmitButton'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
 import { SubmissionContext } from './SubmissionContext'
+import { useNotifier } from '../lib/notifier'
 
 // Does these
 // * Decides what data to pass down to the table
 // * Controls when the table is allowed to reset its state
 //   e.g when editing is going on, no resetting sort order
 const UrlList = ({ cc }) => {
+  const { notify } = useNotifier()
   // holds rowIndex of row being edited
   const [editIndex, setEditIndex] = useState(null)
   const [deleteIndex, setDeleteIndex] = useState(null)
@@ -63,7 +65,7 @@ const UrlList = ({ cc }) => {
   }, [])
 
   const handleSubmit = useCallback((newEntry, comment) => {
-    return new Promise((resolve, reject) => {
+    const actionPromise = new Promise((resolve, reject) => {
       if (deleteIndex !== null) {
         // Delete
         deleteURL(cc, comment, entryToEdit).then(() => {
@@ -115,7 +117,13 @@ const UrlList = ({ cc }) => {
         })
       }
     })
-  }, [deleteIndex, editIndex, cc, entryToEdit, data, mutate, mutateSubmissionState])
+    notify.promise(actionPromise, {
+      loading: 'Requesting...',
+      success: deleteIndex !== null ? 'Deleted' : editIndex === null ? 'Added' : 'Updated',
+      error: (err) => `Failed: ${err.toString()}`,
+    })
+    return actionPromise
+  }, [notify, deleteIndex, editIndex, cc, entryToEdit, data, mutate, mutateSubmissionState])
 
   const onCancel = () => {
     setEditIndex(null)
