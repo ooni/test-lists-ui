@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR, { mutate as globalMutate } from 'swr'
-import { Box, Flex, Container, Heading, Link } from 'ooni-components'
+import { Box, Flex, Heading, Link } from 'ooni-components'
 
 import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
 import Error from './Error'
@@ -160,17 +160,13 @@ const UrlList = ({ cc }) => {
 
           {editIndex !== null && (
             <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
-              <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-                <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} />
-              </Container>
+              <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} />
             </ModalWithEsc>
           )}
 
           {deleteIndex !== null && (
             <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
-              <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-                <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={editFormError} />
-              </Container>
+              <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={editFormError} />
             </ModalWithEsc>
           )}
         </>
