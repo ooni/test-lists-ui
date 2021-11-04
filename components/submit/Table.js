@@ -43,6 +43,9 @@ const TableCell = styled.td`
   margin: 0;
   padding: 0.5rem;
   border-bottom: 1px solid ${props => props.theme.colors.gray6};
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 
   :last-child {
     border-right: 1px solid ${props => props.theme.colors.gray6};
