@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { Box, Button, Heading, Link, Flex } from 'ooni-components'
 import styled from 'styled-components'
 import Lottie from 'react-lottie-player'
@@ -34,7 +34,7 @@ const SubmitButton = () => {
       notify.success('Submitted!')
     }).catch(e => {
       notify.dismiss(loadingNotification)
-      notify.error(`Submission failed. Reason: ${e?.response?.data?.error ?? String(e)}`, { duration: 8000 })
+      notify.error(`Submission failed. Reason: ${e?.response?.data?.error ?? String(e)}`)
       console.error('Submission failed')
       console.error(e)
     })

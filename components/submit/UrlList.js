@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import useSWR, { mutate as globalMutate } from 'swr'
+import useSWR from 'swr'
 import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
 import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
