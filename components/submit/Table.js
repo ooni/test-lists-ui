@@ -108,6 +108,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
 
 const StyledCategoryCell = styled.span`
   position: relative;
+  display: table-caption;
   > span {
     position: absolute;
     font-size: medium;
