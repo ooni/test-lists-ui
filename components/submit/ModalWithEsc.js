@@ -1,12 +1,12 @@
 import { Container, Modal } from 'ooni-components'
 import { useCallback, useEffect } from 'react'
 
-const ModalWithEsc = ({ onHideClick, onCancel, children, ...rest }) => {
+const ModalWithEsc = ({ noEsc = false, onCancel, children, ...rest }) => {
   const onKeyPress = useCallback((e) => {
-    if (e.key === 'Escape') {
+    if (!noEsc && e.key === 'Escape') {
       onCancel()
     }
-  }, [onCancel])
+  }, [onCancel, noEsc])
 
   useEffect(() => {
     document.addEventListener('keydown', onKeyPress)

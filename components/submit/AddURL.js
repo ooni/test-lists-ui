@@ -15,7 +15,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import { Flex, Box, Text } from 'ooni-components'
 
 import { addURL } from '../../components/lib/api'
-import CategoryList from './CategoryList'
+import { CategoryList } from './CategoryCodes'
 import categories from '../lib/category_codes.json'
 import State from './State'
 

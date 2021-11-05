@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { Box, Button, Flex, Heading, Label as LLabel } from 'ooni-components'
 import { Input } from 'ooni-components/dist/components'
 
-import CategoryList from './CategoryList'
+import { CategoryList } from './CategoryCodes'
 
 // Regular expression to test for valid URLs based on
 // https://github.com/citizenlab/test-lists/blob/master/scripts/lint-lists.py#L18
@@ -11,7 +11,7 @@ import CategoryList from './CategoryList'
 
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
-export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
+export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column', onShowCategoryRef }) => {
   const [submitting, setSubmitting] = useState(false)
   const isEdit = 'url' in oldEntry
 
@@ -46,6 +46,15 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
   const width = layout === 'row' ? (1 / 3) : 1
 
+  const categoryRefHelper = (
+    <Box
+      as='small' mx={1} sx={{ cursor: 'help' }}
+      title='Show Category Descriptions' onClick={onShowCategoryRef}
+    >
+      ?
+    </Box>
+  )
+
   return (
     <form onSubmit={handleSubmit}>
       <Heading h={4}>{isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
@@ -64,7 +73,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
         </Flex>
 
         <Flex flexDirection='column' my={2} width={width}>
-          <Label htmlFor='category_code'>Category</Label>
+          <Label htmlFor='category_code'>Category{categoryRefHelper}</Label>
           <CategoryList name='category_code' defaultValue={oldEntry.category_code || ''} required={true} />
         </Flex>
 

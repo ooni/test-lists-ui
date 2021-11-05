@@ -11,6 +11,7 @@ import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
 import SubmitButton from './SubmitButton'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
+import { useCategoryReference } from './CategoryCodes'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -144,13 +145,16 @@ const UrlList = ({ cc }) => {
     setAddFormError(null)
   }, [cc])
 
+  const { categoryModal, showCategoryReference } = useCategoryReference()
+
   return (
     <Flex flexDirection='column' my={2}>
       {data && !error && (
         <>
+          {categoryModal}
           <Box p={2}>
             {submissionState !== 'PR_OPEN' &&
-              <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
+              <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} onShowCategoryRef={showCategoryReference} />
             }
           </Box>
 
@@ -159,8 +163,8 @@ const UrlList = ({ cc }) => {
           <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
 
           {editIndex !== null && (
-            <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
-              <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} />
+            <ModalWithEsc noEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
+              <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} onShowCategoryRef={showCategoryReference} />
             </ModalWithEsc>
           )}
 
