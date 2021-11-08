@@ -153,6 +153,17 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
       }
     },
     {
+      Header: 'Date Added',
+      accessor: 'date_added',
+      maxWidth: 40,
+      Cell: DateCell,
+    },
+    {
+      Header: 'Source',
+      accessor: 'source',
+      maxWidth: 40
+    },
+    {
       Header: 'Notes',
       accessor: 'notes',
       minWidth: 100,
@@ -162,17 +173,6 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
         size: 32
       }
     },
-    {
-      Header: 'Date Added',
-      accessor: 'date_added',
-      maxWidth: 50,
-      Cell: DateCell,
-    },
-    {
-      Header: 'Source',
-      accessor: 'source',
-      maxWidth: 50
-    }
   ], [])
 
   const tableInstance = useTable({
