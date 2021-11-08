@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Box, Button, Flex, Heading, Label as LLabel } from 'ooni-components'
+import { Button, Flex, Heading, Label as LLabel } from 'ooni-components'
 import { Input } from 'ooni-components/dist/components'
 
 import CategoryList from './CategoryList'
@@ -87,7 +87,6 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         {!isEdit && <Button type='submit' hollow disabled={submitting}>Add</Button>}
       </Flex>
-      <Box color='red6'> {error} </Box>
     </form>
   )
 }

@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import useSWR, { mutate as globalMutate } from 'swr'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import useSWR from 'swr'
 import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
-import { fetcher, fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
+import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
@@ -11,12 +11,15 @@ import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
 import SubmitButton from './SubmitButton'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
+import { SubmissionContext } from './SubmissionContext'
+import { useNotifier } from '../lib/notifier'
 
 // Does these
 // * Decides what data to pass down to the table
 // * Controls when the table is allowed to reset its state
 //   e.g when editing is going on, no resetting sort order
 const UrlList = ({ cc }) => {
+  const { notify } = useNotifier()
   // holds rowIndex of row being edited
   const [editIndex, setEditIndex] = useState(null)
   const [deleteIndex, setDeleteIndex] = useState(null)
@@ -39,11 +42,7 @@ const UrlList = ({ cc }) => {
     }
   )
 
-  const { data: { state: submissionState } } = useSWR(
-    apiEndpoints.SUBMISSION_STATE,
-    fetcher,
-    { initialData: { state: null } }
-  )
+  const { submissionState, mutate: mutateSubmissionState } = useContext(SubmissionContext)
 
   const entryToEdit = useMemo(() => {
     let entry = {}
@@ -66,7 +65,7 @@ const UrlList = ({ cc }) => {
   }, [])
 
   const handleSubmit = useCallback((newEntry, comment) => {
-    return new Promise((resolve, reject) => {
+    const actionPromise = new Promise((resolve, reject) => {
       if (deleteIndex !== null) {
         // Delete
         deleteURL(cc, comment, entryToEdit).then(() => {
@@ -76,7 +75,7 @@ const UrlList = ({ cc }) => {
           mutate(updatedData, true)
 
           // Revalidate the submission state to show the submit button
-          globalMutate(apiEndpoints.SUBMISSION_STATE)
+          mutateSubmissionState()
 
           resolve()
         }).catch(e => {
@@ -92,7 +91,7 @@ const UrlList = ({ cc }) => {
           mutate(updatedData, true)
 
           // Revalidate the submission state to show the submit button
-          globalMutate(apiEndpoints.SUBMISSION_STATE)
+          mutateSubmissionState()
 
           resolve()
         }).catch(e => {
@@ -108,7 +107,7 @@ const UrlList = ({ cc }) => {
           const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
           mutate(updatedData, true)
           // Revalidate the submission state to show the submit button
-          globalMutate(apiEndpoints.SUBMISSION_STATE)
+          mutateSubmissionState()
 
           resolve()
         }).catch(e => {
@@ -118,7 +117,17 @@ const UrlList = ({ cc }) => {
         })
       }
     })
-  }, [editIndex, deleteIndex, entryToEdit, cc, data, mutate])
+    notify.promise(actionPromise, {
+      loading: 'Requesting...',
+      success: deleteIndex !== null ? 'Deleted' : editIndex === null ? 'Added' : 'Updated',
+      error: (err) => `Failed: ${err.toString()}`,
+    }, {
+      style: {
+        maxWidth: '600px'
+      }
+    })
+    return actionPromise
+  }, [notify, deleteIndex, editIndex, cc, entryToEdit, data, mutate, mutateSubmissionState])
 
   const onCancel = () => {
     setEditIndex(null)
