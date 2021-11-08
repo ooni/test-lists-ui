@@ -10,11 +10,11 @@ export const useNotifier = () => {
     toast.error((t) => {
       return (
         <Flex justifyContent='space-between' alignItems='center' sx={{ width: '100%' }}>
-          <Box>{message}</Box>
+          <Box width={4 / 5}>{message}</Box>
           <Button inverted fontSize={12} onClick={() => toast.dismiss(t.id)}>Dismiss</Button>
         </Flex>
       )
-    }, { duration: Infinity, position: 'top-right', style: { minWidth: '500px' } })
+    }, { duration: Infinity, position: 'top-right', style: { maxWidth: '600px' } })
   }
   return {
     toast,

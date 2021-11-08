@@ -121,6 +121,10 @@ const UrlList = ({ cc }) => {
       loading: 'Requesting...',
       success: deleteIndex !== null ? 'Deleted' : editIndex === null ? 'Added' : 'Updated',
       error: (err) => `Failed: ${err.toString()}`,
+    }, {
+      style: {
+        maxWidth: '600px'
+      }
     })
     return actionPromise
   }, [notify, deleteIndex, editIndex, cc, entryToEdit, data, mutate, mutateSubmissionState])

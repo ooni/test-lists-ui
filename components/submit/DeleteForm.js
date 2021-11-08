@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Box, Button, Flex, Heading, Input } from 'ooni-components'
+import { Button, Flex, Heading, Input } from 'ooni-components'
 
 const DeleteForm = ({ oldEntry, onDelete, onCancel, error }) => {
   const handleSubmit = useCallback((e) => {
@@ -19,7 +19,6 @@ const DeleteForm = ({ oldEntry, onDelete, onCancel, error }) => {
         <Button hollow onClick={onCancel}> Cancel </Button>
         <Button type='submit'> Delete </Button>
       </Flex>
-      <Box as='small' color='red6'> {error} </Box>
     </form>
   )
 }
