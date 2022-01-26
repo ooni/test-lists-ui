@@ -27,7 +27,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
       url: formData.get('url'),
       category_code: categoryCode,
       date_added: oldEntry.date_added ?? today,
-      source: oldEntry.source ?? '',
+      source: oldEntry.source !== '' ? oldEntry.source : 'Community Member',
       notes: formData.get('notes')
     }
 
