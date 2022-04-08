@@ -98,7 +98,7 @@ export const LoginForm = ({ onLogin }) => {
           <StyledError>{errors?.nickname?.message}</StyledError>
         </StyledInputContainer>
         <Box my={2}>
-          <StyledError>{loginError}</StyledError>
+          <StyledError>{loginError ?? <>&nbsp;</>}</StyledError>
         </Box>
         <Box my={2}>
           <Button type='submit' disabled={submitting}> Login </Button>
