@@ -1,9 +1,23 @@
 import React, { useState, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
-import { Flex, Box, Input, Button, Text, Modal } from 'ooni-components'
+import { Flex, Box, Input, Button, Modal } from 'ooni-components'
+import styled from 'styled-components'
 
 import { registerUser } from './lib/api'
 import Loading from './Loading'
+
+const StyledInputContainer = styled(Box).attrs({
+  width: [1, 1 / 3],
+  my: 3,
+})`
+  position: relative;
+  & small {
+    color: red;
+    position: absolute;
+    top: 2px;
+    right: 10px;
+  }
+`
 
 export const LoginModal = ({ isShowing, hide, onLogin }) =>
   <Modal show={isShowing} onHideClick={hide}>
@@ -13,7 +27,10 @@ export const LoginModal = ({ isShowing, hide, onLogin }) =>
 export const LoginForm = ({ onLogin }) => {
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setError] = useState(null)
-  const { handleSubmit, register, formState: { errors } } = useForm()
+
+  const { handleSubmit, register, formState: { errors } } = useForm({
+    mode: 'onTouched',
+  })
 
   const onSubmit = useCallback((data) => {
     const { email_address, nickname } = data
@@ -39,21 +56,46 @@ export const LoginForm = ({ onLogin }) => {
       <Flex
         flexDirection={['column']}
         alignItems={'center'}
-        justifyContent='center'
       >
-        <Box my={2}>
-          <Input type='email' placeholder='Email' {...register('email_address', { required: true })} />
-        </Box>
-        <Box my={2}>
-          <Input type='text' placeholder='Nickname' {...register('nickname', { required: true, maxLength: 16 })} />
-        </Box>
+        <StyledInputContainer>
+          <Input type='email' placeholder='Email *'
+            {...register('email_address', {
+              required: {
+                value: true,
+                message: 'Email address is required'
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                message: 'Invalid email address format'
+              }
+            })}
+          />
+          <small>{errors?.email_address?.message}</small>
+        </StyledInputContainer>
+        <StyledInputContainer>
+          <Input type='text' placeholder='Nickname *' {...register('nickname', {
+            required: {
+              value: true,
+              message: 'Nickname is required'
+            },
+            minLength: {
+              value: 2,
+              message: 'Should be 2 to 50 characters long'
+            },
+            maxLength: {
+              value: 50,
+              message: 'Should be 2 to 50 characters long'
+            },
+            pattern: {
+              value: /[A-Za-z0-9]+/,
+              message: 'Use letters or numbers, no symbols or spaces'
+            }
+          })}
+          />
+          <small>{errors?.nickname?.message}</small>
+        </StyledInputContainer>
         <Box my={2}>
           <Button type='submit' disabled={submitting}> Login </Button>
-        </Box>
-        <Box my={2} color='red5' as='small'>
-          {errors?.email_address && <Text> Email: {errors?.email_address?.type} </Text>}
-          {errors?.nickname && <Text> Nickname: {errors?.nickname?.type} </Text>}
-          {loginError && <Text>Login Error: {loginError}</Text>}
         </Box>
         {submitting && <Loading size={96} />}
       </Flex>

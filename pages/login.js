@@ -59,7 +59,7 @@ const Login = () => {
 
   return (
     <Layout title='Login'>
-      <Flex my={6} justifyContent='center' alignItems='center' flexDirection='column'>
+      <Flex my={6} flexDirection='column'>
         {/* Before logging In */}
         {!token && !submitted &&
           <LoginForm onLogin={onLoginSubmit} />
