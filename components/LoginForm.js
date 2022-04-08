@@ -6,13 +6,16 @@ import styled from 'styled-components'
 import { registerUser } from './lib/api'
 import Loading from './Loading'
 
+const StyledError = styled.small`
+  color: ${props => props.theme.colors.red5};
+`
+
 const StyledInputContainer = styled(Box).attrs({
   width: [1, 1 / 3],
   my: 3,
 })`
   position: relative;
-  & small {
-    color: red;
+  & ${StyledError} {
     position: absolute;
     top: 2px;
     right: 10px;
@@ -70,7 +73,7 @@ export const LoginForm = ({ onLogin }) => {
               }
             })}
           />
-          <small>{errors?.email_address?.message}</small>
+          <StyledError>{errors?.email_address?.message}</StyledError>
         </StyledInputContainer>
         <StyledInputContainer>
           <Input type='text' placeholder='Nickname *' {...register('nickname', {
@@ -92,8 +95,11 @@ export const LoginForm = ({ onLogin }) => {
             }
           })}
           />
-          <small>{errors?.nickname?.message}</small>
+          <StyledError>{errors?.nickname?.message}</StyledError>
         </StyledInputContainer>
+        <Box my={2}>
+          <StyledError>{loginError}</StyledError>
+        </Box>
         <Box my={2}>
           <Button type='submit' disabled={submitting}> Login </Button>
         </Box>
