@@ -17,7 +17,7 @@ module.exports = function (api) {
   ]
 
   const plugins = [
-    'inline-react-svg', ['styled-components', { ssr: true }]
+    // styled-components plugin removed; uses SWC in next.config.js
   ]
 
   return {

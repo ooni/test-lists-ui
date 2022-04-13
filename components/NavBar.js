@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Flex, Box } from 'ooni-components'
+import Image from 'next/image'
 import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
 import styled from 'styled-components'
 
@@ -30,7 +31,9 @@ const NavBar = () => {
   return (
     <>
       <Flex bg='blue5' color='white' p={3} alignItems='center'>
-        <NavItem><Link href='/'><OONILogo height='32px' /></Link></NavItem>
+        <NavItem><Link href='/' passHref>
+          <Image alt='OONI Logo' src={OONILogo} height='32px' width='115px' />
+        </Link></NavItem>
         <Box sx={{ position: 'absolute', right: 8 }}>
         {!loading && user && 'nick' in user && <Box> {user.nick} ({user.role}) </Box>}
         {!loading && !user && (
