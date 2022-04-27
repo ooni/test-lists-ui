@@ -1,4 +1,5 @@
 {
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "next",
     "standard"
@@ -7,6 +8,8 @@
     "react/react-in-jsx-scope": "off",
     "camelcase": "off",
     "react/prop-types": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"]
   }
 }
