@@ -58,7 +58,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
   return (
     <form onSubmit={handleSubmit}>
-      <Heading h={4}>{isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
+      <Heading h={4} mx={2} px={3}>{isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
       <Flex flexDirection={layout} my={2} mx={2} alignItems='center' flexWrap='wrap'>
 
         <Flex flexDirection='column' my={2} width={width} px={3}>

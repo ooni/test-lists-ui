@@ -1,30 +1,23 @@
 import React, { useCallback, useContext } from 'react'
 import { Box, Button, Heading, Link, Flex } from 'ooni-components'
 import styled from 'styled-components'
-import Lottie from 'react-lottie-player'
 
 import { submitChanges } from '../lib/api'
-import reviewAnimation from './review-animation.json'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
 
-const FloatingBox = styled(Box)`
-  position: fixed;
-  margin-left: auto;
-  bottom: 30px;
-  right: 100px;
-`
-
-const AttributionBox = styled(Box)`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  opacity: 0.5;
+const StickyFlex = styled(Flex)`
+  position: sticky;
+  top: 0px;
+  z-index: 1;
 `
 
 const SubmitButton = () => {
   const { notify } = useNotifier()
   const { submissionState, linkToPR, mutate } = useContext(SubmissionContext)
+  const isSubmitted = submissionState === 'PR_OPEN'
+  const isEditing = submissionState === 'IN_PROGRESS'
+  const isClean = submissionState === 'CLEAN'
 
   const onSubmit = useCallback(() => {
     const loadingNotification = notify.loading('Submitting...')
@@ -40,45 +33,42 @@ const SubmitButton = () => {
     })
   }, [mutate, notify])
 
-  if (submissionState === 'IN_PROGRESS') {
-    return (
-      <FloatingBox>
+  return (
+    <StickyFlex
+      flexDirection={['column']}
+      px={4} py={3} my={4}
+      bg='gray4'
+      // color='white'
+    >
+      <Flex>
         <Button
-          fontSize={2}
-          ml='auto'
-          onClick={onSubmit}
-          title={`Current state: ${submissionState}`}
-        >
-          Submit
+            onClick={onSubmit}
+            title={`Current state: ${submissionState}`}
+            disabled={isSubmitted || isClean}
+          >
+            Submit
         </Button>
-      </FloatingBox>
-    )
-  } else if (submissionState === 'PR_OPEN') {
-    return (
-      <Flex flexDirection={['column', 'row']} alignItems='center' color='gray9' bg='white' px={2} py={4} my={4} sx={{ position: 'relative' }}>
-        <Box width={[1, 1 / 5]} px={[5, 0]}>
-          <Lottie
-            loop
-            animationData={reviewAnimation}
-            play
-          />
-        </Box>
-        <Box width={[1, 4 / 5]}>
-          <Heading h={3}>Submitted!</Heading>
-          <Heading h={4}>
-            Thank you for contributing to improve to the test lists. Your
-            changes are being reviewed <Link href={linkToPR}>here.</Link> You
-            will be able to make further changes after this contribution has been processed by our team.
-          </Heading>
-        </Box>
-        <AttributionBox>
-          <Link href='https://lottiefiles.com/68761-preview-animation'>Animation by Kyunghwan Lee</Link>
-        </AttributionBox>
       </Flex>
-    )
-  } else {
-    return null
-  }
+
+      <Flex
+        my={[2, 2]}
+      >
+        {isClean &&
+          <Box>
+            Add, Edit or Delete URLs in the list. Then submit your changes for review.
+          </Box>
+        }
+        {isSubmitted &&
+          <Box>
+            Your submission is being reviewed <Link href={linkToPR}>here.</Link>
+          </Box>
+        }
+        {isEditing &&
+          <Box> When you are done making changes, click <strong>Submit</strong> to propose your changes.</Box>
+        }
+      </Flex>
+    </StickyFlex>
+  )
 }
 
 export default SubmitButton
