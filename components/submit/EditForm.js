@@ -11,6 +11,8 @@ import CategoryList from './CategoryList'
 
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
+const defaultSource = 'test-lists.ooni.org contribution'
+
 export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
   const [submitting, setSubmitting] = useState(false)
   const isEdit = 'url' in oldEntry
@@ -27,7 +29,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
       url: formData.get('url'),
       category_code: categoryCode,
       date_added: oldEntry.date_added ?? today,
-      source: oldEntry.source !== '' ? oldEntry.source : 'Community Member',
+      source: oldEntry.source ?? defaultSource,
       notes: formData.get('notes')
     }
 
