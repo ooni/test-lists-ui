@@ -17,8 +17,8 @@ const StyledInputContainer = styled(Box).attrs({
   position: relative;
   & ${StyledError} {
     position: absolute;
-    top: 2px;
-    right: 10px;
+    top: -10px;
+    right: 0px;
   }
 `
 
@@ -44,7 +44,6 @@ export const LoginForm = ({ onLogin }) => {
           onLogin()
         }
       } catch (e) {
-        console.error(e)
         setError(e.message)
       } finally {
         setSubmitting(false)
@@ -82,12 +81,12 @@ export const LoginForm = ({ onLogin }) => {
               message: 'Nickname is required'
             },
             minLength: {
-              value: 2,
-              message: 'Should be 2 to 50 characters long'
+              value: 3,
+              message: 'Should be 3 to 50 characters long'
             },
             maxLength: {
               value: 50,
-              message: 'Should be 2 to 50 characters long'
+              message: 'Should be 3 to 50 characters long'
             },
             pattern: {
               value: /[A-Za-z0-9]+/,
