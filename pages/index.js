@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
-import { Flex, Box, Heading, Text, Link } from 'ooni-components'
+import { Flex, Box, Heading } from 'ooni-components'
 
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'

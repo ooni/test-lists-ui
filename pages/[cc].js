@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Heading } from 'ooni-components'
-import { Toaster } from 'react-hot-toast'
 
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'

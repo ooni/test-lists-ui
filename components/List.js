@@ -342,6 +342,7 @@ const List = ({ data, mutateRules }) => {
       {
         id: 'delete',
         maxWidth: 16,
+        // eslint-disable-next-line react/display-name
         Cell: ({ row: { index } }) => (
             <DeleteButton onClick={() => onRowDelete(index)} />
         )

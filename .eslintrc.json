@@ -1,27 +1,15 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
+  "plugins": ["@typescript-eslint"],
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "standard",
-    "plugin:react-hooks/recommended",
-    "plugin:jsx-a11y/recommended"
+    "next",
+    "standard"
   ],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 12,
-    "sourceType": "module"
-  },
-  "plugins": ["react", "jsx-a11y", "react-hooks"],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "camelcase": "off",
     "react/prop-types": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"]
   }
 }

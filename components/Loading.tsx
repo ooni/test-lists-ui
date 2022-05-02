@@ -1,3 +1,4 @@
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
 const rotate = (dir) => keyframes`
@@ -9,22 +10,25 @@ const rotate = (dir) => keyframes`
   }
 `
 
-const Spinner = styled.div`
-  animation: ${props => rotate(props.dir)} ${props => 2 / props.speed}s linear infinite;
+interface SpinnerProps {
+  readonly speed: number;
+  readonly $dir: number;
+}
+
+const Spinner = styled.div<SpinnerProps>`
+  animation: ${props => rotate(props.$dir)} ${props => 2 / props.speed}s linear infinite;
 `
 
-/**
- * Configurable animated loading component
- * @param {number} [size=64] Size
- * @param {number} [speed=1] Used in css transformation as {2 / speed}s
- * @param {number} [dir=1] 1 for clockwise, -1 for counter clockwise
- * @returns Animated Loading Component
- */
-const Loading = ({ size = 64, speed = 1, dir = 1 }) => (
-  <Spinner speed={speed} dir={dir}>
+interface LoadingProps {
+  readonly size?: number;
+  readonly speed?: number;
+  readonly dir?: number;
+}
+const Loading: React.FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
+  <Spinner speed={speed} $dir={dir}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{ margin: 'auto', ßbackground: '#fff', display: 'block' }}
+      style={{ margin: 'auto', background: '#fff', display: 'block' }}
       width={`${size}px`}
       height={`${size}px`}
       viewBox="0 0 100 100"

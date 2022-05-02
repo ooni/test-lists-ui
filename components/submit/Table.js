@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTable, useFlexLayout, useSortBy } from 'react-table'
-import { theme, Flex } from 'ooni-components'
+import { theme } from 'ooni-components'
 import styled from 'styled-components'
 import { MdDelete, MdEdit, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
 

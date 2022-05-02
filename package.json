@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "category_codes": "bash scripts/fetchCategoryCodes.sh"
   },
   "dependencies": {
@@ -15,7 +15,7 @@
     "country-util": "^0.1.0",
     "fontsource-fira-sans": "^4.0.0",
     "immutability-helper": "^3.1.1",
-    "next": "^10.2.2",
+    "next": "^12.1.5",
     "ooni-components": "^0.4.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -28,16 +28,19 @@
     "swr": "^0.5.6"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^12.1.5",
+    "@types/node": "^17.0.23",
+    "@types/react": "^18.0.4",
+    "@types/styled-components": "^5.1.25",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@welldone-software/why-did-you-render": "^6.1.4",
-    "babel-plugin-inline-react-svg": "^2.0.1",
-    "babel-plugin-styled-components": "^1.12.0",
     "eslint": "^7.28.0",
+    "eslint-config-next": "^12.1.5",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.2.0"
+    "ts-migrate": "^0.1.28",
+    "typescript": "4.5.5"
   }
 }
