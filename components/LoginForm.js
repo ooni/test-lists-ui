@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Flex, Box, Input, Button, Modal } from 'ooni-components'
 import styled from 'styled-components'
@@ -31,9 +31,11 @@ export const LoginForm = ({ onLogin }) => {
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setError] = useState(null)
 
-  const { handleSubmit, register, formState: { errors } } = useForm({
+  const { handleSubmit, register, formState, reset } = useForm({
     mode: 'onTouched',
   })
+
+  const { errors, isValid, isDirty } = formState
 
   const onSubmit = useCallback((data) => {
     const { email_address, nickname } = data
@@ -45,13 +47,22 @@ export const LoginForm = ({ onLogin }) => {
         }
       } catch (e) {
         setError(e.message)
+        // Reset form to mark `isDirty` as false
+        reset({}, { keepValues: true })
       } finally {
         setSubmitting(false)
       }
     }
     setSubmitting(true)
     registerApi(email_address, nickname)
-  }, [onLogin])
+  }, [onLogin, reset])
+
+  useEffect(() => {
+    // Remove previous errors when form becomes dirty again
+    if (isDirty) {
+      setError(null)
+    }
+  }, [isDirty])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -100,9 +111,9 @@ export const LoginForm = ({ onLogin }) => {
           <StyledError>{loginError ?? <>&nbsp;</>}</StyledError>
         </Box>
         <Box my={2}>
-          <Button type='submit' disabled={submitting}> Login </Button>
+          <Button type='submit' disabled={submitting || !isDirty || !isValid}> Login </Button>
         </Box>
-        {submitting && <Loading size={96} />}
+        {submitting ? <Loading size={96} /> : <Box my={50}></Box>}
       </Flex>
     </form>
   )
