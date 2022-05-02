@@ -84,10 +84,10 @@ const UrlList = ({ cc }) => {
         })
       } else if (editIndex === null) {
         // Add
-        addURL(newEntry, cc, comment).then(() => {
+        addURL(newEntry, cc, comment).then(({ updated_entry }) => {
           setEditIndex(null)
           setAddFormError(null)
-          const updatedData = [...data, newEntry]
+          const updatedData = [...data, updated_entry]
           mutate(updatedData, true)
 
           // Revalidate the submission state to show the submit button
@@ -97,7 +97,7 @@ const UrlList = ({ cc }) => {
         }).catch(e => {
           const prettyErrorMessage = getPrettyErrorMessage(e?.response?.data?.error ?? e, 'add')
           setAddFormError(prettyErrorMessage)
-          reject(e?.response?.data?.error ?? e)
+          reject(prettyErrorMessage ?? e)
         })
       } else {
         // Update

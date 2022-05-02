@@ -114,17 +114,23 @@ const StyledCategoryCell = styled.span`
 `
 
 const CategoryCell = React.memo(({ cell: { value } }) => (
-  <StyledCategoryCell>
-    {categories[value][0]}<span title={categories[value][1]}>ℹ</span>
-  </StyledCategoryCell>
+  (value in categories) &&
+    <StyledCategoryCell>
+      {categories[value][0]}<span title={categories[value][1]}>ℹ</span>
+    </StyledCategoryCell>
 ))
 
 CategoryCell.displayName = 'CategoryCell'
 
 const DateCell = React.memo(({ cell: { value } }) => {
-  const date = new Date(value)
-  const formattedDate = new Intl.DateTimeFormat([], { dateStyle: 'medium' }).format(date)
-  return formattedDate
+  try {
+    const date = new Date(value)
+    const formattedDate = new Intl.DateTimeFormat([], { dateStyle: 'medium' }).format(date)
+    return formattedDate
+  } catch (e) {
+    console.error(`Cannot parse date: ${value}`, e.message)
+    return ''
+  }
 })
 DateCell.displayName = 'DateCell'
 
