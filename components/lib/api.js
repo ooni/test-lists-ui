@@ -45,23 +45,37 @@ export const fetchTestList = async (url, cc) => {
   }
 }
 
-export const fetchUser = () => {
-  return axios.get(apiEndpoints.ACCOUNT_METADATA).then(res => res.data)
+export const getAPI = async (endpoint, params = {}, config = {}) => {
+  return await axios.request({
+    method: config.method ?? 'GET',
+    url: endpoint,
+    params: params,
+    ...config
+  })
+    .then(res => res.data)
+    .catch(e => {
+      const error = new Error(e?.response?.data?.error ?? e.message)
+      error.info = e?.response?.statusText
+      error.status = e?.response?.status
+      throw error
+    })
 }
 
-export const registerUser = (email, nickname) => {
-  return axios.post(apiEndpoints.USER_REGISTER, {
+const postAPI = async (endpoint, params, config) => {
+  return await getAPI(endpoint, null, { method: 'POST', data: params })
+}
+
+export const registerUser = async (email, nickname) => {
+  console.debug('Called registerUser with', email, nickname)
+  const data = await postAPI(apiEndpoints.USER_REGISTER, {
     email_address: email,
     nickname: nickname
-  }).then(res => res.data)
+  })
+  return data
 }
 
-export const loginUser = (token) => {
-  return axios.get(apiEndpoints.USER_LOGIN, {
-    params: {
-      k: token
-    }
-  }).then(res => res.data)
+export const loginUser = async (token) => {
+  return await getAPI(apiEndpoints.USER_LOGIN, { k: token })
 }
 
 export const updateRule = (oldEntry, newEntry) => {
@@ -78,43 +92,43 @@ export const deleteRule = (oldEntry) => {
   return updateRule(oldEntry, {})
 }
 
-export const addURL = (newEntry, cc, comment) => {
+export const addURL = async (newEntry, cc, comment) => {
   console.debug('Called addURL with new_entry', newEntry)
-  return axios.post(apiEndpoints.SUBMISSION_UPDATE, {
+  const data = await postAPI(apiEndpoints.SUBMISSION_UPDATE, {
     country_code: cc,
     comment: comment,
     new_entry: newEntry,
     old_entry: {}
   })
-    .then(res => res.data)
+  return data.updated_entry
 }
 
-export const updateURL = (cc, comment, oldEntry, newEntry) => {
+export const updateURL = async (cc, comment, oldEntry, newEntry) => {
   console.debug('Called updateURL with old_entry', oldEntry, 'new_entry', newEntry)
-  return axios.post(apiEndpoints.SUBMISSION_UPDATE, {
+  const data = await postAPI(apiEndpoints.SUBMISSION_UPDATE, {
     country_code: cc,
     comment: comment,
     old_entry: oldEntry,
     new_entry: newEntry
   })
-    .then(res => res.data.updated_entry)
+  return data.updated_entry
 }
 
-export const deleteURL = (cc, comment, oldEntry) => {
+export const deleteURL = async (cc, comment, oldEntry) => {
   console.debug('Called deleteURL with oldEntry', oldEntry)
-  return axios.post(apiEndpoints.SUBMISSION_UPDATE, {
+  const data = await postAPI(apiEndpoints.SUBMISSION_UPDATE, {
     country_code: cc,
     comment: comment,
     old_entry: oldEntry,
     new_entry: {}
   })
-    .then(res => res.data)
+  return data.updated_entry
 }
 
-export const submitChanges = () => {
+export const submitChanges = async () => {
   console.debug('Called submitChanges')
-  return axios.post(apiEndpoints.SUBMISSION_SUBMIT)
-    .then(res => res.data)
+  const data = await postAPI(apiEndpoints.SUBMISSION_SUBMIT)
+  return data.pr_id
 }
 
 export const customErrorRetry = (error, key, config, revalidate, opts) => {

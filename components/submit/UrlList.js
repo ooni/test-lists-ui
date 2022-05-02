@@ -79,15 +79,16 @@ const UrlList = ({ cc }) => {
 
           resolve()
         }).catch(e => {
-          setEditFormError(`deleteURL failed: ${e?.response?.data?.error ?? e}`)
-          reject(e?.response?.data?.error ?? e)
+          const prettyErrorMessage = getPrettyErrorMessage(e.message, 'delete')
+          setEditFormError(prettyErrorMessage)
+          reject(prettyErrorMessage)
         })
       } else if (editIndex === null) {
         // Add
-        addURL(newEntry, cc, comment).then(({ updated_entry }) => {
+        addURL(newEntry, cc, comment).then((newEntry) => {
           setEditIndex(null)
           setAddFormError(null)
-          const updatedData = [...data, updated_entry]
+          const updatedData = [...data, newEntry]
           mutate(updatedData, true)
 
           // Revalidate the submission state to show the submit button
@@ -95,9 +96,9 @@ const UrlList = ({ cc }) => {
 
           resolve()
         }).catch(e => {
-          const prettyErrorMessage = getPrettyErrorMessage(e?.response?.data?.error ?? e, 'add')
+          const prettyErrorMessage = getPrettyErrorMessage(e.message, 'add')
           setAddFormError(prettyErrorMessage)
-          reject(prettyErrorMessage ?? e)
+          reject(prettyErrorMessage)
         })
       } else {
         // Update
@@ -111,16 +112,16 @@ const UrlList = ({ cc }) => {
 
           resolve()
         }).catch(e => {
-          const prettyErrorMessage = getPrettyErrorMessage(e?.response?.data?.error ?? e, 'add')
+          const prettyErrorMessage = getPrettyErrorMessage(e.message, 'edit')
           setEditFormError(prettyErrorMessage)
-          reject(e?.response?.data?.error ?? e)
+          reject(prettyErrorMessage)
         })
       }
     })
     notify.promise(actionPromise, {
-      loading: 'Requesting...',
+      loading: 'Saving changes...',
       success: deleteIndex !== null ? 'Deleted' : editIndex === null ? 'Added' : 'Updated',
-      error: (err) => `Failed: ${err.toString()}`,
+      error: (err) => `Failed: ${err}`,
     }, {
       style: {
         maxWidth: '600px'

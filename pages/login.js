@@ -46,7 +46,8 @@ const Login = () => {
           setLoggedIn(true)
           afterLogin()
         } catch (e) {
-          setError(e)
+          console.log(e)
+          setError(e.message)
         }
       }
       login(token)
@@ -87,7 +88,7 @@ const Login = () => {
         {/* Errors */}
         {error &&
           <>
-            <Box mb={3} p={4} bg='red1'>{error.response.status} {error.response.data.error}</Box>
+            <Box mb={3} p={4} bg='red1'>{error}</Box>
             <Link href='/login'>Try logging in again</Link>
           </>
         }
