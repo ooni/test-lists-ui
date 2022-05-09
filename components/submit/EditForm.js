@@ -25,8 +25,16 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     const categoryCode = formData.get('category_code')
     const today = new Date().toISOString().split('T')[0]
 
+    // Add a trailing slash to the URL
+    // * if not already added by user
+    // * if the URL doesn't contain a path component (e.g "https://ooni.org/blog/test-lists")
+    let url = formData.get('url')
+    if (!url.endsWith('/') && !url.match(/\..+\/.+/)) {
+      url = url + '/'
+    }
+
     const newEntry = {
-      url: formData.get('url'),
+      url: url,
       category_code: categoryCode,
       date_added: oldEntry.date_added ?? today,
       source: oldEntry.source ?? defaultSource,
