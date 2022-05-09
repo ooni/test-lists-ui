@@ -28,13 +28,13 @@ const SubmitButton = () => {
 
   const onSubmit = useCallback(() => {
     const loadingNotification = notify.loading('Submitting...')
-    submitChanges().then(({ pr_id }) => {
+    submitChanges().then((pr_id) => {
       mutate({ state: 'PR_OPEN', pr_url: pr_id }, true)
       notify.dismiss(loadingNotification)
       notify.success('Submitted!')
     }).catch(e => {
       notify.dismiss(loadingNotification)
-      notify.error(`Submission failed. Reason: ${e?.response?.data?.error ?? String(e)}`)
+      notify.error(`Submission failed. Reason: ${e.message}`)
       console.error('Submission failed')
       console.error(e)
     })
