@@ -1,6 +1,9 @@
+import { HTMLAttributes } from 'react'
 import categories from '../lib/category_codes.json'
 
-const CategoryList = ({ name, defaultValue, ...rest }) => (
+type CategoryListProps = HTMLAttributes<HTMLSelectElement> & { name: string, required: boolean }
+
+const CategoryList = ({ name, defaultValue, ...rest }: CategoryListProps) => (
   <select name={name} {...rest}>
     <option value=''>Select a category</option>
     {Object.entries(categories)

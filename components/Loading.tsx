@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
-const rotate = (dir) => keyframes`
+const rotate = (dir: number) => keyframes`
   from {
     transform: rotate(0deg);
   }
@@ -19,12 +19,12 @@ const Spinner = styled.div<SpinnerProps>`
   animation: ${props => rotate(props.$dir)} ${props => 2 / props.speed}s linear infinite;
 `
 
-interface LoadingProps {
-  readonly size?: number;
-  readonly speed?: number;
-  readonly dir?: number;
+type LoadingProps = {
+  size?: number;
+  speed?: number;
+  dir?: number;
 }
-const Loading: React.FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
+const Loading: React.FunctionComponent<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
   <Spinner speed={speed} $dir={dir}>
     <svg
       xmlns="http://www.w3.org/2000/svg"

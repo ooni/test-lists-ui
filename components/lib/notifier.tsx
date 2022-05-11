@@ -6,8 +6,8 @@ const NotifyComponent = () => <Toaster position='top-right' />
 
 export const useNotifier = () => {
   const Notification = React.memo(NotifyComponent)
-  const error = (message) => {
-    toast.error((t) => {
+  const error: typeof toast['error'] = (message) => {
+    return toast.error((t) => {
       return (
         <Flex justifyContent='space-between' alignItems='center' sx={{ width: '100%' }}>
           <Box width={4 / 5}>{message}</Box>

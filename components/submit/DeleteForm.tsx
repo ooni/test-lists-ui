@@ -1,11 +1,13 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { Button, Flex, Heading, Input } from 'ooni-components'
 
-const DeleteForm = ({ oldEntry, onDelete, onCancel, error }) => {
-  const handleSubmit = useCallback((e) => {
+import { DeleteFormProps } from '../types'
+
+const DeleteForm = ({ oldEntry, onDelete, onCancel }: DeleteFormProps) => {
+  const handleSubmit = useCallback((e: React.SyntheticEvent) => {
     e.preventDefault()
-    const formData = new FormData(e.target)
-    const comment = formData.get('comment')
+    const formData = new FormData(e.target as HTMLFormElement)
+    const comment = formData.get('comment') as string
     onDelete(null, comment)
   }, [onDelete])
 

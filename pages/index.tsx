@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Flex, Box, Heading } from 'ooni-components'
 
@@ -12,7 +12,7 @@ const Home = () => {
   const router = useRouter()
   const { user, loading } = useUser()
 
-  const onCountryChange = useCallback((e) => {
+  const onCountryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCountry = e.target.value
     router.push(`/${selectedCountry}`, undefined, { shallow: true })
   }, [router])
@@ -26,7 +26,7 @@ const Home = () => {
           <Flex alignItems='center' justifyContent='center' flexDirection='column' my='auto'>
             <Heading h={4} my={4}>Which country&apos;s test list would you like to contribute to?</Heading>
             <Box my={2}>
-              <CountryList onChange={onCountryChange} />
+              <CountryList defaultValue='' onChange={onCountryChange} />
             </Box>
           </Flex>
         }

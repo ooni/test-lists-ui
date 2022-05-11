@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Flex, Box, Link } from 'ooni-components'
 import styled from 'styled-components'
 
@@ -16,7 +17,12 @@ const FooterColumn = styled(Flex).attrs({
   mx: 3
 })``
 
-const FooterItem = ({ label, link }) => (
+type FooterItemProps = {
+  label: React.ReactNode,
+  link: string
+}
+
+const FooterItem: React.FunctionComponent<FooterItemProps> = ({ label, link }) => (
   <Link my={1} mx={3} color='gray2' href={link}>{label}</Link>
 )
 

@@ -27,7 +27,7 @@ const fields = [
   }
 ]
 
-const AddRule = ({ onAddRule }) => {
+const AddRule = () => {
   const formRef = useRef()
   const [error, setError] = useState(null)
   const router = useRouter()

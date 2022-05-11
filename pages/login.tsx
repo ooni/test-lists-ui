@@ -14,9 +14,10 @@ import QuickStartGuide from '../components/submit/QuickStartGuide'
 const Login = () => {
   const [submitted, setSubmitted] = useState(false)
   const [loggedIn, setLoggedIn] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string|null>(null)
   const router = useRouter()
-  const { token, returnTo = '/' } = router.query
+  const token = String(router.query.token)
+  const returnTo = String(router.query.returnTo)
 
   const { user, loading } = useUser()
 
@@ -40,14 +41,16 @@ const Login = () => {
   // This fetches and sets the authentication cookie
   useEffect(() => {
     if (token) {
-      const login = async (token) => {
+      const login = async (token: string) => {
         try {
           await loginUser(token)
           setLoggedIn(true)
           afterLogin()
         } catch (e) {
           console.log(e)
-          setError(e.message)
+          if (e instanceof Error) {
+            setError(e.message)
+          }
         }
       }
       login(token)

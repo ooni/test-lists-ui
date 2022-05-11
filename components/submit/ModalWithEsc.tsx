@@ -1,8 +1,15 @@
 import { Modal } from 'ooni-components'
-import { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
-const ModalWithEsc = ({ onHideClick, onCancel, ...rest }) => {
-  const onKeyPress = useCallback((e) => {
+type ModalWithEscProps = {
+  onCancel: () => void
+  show: boolean
+  onHideClick: () => void
+  children: React.ReactNode
+}
+
+const ModalWithEsc: React.FunctionComponent<ModalWithEscProps> = ({ onCancel, ...rest }) => {
+  const onKeyPress = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       onCancel()
     }

@@ -13,24 +13,29 @@ import SubmitButton from './SubmitButton'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
+import { Entry } from '../types'
+
+type UrlListProps = {
+  cc: string
+}
 
 // Does these
 // * Decides what data to pass down to the table
 // * Controls when the table is allowed to reset its state
 //   e.g when editing is going on, no resetting sort order
-const UrlList = ({ cc }) => {
+const UrlList = ({ cc }: UrlListProps) => {
   const { notify } = useNotifier()
   // holds rowIndex of row being edited
-  const [editIndex, setEditIndex] = useState(null)
-  const [deleteIndex, setDeleteIndex] = useState(null)
+  const [editIndex, setEditIndex] = useState<number | null>(null)
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
   // controls when table state can be reset
   const [skipPageReset, setSkipPageResest] = useState(false)
   // error to show when the edit form modal is on
-  const [editFormError, setEditFormError] = useState(null)
+  const [editFormError, setEditFormError] = useState<string | null>(null)
   // error to show when add action fails
-  const [addFormError, setAddFormError] = useState(null)
+  const [addFormError, setAddFormError] = useState<string | null>(null)
 
-  const { data, error, mutate } = useSWR(
+  const { data, error, mutate } = useSWR<Entry []>(
     [apiEndpoints.SUBMISSION_LIST, cc],
     fetchTestList,
     {
@@ -44,8 +49,8 @@ const UrlList = ({ cc }) => {
 
   const { submissionState, mutate: mutateSubmissionState } = useContext(SubmissionContext)
 
-  const entryToEdit = useMemo(() => {
-    let entry = {}
+  const entryToEdit: Entry = useMemo(() => {
+    let entry = {} as Entry
     if (data) {
       if (editIndex !== null && editIndex > -1) {
         entry = data[editIndex]
@@ -54,18 +59,22 @@ const UrlList = ({ cc }) => {
         entry = data[deleteIndex]
       }
     }
-    delete entry.category_description
     return entry
   }, [data, editIndex, deleteIndex])
 
-  const onEdit = useCallback((index) => {
+  const onEdit = useCallback((index: number) => {
     setSkipPageResest(true)
     setEditIndex(index)
     setEditFormError(null)
   }, [])
 
-  const handleSubmit = useCallback((newEntry, comment) => {
-    const actionPromise = new Promise((resolve, reject) => {
+  type HandleSubmitFunction = (newEntry: Entry, comment: string) => void
+
+  const handleSubmit: HandleSubmitFunction = useCallback((newEntry, comment) => {
+    if (!data) {
+      return
+    }
+    const actionPromise = new Promise<void>((resolve, reject) => {
       if (deleteIndex !== null) {
         // Delete
         deleteURL(cc, comment, entryToEdit).then(() => {
@@ -135,7 +144,7 @@ const UrlList = ({ cc }) => {
     setEditFormError(null)
   }
 
-  const onDelete = useCallback((index) => {
+  const onDelete = useCallback((index: number) => {
     setDeleteIndex(index)
   }, [])
 
@@ -158,9 +167,10 @@ const UrlList = ({ cc }) => {
     <Flex flexDirection='column' my={2}>
       {data && !error && (
         <>
+          {/* Form to add a new URL */}
           <Box p={2}>
             {submissionState !== 'PR_OPEN' &&
-              <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
+              <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{} as Entry} error={addFormError} />
             }
           </Box>
 

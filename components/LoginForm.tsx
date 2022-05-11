@@ -22,33 +22,39 @@ const StyledInputContainer = styled(Box).attrs({
   }
 `
 
-export const LoginModal = ({ isShowing, hide, onLogin }) =>
-  <Modal show={isShowing} onHideClick={hide}>
-    <LoginForm onLogin={onLogin} />
-  </Modal>
+type LoginFormData = {
+  email_address: string,
+  nickname: string
+}
 
-export const LoginForm = ({ onLogin }) => {
+type LoginFormProps = {
+  onLogin: Function
+}
+
+export const LoginForm: React.FunctionComponent<LoginFormProps> = ({ onLogin }) => {
   const [submitting, setSubmitting] = useState(false)
-  const [loginError, setError] = useState(null)
-
-  const { handleSubmit, register, formState, reset } = useForm({
+  const [loginError, setError] = useState<string | null>(null)
+  const { handleSubmit, register, formState, reset } = useForm<LoginFormData>({
     mode: 'onTouched',
   })
 
   const { errors, isValid, isDirty } = formState
 
-  const onSubmit = useCallback((data) => {
+  const onSubmit = useCallback((data: LoginFormData) => {
     const { email_address, nickname } = data
-    const registerApi = async (email_address, nickname) => {
+    const registerApi = async (email_address: string, nickname: string) => {
       try {
         await registerUser(email_address, nickname)
         if (typeof onLogin === 'function') {
           onLogin()
         }
       } catch (e) {
-        setError(e.message)
         // Reset form to mark `isDirty` as false
         reset({}, { keepValues: true })
+        console.error(e)
+        if (e instanceof Error) {
+          setError(e.message)
+        }
       } finally {
         setSubmitting(false)
       }
@@ -118,5 +124,15 @@ export const LoginForm = ({ onLogin }) => {
     </form>
   )
 }
+
+type LoginModalProps = {
+  isShowing: boolean,
+  hide: Function,
+  onLogin: Function
+}
+export const LoginModal: React.FunctionComponent<LoginModalProps> = ({ isShowing, hide, onLogin }) =>
+  <Modal show={isShowing} onHideClick={hide}>
+    <LoginForm onLogin={onLogin} />
+  </Modal>
 
 export default LoginForm
