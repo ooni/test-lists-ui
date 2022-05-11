@@ -28,7 +28,7 @@ const Loading: React.FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
   <Spinner speed={speed} $dir={dir}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{ margin: 'auto', background: '#fff', display: 'block' }}
+      style={{ margin: 'auto', display: 'block' }}
       width={`${size}px`}
       height={`${size}px`}
       viewBox="0 0 100 100"

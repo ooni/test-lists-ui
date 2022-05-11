@@ -26,9 +26,9 @@ export const fetcher = async (url) => {
     const res = await axios.get(url)
     return res.data.rules ?? res.data
   } catch (e) {
-    const error = new Error(e.response?.data?.error ?? e.message)
-    error.info = e.response.statusText
-    error.status = e.response.status
+    const error = new Error(e?.response?.data?.error ?? e.message)
+    error.info = e?.response?.statusText
+    error.status = e?.response?.status
     throw error
   }
 }

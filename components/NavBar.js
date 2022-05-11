@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Flex, Box } from 'ooni-components'
@@ -7,7 +7,6 @@ import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonoc
 import styled from 'styled-components'
 
 import { useUser } from './lib/hooks'
-import { LoginModal } from './LoginForm'
 import Loading from './Loading'
 
 const NavItem = styled(Box).attrs({
@@ -23,10 +22,7 @@ const NavItem = styled(Box).attrs({
 
 const NavBar = () => {
   const router = useRouter()
-  const [showLoginModal, setShowLogin] = useState(false)
   const { user, loading } = useUser()
-
-  const hideLogin = useCallback(() => setShowLogin(false), [])
 
   return (
     <>
@@ -48,7 +44,6 @@ const NavBar = () => {
         {loading && <Loading size={32} />}
         </Box>
       </Flex>
-      <LoginModal isShowing={showLoginModal} hide={hideLogin} />
     </>
   )
 }
