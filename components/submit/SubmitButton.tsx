@@ -7,6 +7,7 @@ import { submitChanges } from '../lib/api'
 import reviewAnimation from './review-animation.json'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
+import { SubmissionContextType } from '../types'
 
 const FloatingBox = styled(Box)`
   position: fixed;
@@ -22,9 +23,9 @@ const AttributionBox = styled(Box)`
   opacity: 0.5;
 `
 
-const SubmitButton = () => {
+const SubmitButton: React.FunctionComponent = () => {
   const { notify } = useNotifier()
-  const { submissionState, linkToPR, mutate } = useContext(SubmissionContext)
+  const { submissionState, linkToPR, mutate } = useContext(SubmissionContext) as SubmissionContextType
 
   const onSubmit = useCallback(() => {
     const loadingNotification = notify.loading('Submitting...')

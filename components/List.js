@@ -120,7 +120,7 @@ const Button = styled.button`
 // Dynamic button
 // * Starts editing a row
 // * Switches to a two button component to confirm or cancel a row edit operation.
-const EditButton = ({ resetRow, onRowUpdate, row: { index, values, state: { isEditing, dirty }, setState } }) => {
+const EditButton = ({ resetRow, onRowUpdate, row: { index, values, state: { isEditing, /* dirty */ }, setState } }) => {
   const onEdit = useCallback(() => {
     // TODO: Don't edit if another row is still being edited
     setState(state => ({ ...state, isEditing: true }))

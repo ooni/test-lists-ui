@@ -2,6 +2,7 @@
 import { theme } from 'ooni-components'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import 'fontsource-fira-sans/latin.css'
+import { AppProps } from 'next/app'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -18,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-function MyApp ({ Component, pageProps }) {
+function MyApp ({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyle />

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Heading } from 'ooni-components'
 
@@ -12,9 +12,9 @@ export default function Submit () {
   const router = useRouter()
   const { query: { cc } } = router
 
-  const countryCode = typeof cc === 'string' ? cc.toUpperCase() : cc
+  const countryCode = String(cc).toUpperCase()
 
-  const onCountryChange = useCallback((e) => {
+  const onCountryChange: React.ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
     const selectedCountry = e.target.value
     router.push(`/${selectedCountry}`, undefined, { shallow: true })
   }, [router])

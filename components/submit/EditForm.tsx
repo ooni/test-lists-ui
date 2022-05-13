@@ -1,51 +1,54 @@
-import { useCallback, useState } from 'react'
-import { Button, Flex, Heading, Label as LLabel } from 'ooni-components'
-import { Input } from 'ooni-components/dist/components'
+import React, { SyntheticEvent, useCallback, useState } from 'react'
+import { Button, Flex, Heading, Label as LLabel, Input } from 'ooni-components'
 
 import CategoryList from './CategoryList'
+import { Entry, EditFormProps } from '../types'
 
 // Regular expression to test for valid URLs based on
 // https://github.com/citizenlab/test-lists/blob/master/scripts/lint-lists.py#L18
 // FIX: This regex works at https://regexr.com/629v6 but not here. Using a generic regex in the URL input below
 // const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
 
-const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
+type LabelProps = {
+  children: React.ReactNode
+}
+const Label = ({ children }: LabelProps & React.HTMLProps<HTMLLabelElement>) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
 const defaultSource = 'test-lists.ooni.org contribution'
 
-export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
+export const EditForm = ({ oldEntry, onSubmit, onCancel, layout = 'column' }: EditFormProps) => {
   const [submitting, setSubmitting] = useState(false)
   const isEdit = 'url' in oldEntry
 
-  const handleSubmit = useCallback(async (e) => {
+  const handleSubmit = useCallback(async (e: SyntheticEvent) => {
     e.preventDefault()
     setSubmitting(true)
 
-    const formData = new FormData(e.target)
-    const categoryCode = formData.get('category_code')
+    const formElement = e.target as HTMLFormElement
+    const formData = new FormData(formElement)
     const today = new Date().toISOString().split('T')[0]
 
     // Add a trailing slash to the URL
     // * if not already added by user
     // * if the URL doesn't contain a path component (e.g "https://ooni.org/blog/test-lists")
-    let url = formData.get('url')
+    let url = formData.get('url') as string
     if (!url.endsWith('/') && !url.match(/\..+\/.+/)) {
       url = url + '/'
     }
 
-    const newEntry = {
+    const newEntry: Entry = {
       url: url,
-      category_code: categoryCode,
+      category_code: formData.get('category_code') as string,
       date_added: oldEntry.date_added ?? today,
       source: oldEntry.source ?? defaultSource,
-      notes: formData.get('notes')
+      notes: formData.get('notes') as string
     }
 
     const comment = formData.get('comment')
     try {
       await onSubmit(newEntry, comment)
       console.debug('onSubmit succeeded')
-      e.target.reset()
+      formElement.reset()
     } catch (e) {
       // Submit failed, don't change form state yet
       console.debug(`Submit failed: ${e}`)
@@ -85,7 +88,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         <Flex flexDirection='column' my={2} width={width} px={3} flexGrow={'auto'}>
           <Label htmlFor='comment'>Comment</Label>
-          <Input name='comment' type='text' required={true} placeholder="Please share why you are updating this URL" defaultValue={oldEntry.comment} />
+          <Input name='comment' type='text' required={true} placeholder="Please share why you are updating this URL" />
         </Flex>
 
         {isEdit && (

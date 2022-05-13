@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import NextHead from 'next/head'
 import styled from 'styled-components'
 import { Container, Flex } from 'ooni-components'
@@ -11,14 +11,18 @@ const PageWrapper = styled(Flex)`
   min-height: 100vh;
 `
 
-const Layout = ({ title = '', children }) => {
+type LayoutProps = {
+  title: string,
+  children: React.ReactNode
+}
+const Layout: React.FunctionComponent<LayoutProps> = ({ title = '', children }) => {
   return (
     <>
       <NextHead>
         <title>{title}</title>
       </NextHead>
       <PageWrapper>
-        <NavBar title={title} />
+        <NavBar />
         <Container sx={{ flex: 1, width: '100%' }}>
           {children}
         </Container>
