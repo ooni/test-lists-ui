@@ -9,7 +9,6 @@ import styled from 'styled-components'
 import { useUser } from './lib/hooks'
 import { useNotifier } from './lib/notifier'
 import { logoutUser } from './lib/api'
-import { IApiError } from './types'
 
 const NavItem = styled(Box).attrs({
   fontSize: 2
@@ -32,7 +31,7 @@ const NavBar = () => {
     logoutUser().then(() => {
       console.debug('Logged out')
       router.push('/login')
-    }).catch((e: IApiError) => {
+    }).catch((e: Error) => {
       notify.error(`Logout failed: ${e}`)
     }).finally(() => {
       mutate()
