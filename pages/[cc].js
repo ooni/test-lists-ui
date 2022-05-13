@@ -5,6 +5,7 @@ import { Heading } from 'ooni-components'
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
 import UrlList from '../components/submit/UrlList'
+import Changes from '../components/submit/Changes'
 import { PageContextProvider } from '../components/submit/SubmissionContext'
 import { useNotifier } from '../components/lib/notifier'
 
@@ -25,6 +26,9 @@ export default function Submit () {
     <Layout title='Url Submission'>
       <Notification />
       <Heading h={1}>Test List</Heading>
+      <PageContextProvider>
+        <Changes />
+      </PageContextProvider>
       <CountryList defaultValue={countryCode} onChange={onCountryChange} />
       {countryCode && (
         <PageContextProvider>
