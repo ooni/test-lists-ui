@@ -13,7 +13,7 @@ export const apiEndpoints = {
   SUBMISSION_ADD: '/api/v1/url-submission/add-url',
   SUBMISSION_UPDATE: '/api/v1/url-submission/update-url',
   SUBMISSION_STATE: '/api/v1/url-submission/state',
-  SUBMISSION_DIFF: '/api/v1/url-submission/diff',
+  SUBMISSION_CHANGES: '/api/v1/url-submission/changes',
   SUBMISSION_SUBMIT: '/api/v1/url-submission/submit'
 }
 
