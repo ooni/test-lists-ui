@@ -165,7 +165,6 @@ const UrlList = ({ cc }) => {
             }
           </Box>
 
-
           <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
 
           {editIndex !== null && (

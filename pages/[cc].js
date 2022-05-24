@@ -8,7 +8,7 @@ import UrlList from '../components/submit/UrlList'
 import { PageContextProvider } from '../components/submit/SubmissionContext'
 import { useNotifier } from '../components/lib/notifier'
 
-export default function Submit() {
+export default function Submit () {
   const router = useRouter()
   const {
     query: { cc },
