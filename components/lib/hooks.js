@@ -23,8 +23,8 @@ export function useUser () {
   return {
     loading,
     loggedOut,
-    user: data?.nick ? data : null,
-    mutate
+    user: data?.role ? data : null,
+    mutate,
   }
 }
 

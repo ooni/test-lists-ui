@@ -46,7 +46,7 @@ const NavBar = () => {
         </NextLink></NavItem>
         <Box ml='auto'>
         {!loading && user && 'nick' in user &&
-            <Link href='#logout' color='white' onClick={onLogout}>Logout ({user.nick})</Link>
+            <Link href='#logout' color='white' onClick={onLogout}>Logout</Link>
         }
         </Box>
       </Flex>
