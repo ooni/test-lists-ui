@@ -80,7 +80,6 @@ const Changes = () => {
     errorRetryCount: 2,
   })
 
-  const { global, ...otherLists } = data.changes
   const headerRow: Change = {
     action: 'Action',
     url: 'URL',
@@ -98,8 +97,7 @@ const Changes = () => {
             <Row change={headerRow} />
           </Box>
           <Box>
-            <ChangeSet cc={'global'} changes={global} />
-            {Object.keys(otherLists)
+            {Object.keys(data.changes)
               .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
               .map((cc) => (
                 <ChangeSet key={cc} cc={cc} changes={data.changes[cc]} />
