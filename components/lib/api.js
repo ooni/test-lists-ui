@@ -4,6 +4,7 @@ export const apiEndpoints = {
   ACCOUNT_METADATA: '/api/_/account_metadata',
   USER_REGISTER: '/api/v1/user_register',
   USER_LOGIN: '/api/v1/user_login',
+  USER_LOGOUT: '/api/v1/user_logout',
   RULE_LIST: '/api/_/url-priorities/list',
   RULE_UPDATE: '/api/_/url-priorities/update',
   COUNTRIES_LIST: '/api/_/countries',
@@ -76,6 +77,10 @@ export const registerUser = async (email, nickname) => {
 
 export const loginUser = async (token) => {
   return await getAPI(apiEndpoints.USER_LOGIN, { k: token })
+}
+
+export const logoutUser = async (token) => {
+  return await postAPI(apiEndpoints.USER_LOGOUT)
 }
 
 export const updateRule = (oldEntry, newEntry) => {
