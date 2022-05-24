@@ -5,36 +5,36 @@ import { Heading } from 'ooni-components'
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
 import UrlList from '../components/submit/UrlList'
-import Changes from '../components/submit/Changes'
 import { PageContextProvider } from '../components/submit/SubmissionContext'
 import { useNotifier } from '../components/lib/notifier'
 
-export default function Submit () {
+export default function Submit() {
   const router = useRouter()
-  const { query: { cc } } = router
+  const {
+    query: { cc },
+  } = router
 
   const countryCode = typeof cc === 'string' ? cc.toUpperCase() : cc
 
-  const onCountryChange = useCallback((e) => {
-    const selectedCountry = e.target.value
-    router.push(`/${selectedCountry}`, undefined, { shallow: true })
-  }, [router])
+  const onCountryChange = useCallback(
+    (e) => {
+      const selectedCountry = e.target.value
+      router.push(`/${selectedCountry}`, undefined, { shallow: true })
+    },
+    [router]
+  )
 
   const { Notification } = useNotifier()
 
   return (
-    <Layout title='Url Submission'>
+    <Layout title="Url Submission">
       <Notification />
       <Heading h={1}>Test List</Heading>
       <PageContextProvider>
-        <Changes />
+        <CountryList defaultValue={countryCode} onChange={onCountryChange} />
+        {/* <Changes /> */}
+        {countryCode && <UrlList cc={countryCode} />}
       </PageContextProvider>
-      <CountryList defaultValue={countryCode} onChange={onCountryChange} />
-      {countryCode && (
-        <PageContextProvider>
-          <UrlList cc={countryCode} />
-        </PageContextProvider>
-      )}
     </Layout>
   )
 }
