@@ -94,7 +94,6 @@ const Changes = () => {
       flexDirection='column'
       mt={2}
       pb={4}
-      sx={{ border: '1px solid gray', borderBottom: 'none' }}
     >
       {data && !error && (
         <>

@@ -1,17 +1,10 @@
 import React, { useCallback, useContext } from 'react'
 import { Box, Button, Link, Flex } from 'ooni-components'
-import styled from 'styled-components'
 
 import { submitChanges } from '../lib/api'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
 import Changes from './Changes'
-
-const StickyFlex = styled(Flex)`
-  position: sticky;
-  top: 0px;
-  z-index: 1;
-`
 
 const SubmitButton = () => {
   const { notify } = useNotifier()
@@ -39,7 +32,7 @@ const SubmitButton = () => {
   return (
     <>
       <Changes />
-      <StickyFlex
+      <Flex
         flexDirection={['column']}
         px={4}
         py={3}
@@ -77,7 +70,7 @@ const SubmitButton = () => {
             </Box>
           )}
         </Flex>
-      </StickyFlex>
+      </Flex>
     </>
   )
 }
