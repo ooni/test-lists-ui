@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react'
-import { Button, Flex, Heading, Label as LLabel } from 'ooni-components'
-import { Input } from 'ooni-components/dist/components'
+import { useCallback, useState, useContext } from 'react'
+import { Button, Flex, Heading, Label as LLabel, Input } from 'ooni-components'
+import styled from 'styled-components'
 
 import CategoryList from './CategoryList'
+import { SubmissionContext } from './SubmissionContext'
 
 // Regular expression to test for valid URLs based on
 // https://github.com/citizenlab/test-lists/blob/master/scripts/lint-lists.py#L18
@@ -11,10 +12,17 @@ import CategoryList from './CategoryList'
 
 const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
 
+const HorizontalLine = styled.hr`
+  border: 1px solid ${props => props.theme.colors.gray5};
+  width: 100%;
+`
+
 const defaultSource = 'test-lists.ooni.org contribution'
 
 export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column' }) => {
   const [submitting, setSubmitting] = useState(false)
+  const { countryCode } = useContext(SubmissionContext)
+
   const isEdit = 'url' in oldEntry
 
   const handleSubmit = useCallback(async (e) => {
@@ -41,7 +49,10 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
       notes: formData.get('notes')
     }
 
-    const comment = formData.get('comment')
+    const comment = formData.has('comment')
+      ? formData.get('comment')
+      : `Added ${url} to ${countryCode}.csv`
+
     try {
       await onSubmit(newEntry, comment)
       console.debug('onSubmit succeeded')
@@ -52,50 +63,76 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
     } finally {
       setSubmitting(false)
     }
-  }, [oldEntry.date_added, oldEntry.source, onSubmit])
+  }, [countryCode, oldEntry.date_added, oldEntry.source, onSubmit])
 
-  const width = layout === 'row' ? (1 / 3) : 1
+  const width = layout === 'row' ? [1, (2 / 8)] : 1
 
   return (
     <form onSubmit={handleSubmit}>
-      <Heading h={4} mx={2} px={3}>{isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}</Heading>
-      <Flex flexDirection={layout} my={2} mx={2} alignItems='center' flexWrap='wrap'>
-
-        <Flex flexDirection='column' my={2} width={width} px={3}>
-          <Label htmlFor='url'>URL</Label>
+      <Heading h={4} mx={0} px={0}>
+        {isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}
+      </Heading>
+      <Flex flexDirection={layout} my={2} alignItems="center" flexWrap="wrap">
+        <Flex flexDirection="column" my={2} width={width}>
+          <Label htmlFor="url">URL</Label>
           <Input
-            name='url'
-            type='text'
+            name="url"
+            type="text"
             required={true}
-            pattern='https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
-            placeholder='https://example.com/'
+            pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
+            placeholder="https://example.com/"
             defaultValue={oldEntry.url}
           />
         </Flex>
 
-        <Flex flexDirection='column' my={2} width={width}>
-          <Label htmlFor='category_code'>Category</Label>
-          <CategoryList name='category_code' defaultValue={oldEntry.category_code || ''} required={true} />
+        <Flex flexDirection="column" m={2} width={width}>
+          <Label htmlFor="category_code">Category</Label>
+          <CategoryList
+            name="category_code"
+            defaultValue={oldEntry.category_code || ''}
+            required={true}
+          />
         </Flex>
 
-        <Flex flexDirection='column' my={2} width={width} px={3}>
-          <Label htmlFor='notes'>Notes</Label>
-          <Input name='notes' type='text' placeholder='Document any useful context for this URL' defaultValue={oldEntry.notes} />
+        <Flex flexDirection="column" m={2} width={width}>
+          <Label htmlFor="notes">Notes</Label>
+          <Input
+            name="notes"
+            type="text"
+            placeholder="Document any useful context for this URL"
+            defaultValue={oldEntry.notes}
+          />
         </Flex>
 
-        <Flex flexDirection='column' my={2} width={width} px={3} flexGrow={'auto'}>
-          <Label htmlFor='comment'>Comment</Label>
-          <Input name='comment' type='text' required={true} placeholder="Please share why you are updating this URL" defaultValue={oldEntry.comment} />
-        </Flex>
+        {isEdit && <HorizontalLine />}
 
         {isEdit && (
-          <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
-              <Button inverted onClick={onCancel} mr={3}>Cancel</Button>
-              <Button type='submit'>Done</Button>
+          <Flex flexDirection="column" my={2} width={width} flexGrow={'auto'}>
+            <Label htmlFor="comment">Comment</Label>
+            <Input
+              name="comment"
+              type="text"
+              required={true}
+              placeholder="Please share why you are updating this URL"
+              defaultValue={oldEntry.comment}
+            />
           </Flex>
         )}
 
-        {!isEdit && <Button type='submit' hollow disabled={submitting}>Add</Button>}
+        {isEdit && (
+          <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
+            <Button inverted onClick={onCancel} mr={3}>
+              Cancel
+            </Button>
+            <Button type="submit">Done</Button>
+          </Flex>
+        )}
+
+        {!isEdit && (
+          <Button ml="auto" type="submit" hollow disabled={submitting}>
+            Add
+          </Button>
+        )}
       </Flex>
     </form>
   )

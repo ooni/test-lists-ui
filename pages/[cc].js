@@ -30,7 +30,7 @@ export default function Submit () {
   return (
     <Layout title='Url Submission'>
       <Notification />
-      <PageContextProvider>
+      <PageContextProvider countryCode={countryCode}>
         <SubmitButton />
         <Heading h={1}>Test List</Heading>
         <CountryList defaultValue={countryCode} onChange={onCountryChange} />

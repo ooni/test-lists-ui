@@ -5,7 +5,7 @@ import { apiEndpoints, customErrorRetry, fetcher } from '../lib/api'
 export const SubmissionContext = React.createContext()
 
 // TOOD: Handle when the API request fails
-export const PageContextProvider = ({ children }) => {
+export const PageContextProvider = ({ countryCode, children }) => {
   const { data, mutate } = useSWR(apiEndpoints.SUBMISSION_STATE, fetcher, {
     errorRetryCount: 2,
     onErrorRetry: customErrorRetry
@@ -14,7 +14,9 @@ export const PageContextProvider = ({ children }) => {
   const { state, pr_url } = data ?? { state: 'CLEAN', pr_url: undefined }
 
   return (
-    <SubmissionContext.Provider value={{ submissionState: state, linkToPR: pr_url, mutate }}>
+    <SubmissionContext.Provider
+      value={{ countryCode, submissionState: state, linkToPR: pr_url, mutate }}
+    >
       {children}
     </SubmissionContext.Provider>
   )

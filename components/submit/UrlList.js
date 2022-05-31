@@ -193,7 +193,7 @@ const UrlList = ({ cc }) => {
     <Flex flexDirection='column' my={2}>
       {data && !error && (
         <>
-          <Box p={2}>
+          <Box py={2}>
             {submissionState !== 'PR_OPEN' && (
               <EditForm
                 layout='row'
