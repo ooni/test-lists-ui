@@ -43,8 +43,8 @@ const SubmitButton = () => {
         flexDirection={['column']}
         px={4}
         py={3}
-        my={4}
-        bg="gray4"
+        mb={4}
+        bg='gray4'
         // color='white'
       >
         <Flex>

@@ -9,7 +9,6 @@ import { EditForm } from './EditForm'
 import ModalWithEsc from './ModalWithEsc'
 import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
-import SubmitButton from './SubmitButton'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
@@ -38,11 +37,12 @@ const UrlList = ({ cc }) => {
       dedupingInterval: 6000,
       errorRetryInterval: 1000,
       errorRetryCount: 2,
-      onErrorRetry: customErrorRetry
+      onErrorRetry: customErrorRetry,
     }
   )
 
-  const { submissionState, mutate: mutateSubmissionState } = useContext(SubmissionContext)
+  const { submissionState, mutate: mutateSubmissionState } =
+    useContext(SubmissionContext)
 
   const entryToEdit = useMemo(() => {
     let entry = {}
@@ -64,71 +64,106 @@ const UrlList = ({ cc }) => {
     setEditFormError(null)
   }, [])
 
-  const handleSubmit = useCallback((newEntry, comment) => {
-    const actionPromise = new Promise((resolve, reject) => {
-      if (deleteIndex !== null) {
-        // Delete
-        deleteURL(cc, comment, entryToEdit).then(() => {
-          setDeleteIndex(null)
-          setEditFormError(null)
-          const updatedData = data.filter(i => i.url !== entryToEdit.url)
-          mutate(updatedData, true)
+  const handleSubmit = useCallback(
+    (newEntry, comment) => {
+      const actionPromise = new Promise((resolve, reject) => {
+        if (deleteIndex !== null) {
+          // Delete
+          deleteURL(cc, comment, entryToEdit)
+            .then(() => {
+              setDeleteIndex(null)
+              setEditFormError(null)
+              const updatedData = data.filter((i) => i.url !== entryToEdit.url)
+              mutate(updatedData, true)
 
-          // Revalidate the submission state to show the submit button
-          mutateSubmissionState()
+              // Revalidate the submission state to show the submit button
+              mutateSubmissionState()
 
-          resolve()
-        }).catch(e => {
-          const prettyErrorMessage = getPrettyErrorMessage(e.message, 'delete')
-          setEditFormError(prettyErrorMessage)
-          reject(prettyErrorMessage)
-        })
-      } else if (editIndex === null) {
-        // Add
-        addURL(newEntry, cc, comment).then((newEntry) => {
-          setEditIndex(null)
-          setAddFormError(null)
-          const updatedData = [...data, newEntry]
-          mutate(updatedData, true)
+              resolve()
+            })
+            .catch((e) => {
+              const prettyErrorMessage = getPrettyErrorMessage(
+                e.message,
+                'delete'
+              )
+              setEditFormError(prettyErrorMessage)
+              reject(prettyErrorMessage)
+            })
+        } else if (editIndex === null) {
+          // Add
+          addURL(newEntry, cc, comment)
+            .then((newEntry) => {
+              setEditIndex(null)
+              setAddFormError(null)
+              const updatedData = [...data, newEntry]
+              mutate(updatedData, true)
 
-          // Revalidate the submission state to show the submit button
-          mutateSubmissionState()
+              // Revalidate the submission state to show the submit button
+              mutateSubmissionState()
 
-          resolve()
-        }).catch(e => {
-          const prettyErrorMessage = getPrettyErrorMessage(e.message, 'add')
-          setAddFormError(prettyErrorMessage)
-          reject(prettyErrorMessage)
-        })
-      } else {
-        // Update
-        updateURL(cc, comment, entryToEdit, newEntry).then((updatedEntry) => {
-          setEditIndex(null)
-          setEditFormError(null)
-          const updatedData = data.map((v, i) => editIndex === i ? updatedEntry : v)
-          mutate(updatedData, true)
-          // Revalidate the submission state to show the submit button
-          mutateSubmissionState()
+              resolve()
+            })
+            .catch((e) => {
+              const prettyErrorMessage = getPrettyErrorMessage(e.message, 'add')
+              setAddFormError(prettyErrorMessage)
+              reject(prettyErrorMessage)
+            })
+        } else {
+          // Update
+          updateURL(cc, comment, entryToEdit, newEntry)
+            .then((updatedEntry) => {
+              setEditIndex(null)
+              setEditFormError(null)
+              const updatedData = data.map((v, i) =>
+                editIndex === i ? updatedEntry : v
+              )
+              mutate(updatedData, true)
+              // Revalidate the submission state to show the submit button
+              mutateSubmissionState()
 
-          resolve()
-        }).catch(e => {
-          const prettyErrorMessage = getPrettyErrorMessage(e.message, 'edit')
-          setEditFormError(prettyErrorMessage)
-          reject(prettyErrorMessage)
-        })
-      }
-    })
-    notify.promise(actionPromise, {
-      loading: 'Saving changes...',
-      success: deleteIndex !== null ? 'Deleted' : editIndex === null ? 'Added' : 'Updated',
-      error: (err) => `Failed: ${err}`,
-    }, {
-      style: {
-        maxWidth: '600px'
-      }
-    })
-    return actionPromise
-  }, [notify, deleteIndex, editIndex, cc, entryToEdit, data, mutate, mutateSubmissionState])
+              resolve()
+            })
+            .catch((e) => {
+              const prettyErrorMessage = getPrettyErrorMessage(
+                e.message,
+                'edit'
+              )
+              setEditFormError(prettyErrorMessage)
+              reject(prettyErrorMessage)
+            })
+        }
+      })
+      notify.promise(
+        actionPromise,
+        {
+          loading: 'Saving changes...',
+          success:
+            deleteIndex !== null
+              ? 'Deleted'
+              : editIndex === null
+                ? 'Added'
+                : 'Updated',
+          error: (err) => `Failed: ${err}`,
+        },
+        {
+          style: {
+            maxWidth: '600px',
+          },
+        }
+      )
+      return actionPromise
+    },
+    [
+      notify,
+      deleteIndex,
+      editIndex,
+      cc,
+      entryToEdit,
+      data,
+      mutate,
+      mutateSubmissionState,
+    ]
+  )
 
   const onCancel = () => {
     setEditIndex(null)
@@ -158,39 +193,81 @@ const UrlList = ({ cc }) => {
     <Flex flexDirection='column' my={2}>
       {data && !error && (
         <>
-          <SubmitButton />
           <Box p={2}>
-            {submissionState !== 'PR_OPEN' &&
-              <EditForm layout='row' onSubmit={handleSubmit} oldEntry={{}} error={addFormError} />
-            }
+            {submissionState !== 'PR_OPEN' && (
+              <EditForm
+                layout='row'
+                onSubmit={handleSubmit}
+                oldEntry={{}}
+                error={addFormError}
+              />
+            )}
           </Box>
 
-          <Table data={data} onEdit={onEdit} onDelete={onDelete} skipPageReset={skipPageReset} submissionState={submissionState} />
+          <Table
+            data={data}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            skipPageReset={skipPageReset}
+            submissionState={submissionState}
+          />
 
           {editIndex !== null && (
-            <ModalWithEsc onCancel={onCancel} show={editIndex !== null} onHideClick={onCancel}>
-              <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-                <EditForm layout='column' onSubmit={handleSubmit} onCancel={onCancel} oldEntry={entryToEdit} error={editFormError} />
+            <ModalWithEsc
+              onCancel={onCancel}
+              show={editIndex !== null}
+              onHideClick={onCancel}
+            >
+              <Container
+                sx={{ width: ['90vw', '40vw'] }}
+                px={[2, 5]}
+                py={[2, 3]}
+                color='gray8'
+              >
+                <EditForm
+                  layout='column'
+                  onSubmit={handleSubmit}
+                  onCancel={onCancel}
+                  oldEntry={entryToEdit}
+                  error={editFormError}
+                />
               </Container>
             </ModalWithEsc>
           )}
 
           {deleteIndex !== null && (
-            <ModalWithEsc onCancel={onCancelDelete} show={deleteIndex !== null} onHideClick={onCancelDelete}>
-              <Container sx={{ width: ['90vw', '40vw'] }} px={[2, 5]} py={[2, 3]} color='gray8'>
-                <DeleteForm oldEntry={entryToEdit} onDelete={handleSubmit} onCancel={onCancelDelete} error={editFormError} />
+            <ModalWithEsc
+              onCancel={onCancelDelete}
+              show={deleteIndex !== null}
+              onHideClick={onCancelDelete}
+            >
+              <Container
+                sx={{ width: ['90vw', '40vw'] }}
+                px={[2, 5]}
+                py={[2, 3]}
+                color='gray8'
+              >
+                <DeleteForm
+                  oldEntry={entryToEdit}
+                  onDelete={handleSubmit}
+                  onCancel={onCancelDelete}
+                  error={editFormError}
+                />
               </Container>
             </ModalWithEsc>
           )}
         </>
       )}
-      {!data && error && error.message === 'Country not supported' &&
+      {!data && error && error.message === 'Country not supported' && (
         <Heading h={4} px={[1, 5]} py={4} my={4} bg='white' color='gray9'>
-          We do not currently have a test list for this country and we do not support creating new ones here yet.
-          If you would like to contribute to this country test list, send an email
-          to <Link href='mailto:contact@openobservatoyr.org'><em>contact@openobservatory.org</em></Link>
+          We do not currently have a test list for this country and we do not
+          support creating new ones here yet. If you would like to contribute to
+          this country test list, send an email to{' '}
+          <Link href='mailto:contact@openobservatoyr.org'>
+            <em>contact@openobservatory.org</em>
+          </Link>
         </Heading>
-      }
+      )}
       {!data && !error && <Loading size={200} />}
       {error && <Error>{error.message}</Error>}
     </Flex>

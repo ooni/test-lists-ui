@@ -7,6 +7,7 @@ import CountryList from '../components/submit/CountryList'
 import UrlList from '../components/submit/UrlList'
 import { PageContextProvider } from '../components/submit/SubmissionContext'
 import { useNotifier } from '../components/lib/notifier'
+import SubmitButton from '../components/submit/SubmitButton'
 
 export default function Submit () {
   const router = useRouter()
@@ -27,12 +28,12 @@ export default function Submit () {
   const { Notification } = useNotifier()
 
   return (
-    <Layout title="Url Submission">
+    <Layout title='Url Submission'>
       <Notification />
-      <Heading h={1}>Test List</Heading>
       <PageContextProvider>
+        <SubmitButton />
+        <Heading h={1}>Test List</Heading>
         <CountryList defaultValue={countryCode} onChange={onCountryChange} />
-        {/* <Changes /> */}
         {countryCode && <UrlList cc={countryCode} />}
       </PageContextProvider>
     </Layout>

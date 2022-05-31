@@ -3,9 +3,9 @@ import useSWR from 'swr'
 import { Box, Flex, Text, Heading } from 'ooni-components'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { territoryNames } from 'country-util'
+import styled from 'styled-components'
 
 import { apiEndpoints, fetcher } from '../lib/api'
-import styled from 'styled-components'
 
 type Change = {
   action: 'Action' | 'add' | 'delete'
@@ -62,8 +62,8 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
         : cc.toUpperCase()
   }
   return (
-    <Flex flexDirection="column">
-      <Box>
+    <Flex flexDirection='column'>
+      <Box mx={3}>
         <Heading h={5}>{countryName}</Heading>
       </Box>
       <Box>
@@ -90,10 +90,15 @@ const Changes = () => {
   }
 
   return (
-    <Flex flexDirection="column" my={2}>
+    <Flex
+      flexDirection='column'
+      mt={2}
+      pb={4}
+      sx={{ border: '1px solid gray', borderBottom: 'none' }}
+    >
       {data && !error && (
         <>
-          <Box fontWeight="bold">
+          <Box fontWeight='bold'>
             <Row change={headerRow} />
           </Box>
           <Box>
