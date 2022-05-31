@@ -22,9 +22,15 @@ type RowProps = {
   change: Change
 }
 
+const OddEvenRow = styled(Flex)`
+  :nth-child(even) {
+    background: ${props => props.theme.colors.gray2};
+  }
+`
+
 const Row: React.FunctionComponent<RowProps> = ({ change }) => {
   return (
-    <Flex key={change.url} py={2}>
+    <OddEvenRow key={change.url} py={2}>
       <Flex width={1 / 8}>
         <Cell pr={2}>
           {change.action === 'add' && <MdEdit />}
@@ -47,7 +53,7 @@ const Row: React.FunctionComponent<RowProps> = ({ change }) => {
       <Cell pr={2} width={2 / 8}>
         {change.notes}
       </Cell>
-    </Flex>
+    </OddEvenRow>
   )
 }
 
