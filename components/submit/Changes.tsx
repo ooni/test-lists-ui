@@ -86,6 +86,8 @@ const Changes = () => {
     errorRetryCount: 2,
   })
 
+  const hasChanges = Object.keys(data?.changes ?? {}).length > 0
+
   const headerRow: Change = {
     action: 'Action',
     url: 'URL',
@@ -93,6 +95,10 @@ const Changes = () => {
     date_added: 'Date Added',
     source: 'Source',
     notes: 'Notes',
+  }
+
+  if (!hasChanges) {
+    return <></>
   }
 
   return (

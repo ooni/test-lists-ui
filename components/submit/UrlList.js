@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { mutate as globalMutate } from 'swr'
 import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
-import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry } from '../lib/api'
+import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry, fetcher } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
@@ -64,6 +64,14 @@ const UrlList = ({ cc }) => {
     setEditFormError(null)
   }, [])
 
+  const mutateChanges = useCallback(async () => {
+    globalMutate(
+      apiEndpoints.SUBMISSION_CHANGES,
+      await fetcher(apiEndpoints.SUBMISSION_CHANGES),
+      false
+    )
+  }, [])
+
   const handleSubmit = useCallback(
     (newEntry, comment) => {
       const actionPromise = new Promise((resolve, reject) => {
@@ -78,6 +86,8 @@ const UrlList = ({ cc }) => {
 
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
+              // Update the changes section
+              mutateChanges()
 
               resolve()
             })
@@ -100,6 +110,8 @@ const UrlList = ({ cc }) => {
 
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
+              // Update the changes section
+              mutateChanges()
 
               resolve()
             })
@@ -120,6 +132,8 @@ const UrlList = ({ cc }) => {
               mutate(updatedData, true)
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
+              // Update the changes section
+              mutateChanges()
 
               resolve()
             })

@@ -4,7 +4,6 @@ import { Box, Button, Link, Flex } from 'ooni-components'
 import { submitChanges } from '../lib/api'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
-import Changes from './Changes'
 
 const SubmitButton = () => {
   const { notify } = useNotifier()
@@ -30,48 +29,37 @@ const SubmitButton = () => {
   }, [mutate, notify])
 
   return (
-    <>
-      <Changes />
-      <Flex
-        flexDirection={['column']}
-        px={4}
-        py={3}
-        mb={4}
-        bg='gray4'
-        // color='white'
-      >
-        <Flex>
-          <Button
-            onClick={onSubmit}
-            title={`Current state: ${submissionState}`}
-            disabled={isSubmitted || isClean}
-          >
-            Submit
-          </Button>
-        </Flex>
-
-        <Flex my={[2, 2]}>
-          {isClean && (
-            <Box>
-              Add, Edit or Delete URLs in the list. Then submit your changes for
-              review.
-            </Box>
-          )}
-          {isSubmitted && (
-            <Box>
-              Your submission is being reviewed{' '}
-              <Link href={linkToPR}>here.</Link>
-            </Box>
-          )}
-          {isEditing && (
-            <Box>
-              When you are done making changes, click <strong>Submit</strong> to
-              propose your changes.
-            </Box>
-          )}
-        </Flex>
+    <Flex flexDirection={['column']} py={3} mb={4}>
+      <Flex my={[2, 2]}>
+        {isClean && (
+          <Box>
+            Add, Edit or Delete URLs in the list. Then submit your changes for
+            review.
+          </Box>
+        )}
+        {isSubmitted && (
+          <Box>
+            Your submission is being reviewed{' '}
+            <Link href={linkToPR}>here.</Link>
+          </Box>
+        )}
+        {isEditing && (
+          <Box>
+            When you are done making changes, click <strong>Submit</strong> to
+            propose your changes.
+          </Box>
+        )}
       </Flex>
-    </>
+      <Flex>
+        <Button
+          onClick={onSubmit}
+          title={`Current state: ${submissionState}`}
+          disabled={isSubmitted || isClean}
+        >
+          Submit
+        </Button>
+      </Flex>
+    </Flex>
   )
 }
 
