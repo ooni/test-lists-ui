@@ -8,6 +8,7 @@ import LoginForm from '../components/LoginForm'
 import { apiEndpoints, loginUser } from '../components/lib/api'
 import { mutate } from 'swr'
 import Loading from '../components/Loading'
+import { useUser } from '../components/lib/hooks'
 import QuickStartGuide from '../components/submit/QuickStartGuide'
 
 const Login = () => {
@@ -16,6 +17,15 @@ const Login = () => {
   const [error, setError] = useState(null)
   const router = useRouter()
   const { token, returnTo = '/' } = router.query
+
+  const { user, loading } = useUser()
+
+  // If user is already logged in, redirect to home page
+  useEffect(() => {
+    if (!loading && user.loggedIn) {
+      router.replace('/')
+    }
+  }, [user, loading, router])
 
   const onLoginSubmit = useCallback(() => {
     // After submitting the login form
