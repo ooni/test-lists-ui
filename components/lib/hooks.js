@@ -5,26 +5,29 @@ import useSWR from 'swr'
 import { fetcher, apiEndpoints } from './api'
 
 export function useUser () {
-  const { data, error, isValidating, mutate } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher)
+  const { data, error, mutate } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher)
   const router = useRouter()
+
+  const loading = !data && !error
+  // If API returned `401 Unauthorized`, assume the user is not logged in
+  const loggedOut = error && error.status === 401
 
   // Automatically redirect to /login from anywhere the hook is called before logging in
   // Additionally, it can pass in the path to return to via `returnTo` query param, but
   // this is not supported by the API yet.
   useEffect(() => {
-    if (typeof data === 'object' && !('role' in data) && router.pathname !== '/login') {
+    if (loggedOut && router.pathname !== '/login') {
       // router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
       router.push('/login')
     }
-  }, [isValidating, data, router])
-
-  const loading = !data && !error
-  const loggedOut = error && error.status === 403
+  }, [router, loggedOut])
 
   return {
     loading,
     loggedOut,
-    user: data?.role ? data : null,
+    user: {
+      loggedIn: !loggedOut
+    },
     mutate,
   }
 }
