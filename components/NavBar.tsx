@@ -45,7 +45,7 @@ const NavBar = () => {
           <Image alt='OONI Logo' src={OONILogo} height='32px' width='115px' />
         </NextLink></NavItem>
         <Box ml='auto'>
-        {!loading && user &&
+        {!loading && user.loggedIn &&
             <Link href='#logout' color='white' onClick={onLogout}>Logout</Link>
         }
         </Box>
