@@ -66,11 +66,10 @@ const postAPI = async (endpoint, params, config) => {
   return await getAPI(endpoint, null, { method: 'POST', data: params })
 }
 
-export const registerUser = async (email, nickname) => {
-  console.debug('Called registerUser with', email, nickname)
+export const registerUser = async (email) => {
+  console.debug('Called registerUser with', email)
   const data = await postAPI(apiEndpoints.USER_REGISTER, {
-    email_address: email,
-    nickname: nickname
+    email_address: email
   })
   return data
 }

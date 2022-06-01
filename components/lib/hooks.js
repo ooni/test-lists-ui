@@ -9,9 +9,10 @@ export function useUser () {
   const router = useRouter()
 
   // Automatically redirect to /login from anywhere the hook is called before logging in
-  // (not yet) passing in the path to return to via `returnTo` query param
+  // Additionally, it can pass in the path to return to via `returnTo` query param, but
+  // this is not supported by the API yet.
   useEffect(() => {
-    if (typeof data === 'object' && !('nick' in data) && router.pathname !== '/login') {
+    if (typeof data === 'object' && !('role' in data) && router.pathname !== '/login') {
       // router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
       router.push('/login')
     }

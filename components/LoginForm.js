@@ -38,10 +38,10 @@ export const LoginForm = ({ onLogin }) => {
   const { errors, isValid, isDirty } = formState
 
   const onSubmit = useCallback((data) => {
-    const { email_address, nickname } = data
-    const registerApi = async (email_address, nickname) => {
+    const { email_address } = data
+    const registerApi = async (email_address) => {
       try {
-        await registerUser(email_address, nickname)
+        await registerUser(email_address)
         if (typeof onLogin === 'function') {
           onLogin()
         }
@@ -54,7 +54,7 @@ export const LoginForm = ({ onLogin }) => {
       }
     }
     setSubmitting(true)
-    registerApi(email_address, nickname)
+    registerApi(email_address)
   }, [onLogin, reset])
 
   useEffect(() => {
@@ -84,28 +84,6 @@ export const LoginForm = ({ onLogin }) => {
             })}
           />
           <StyledError>{errors?.email_address?.message}</StyledError>
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <Input type='text' placeholder='Nickname *' {...register('nickname', {
-            required: {
-              value: true,
-              message: 'Nickname is required'
-            },
-            minLength: {
-              value: 3,
-              message: 'Should be 3 to 50 characters long'
-            },
-            maxLength: {
-              value: 50,
-              message: 'Should be 3 to 50 characters long'
-            },
-            pattern: {
-              value: /[A-Za-z0-9]+/,
-              message: 'Use letters or numbers, no symbols or spaces'
-            }
-          })}
-          />
-          <StyledError>{errors?.nickname?.message}</StyledError>
         </StyledInputContainer>
         <Box my={2}>
           <StyledError>{loginError ?? <>&nbsp;</>}</StyledError>
