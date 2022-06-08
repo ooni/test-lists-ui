@@ -12,6 +12,7 @@ import Loading from '../Loading'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
+import { useChanges } from './Changes'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -64,19 +65,23 @@ const UrlList = ({ cc }) => {
     setEditFormError(null)
   }, [])
 
-  const mutateChanges = useCallback(async () => {
-    globalMutate(
-      apiEndpoints.SUBMISSION_CHANGES,
-      await fetcher(apiEndpoints.SUBMISSION_CHANGES),
-      false
-    )
-  }, [])
+  const { changes, mutateChanges } = useChanges()
+
+  const updateChanges = useCallback(async (outgoingChange) => {
+    const optimisticUpdatedChanges = { ...changes }
+    optimisticUpdatedChanges[cc].push(outgoingChange)
+    mutateChanges(optimisticUpdatedChanges)
+  }, [cc, changes, mutateChanges])
 
   const handleSubmit = useCallback(
     (newEntry, comment) => {
       const actionPromise = new Promise((resolve, reject) => {
         if (deleteIndex !== null) {
           // Delete
+
+          // Update the changes section
+          updateChanges({ action: 'delete', ...entryToEdit })
+
           deleteURL(cc, comment, entryToEdit)
             .then(() => {
               setDeleteIndex(null)
@@ -86,8 +91,6 @@ const UrlList = ({ cc }) => {
 
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
-              // Update the changes section
-              mutateChanges()
 
               resolve()
             })
@@ -111,7 +114,7 @@ const UrlList = ({ cc }) => {
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
               // Update the changes section
-              mutateChanges()
+              updateChanges()
 
               resolve()
             })
@@ -133,7 +136,7 @@ const UrlList = ({ cc }) => {
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
               // Update the changes section
-              mutateChanges()
+              updateChanges()
 
               resolve()
             })

@@ -36,7 +36,7 @@ export default function Submit () {
         <SubmitButton />
         <Heading h={1}>Test List</Heading>
         <CountryList defaultValue={countryCode} onChange={onCountryChange} />
-        {countryCode && <UrlList cc={countryCode} />}
+        {countryCode && <UrlList cc={cc} />}
       </PageContextProvider>
     </Layout>
   )

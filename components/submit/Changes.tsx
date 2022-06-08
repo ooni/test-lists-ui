@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Box, Flex, Text, Heading } from 'ooni-components'
 import { MdDelete, MdEdit } from 'react-icons/md'
@@ -81,12 +81,36 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
   )
 }
 
-const Changes = () => {
-  const { data, error } = useSWR(apiEndpoints.SUBMISSION_CHANGES, fetcher, {
+export const useChanges = () => {
+  const { data, error, mutate } = useSWR(apiEndpoints.SUBMISSION_CHANGES, fetcher, {
     errorRetryCount: 2,
   })
 
-  const hasChanges = Object.keys(data?.changes ?? {}).length > 0
+  const mutateChanges = useCallback(
+    (optimisticUpdatedChanges) => {
+      console.log(optimisticUpdatedChanges)
+      mutate({ ...data, changes: optimisticUpdatedChanges }, true)
+      // setTimeout(() => {
+      //   mutate({ ...data, changes: { global: [] } }, true)
+      // }, 1)
+    },
+    [data, mutate]
+  )
+
+  return {
+    changes: data?.changes,
+    error,
+    mutateChanges: mutateChanges,
+  }
+}
+
+const Changes = () => {
+  const { changes } = useChanges()
+
+  useEffect(() => {
+    console.log('changes in <Changes> changed: ', changes)
+  }, [changes])
+  const hasChanges = Object.keys(changes ?? {}).length > 0
 
   const headerRow: Change = {
     action: 'Action',
@@ -102,21 +126,17 @@ const Changes = () => {
   }
 
   return (
-    <Flex
-      flexDirection='column'
-      mt={2}
-      pb={4}
-    >
-      {data && !error && (
+    <Flex flexDirection="column" mt={2} pb={4}>
+      {changes && (
         <>
-          <Box fontWeight='bold'>
+          <Box fontWeight="bold">
             <Row change={headerRow} />
           </Box>
           <Box>
-            {Object.keys(data.changes)
+            {Object.keys(changes)
               .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
               .map((cc) => (
-                <ChangeSet key={cc} cc={cc} changes={data.changes[cc]} />
+                <ChangeSet key={cc} cc={cc} changes={changes[cc]} />
               ))}
           </Box>
         </>
