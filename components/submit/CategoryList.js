@@ -1,7 +1,8 @@
+import { Select } from 'ooni-components'
 import categories from '../lib/category_codes.json'
 
 const CategoryList = ({ name, defaultValue, ...rest }) => (
-  <select name={name} {...rest}>
+  <Select name={name} {...rest}>
     <option value=''>Select a category</option>
     {Object.entries(categories)
       .sort((c1, c2) => c1[1] > c2[1] ? 1 : -1)
@@ -11,7 +12,7 @@ const CategoryList = ({ name, defaultValue, ...rest }) => (
         </option>
       ))
     }
-  </select>
+  </Select>
 )
 
 export default CategoryList

@@ -74,7 +74,7 @@ const EditButton = ({ row: { index }, onEdit, submissionState }) => {
   }, [onEdit, index])
 
   return (
-    <Button title='Edit' mx='auto' disabled={submissionState === 'PR_OPEN'}><MdEdit onClick={editRow} size={20} /></Button>
+    <Button title='Edit' mx='auto'><MdEdit onClick={editRow} size={20} /></Button>
   )
 }
 
@@ -84,7 +84,7 @@ const DeleteButton = ({ row: { index }, onDelete, submissionState }) => {
   }, [onDelete, index])
 
   return (
-    <Button title='Delete' onClick={deleteRow} disabled={submissionState === 'PR_OPEN'}><MdDelete size={18} /></Button>
+    <Button title='Delete' onClick={deleteRow}><MdDelete size={18} /></Button>
   )
 }
 
