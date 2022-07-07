@@ -5,6 +5,7 @@ import { MdDelete, MdEdit } from 'react-icons/md'
 import { territoryNames } from 'country-util'
 import styled from 'styled-components'
 
+import SubmitButton from './SubmitButton'
 import { apiEndpoints, fetcher } from '../lib/api'
 
 type Change = {
@@ -119,6 +120,7 @@ const Changes = () => {
                 <ChangeSet key={cc} cc={cc} changes={data.changes[cc]} />
               ))}
           </Box>
+          <SubmitButton />
         </>
       )}
     </Flex>

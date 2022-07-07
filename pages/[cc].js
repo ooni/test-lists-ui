@@ -7,7 +7,6 @@ import CountryList from '../components/submit/CountryList'
 import UrlList from '../components/submit/UrlList'
 import { PageContextProvider } from '../components/submit/SubmissionContext'
 import { useNotifier } from '../components/lib/notifier'
-import SubmitButton from '../components/submit/SubmitButton'
 import Changes from '../components/submit/Changes'
 
 export default function Submit () {
@@ -33,7 +32,6 @@ export default function Submit () {
       <Notification />
       <PageContextProvider countryCode={countryCode}>
         <Changes />
-        <SubmitButton />
         <Heading h={1}>Test List</Heading>
         <CountryList defaultValue={countryCode} onChange={onCountryChange} />
         {countryCode && <UrlList cc={countryCode} />}
