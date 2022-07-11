@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useRouter, NextRouter } from 'next/router'
 import NextLink from 'next/link'
 import { Flex, Box, Link } from 'ooni-components'
@@ -6,6 +6,7 @@ import Image from 'next/image'
 import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
 import styled from 'styled-components'
 
+import QuickStartGuideModal from './QuickStartGuideModal'
 import { useUser } from './lib/hooks'
 import { useNotifier } from './lib/notifier'
 import { logoutUser } from './lib/api'
@@ -25,6 +26,7 @@ const NavBar = () => {
   const router: NextRouter = useRouter()
   const { user, loading, mutate } = useUser()
   const { notify } = useNotifier()
+  const [showModal, setShowModal] = useState(false)
 
   const onLogout = useCallback((e: MouseEvent) => {
     e.preventDefault()
@@ -40,13 +42,17 @@ const NavBar = () => {
 
   return (
     <>
+      <QuickStartGuideModal show={showModal} setShowModal={setShowModal} />
       <Flex bg='blue5' color='white' p={3} alignItems='center'>
         <NavItem><NextLink href='/' passHref>
           <Image alt='OONI Logo' src={OONILogo} height='32px' width='115px' />
         </NextLink></NavItem>
         <Box ml='auto'>
         {!loading && user.loggedIn &&
-            <Link href='#logout' color='white' onClick={onLogout}>Logout</Link>
+            <>
+              <Link href='#logout' color='white' mr={4} onClick={() => setShowModal(true)}>Help</Link>
+              <Link href='#logout' color='white' onClick={onLogout}>Logout</Link>
+            </>
         }
         </Box>
       </Flex>
