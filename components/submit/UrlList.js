@@ -33,7 +33,6 @@ const UrlList = ({ cc }) => {
     [apiEndpoints.SUBMISSION_LIST, cc],
     fetchTestList,
     {
-      revalidateOnFocus: false,
       dedupingInterval: 6000,
       errorRetryInterval: 1000,
       errorRetryCount: 2,
