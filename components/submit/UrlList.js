@@ -176,6 +176,7 @@ const UrlList = ({ cc }) => {
       data,
       mutate,
       mutateSubmissionState,
+      mutateChanges,
     ]
   )
 
@@ -208,14 +209,12 @@ const UrlList = ({ cc }) => {
       {data && !error && (
         <>
           <Box py={2}>
-            {submissionState !== 'PR_OPEN' && (
               <EditForm
                 layout='row'
                 onSubmit={handleSubmit}
                 oldEntry={{}}
                 error={addFormError}
               />
-            )}
           </Box>
 
           <Table
