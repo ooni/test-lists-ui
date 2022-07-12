@@ -10,7 +10,14 @@ import { SubmissionContext } from './SubmissionContext'
 // FIX: This regex works at https://regexr.com/629v6 but not here. Using a generic regex in the URL input below
 // const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
 
-const Label = ({ children }) => <LLabel fontWeight='bold' my={2} fontSize={1}>{children}</LLabel>
+const Label = ({ children, required }) => {
+  const css = required ? { '&::after': { content: "'*'", marginLeft: '2px' } } : null
+  return (
+    <LLabel fontWeight='bold' my={2} fontSize={1} css={css}>
+      {children}
+    </LLabel>
+  )
+}
 
 const HorizontalLine = styled.hr`
   border: 1px solid ${props => props.theme.colors.gray5};
@@ -74,7 +81,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
       </Heading>
       <Flex flexDirection={layout} my={2} alignItems="center" flexWrap="wrap">
         <Flex flexDirection="column" my={2} width={width}>
-          <Label htmlFor="url">URL</Label>
+          <Label htmlFor="url" required={true}>URL</Label>
           <Input
             name="url"
             type="text"
@@ -86,7 +93,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
         </Flex>
 
         <Flex flexDirection="column" m={2} width={width}>
-          <Label htmlFor="category_code">Category</Label>
+          <Label htmlFor="category_code" required={true}>Category</Label>
           <CategoryList
             name="category_code"
             defaultValue={oldEntry.category_code || ''}
@@ -108,7 +115,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
 
         {isEdit && (
           <Flex flexDirection="column" my={2} width={width} flexGrow={'auto'}>
-            <Label htmlFor="comment">Comment</Label>
+            <Label htmlFor="comment" required={true}>Comment</Label>
             <Input
               name="comment"
               type="text"
