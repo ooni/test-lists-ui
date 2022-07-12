@@ -12,6 +12,9 @@ import Loading from '../Loading'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
 import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
+import { useWarnBeforeUnload } from '../lib/hooks'
+
+const promptText = 'You have made some changes that have not been submitted. Are you sure you want to ?'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -42,6 +45,8 @@ const UrlList = ({ cc }) => {
 
   const { submissionState, mutate: mutateSubmissionState } =
     useContext(SubmissionContext)
+
+  useWarnBeforeUnload(submissionState === 'IN_PROGRESS', promptText)
 
   const entryToEdit = useMemo(() => {
     let entry = {}
