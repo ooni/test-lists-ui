@@ -12,6 +12,11 @@ const EVEN_ROW_BG = theme.colors.gray0
 
 const Table = styled.table`
   width: 100%;
+  .secondary {
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
 `
 
 const TableHeader = styled.thead`
@@ -44,6 +49,7 @@ const TableCell = styled.td`
   margin: 0;
   padding: 0.5rem;
   border-bottom: 1px solid ${props => props.theme.colors.gray6};
+  word-wrap: break-word;
 
   :last-child {
     border-right: 1px solid ${props => props.theme.colors.gray6};
@@ -143,7 +149,7 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
       inputAttrs: {
         type: 'url',
         size: 44
-      }
+      },
     },
     {
       Header: 'Category',
@@ -155,19 +161,21 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
         type: 'text',
         maxLength: 5,
         size: 10,
-        id: 'category_code'
-      }
+        id: 'category_code',
+      },
     },
     {
       Header: 'Date Added',
       accessor: 'date_added',
       maxWidth: 40,
       Cell: DateCell,
+      className: 'secondary'
     },
     {
       Header: 'Source',
       accessor: 'source',
-      maxWidth: 40
+      maxWidth: 40,
+      className: 'secondary'
     },
     {
       Header: 'Notes',
@@ -177,7 +185,8 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
         type: 'text',
         maxLength: 20,
         size: 32
-      }
+      },
+      className: 'secondary'
     },
   ], [])
 
@@ -230,7 +239,7 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
             {// Loop over the headers in each row
             headerGroup.headers.map(column => (
               // Apply the header cell props
-              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+              <th {...column.getHeaderProps([column.getSortByToggleProps(), { className: column.className }])}>
                 {// Render the header
                 column.render('Header')}
                 <TableSortLabel active={column.isSorted} direction={column.isSortedDesc ? 'desc' : 'asc'} />
@@ -254,7 +263,7 @@ const TableView = ({ data, onEdit, onDelete, skipPageReset, submissionState }) =
               row.cells.map(cell => {
                 // Apply the cell props
                 return (
-                  <TableCell {...cell.getCellProps()}>
+                  <TableCell {...cell.getCellProps([{ className: cell.column.className }])}>
                     {// Render the cell contents
                     cell.render('Cell')}
                   </TableCell>

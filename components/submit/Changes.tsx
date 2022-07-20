@@ -27,12 +27,15 @@ const OddEvenRow = styled(Flex)`
   :nth-child(even) {
     background: ${props => props.theme.colors.gray2};
   }
+  @media (max-width: 640px) {
+    flex-wrap: wrap;
+  }
 `
 
 const Row: React.FunctionComponent<RowProps> = ({ change }) => {
   return (
     <OddEvenRow key={change.url} py={2}>
-      <Flex width={1 / 8}>
+      <Flex width={[1, 2 / 8, 1 / 8]}>
         <Cell pr={2}>
           {change.action === 'add' && <MdEdit />}
           {change.action === 'delete' && <MdDelete />}
@@ -42,16 +45,16 @@ const Row: React.FunctionComponent<RowProps> = ({ change }) => {
           {change.action === 'delete' && <Text>Deleted</Text>}
         </Cell>
       </Flex>
-      <Cell px={2} width={3 / 8}>
+      <Cell pr={2} width={[1, 3 / 8]}>
         {change.url}
       </Cell>
-      <Cell pr={2} width={2 / 8}>
+      <Cell pr={2} width={[1, 1 / 8, 2 / 8]}>
         {change.category_description}
       </Cell>
-      <Cell pr={2} width={1 / 8}>
+      <Cell pr={2} width={[1, 1 / 8]}>
         {change.source}
       </Cell>
-      <Cell pr={2} width={2 / 8}>
+      <Cell pr={2} width={[1, 2 / 8]}>
         {change.notes}
       </Cell>
     </OddEvenRow>

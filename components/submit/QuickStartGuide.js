@@ -3,7 +3,7 @@ import instructions from './quick_start_guide.json'
 
 const QuickStartGuide = ({ ...props }) => {
   return (
-    <Box bg='blue5' color='white' px={5} py={2} {...props}>
+    <Box bg='blue5' color='white' px={[3, 5]} py={2} {...props}>
       <Heading id="quickstart" h={4} textAlign="center">
         Quick Start Guide
         <Link href="#quickstart" mx={1} fontSize={1}>
