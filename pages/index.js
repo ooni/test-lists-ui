@@ -19,7 +19,7 @@ const Home = () => {
 
   return (
     <Layout title='OONI Test List Platform'>
-      <Flex sx={{ height: '80vh' }} alignItems='center' justifyContent='center' flexDirection='column'>
+      <Flex alignItems='center' justifyContent='center' flexDirection='column'>
         <Heading h={1} mt={3}>OONI Test List platform</Heading>
 
         {!loading && user !== null &&
@@ -33,7 +33,7 @@ const Home = () => {
 
         {loading && <Loading size={96} />}
 
-        <Flex flexDirection='column' px={5} py={4}>
+        <Flex flexDirection='column' px={[0, 5]} py={4}>
           <QuickStartGuide />
         </Flex>
       </Flex>
