@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
-import { Flex, Box, Heading } from 'ooni-components'
+import { Flex, Box, Heading, Text, Link } from 'ooni-components'
+import NLink from 'next/link'
 
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
 import { useUser } from '../components/lib/hooks'
 import Loading from '../components/Loading'
-import QuickStartGuide from '../components/submit/QuickStartGuide'
 
 const Home = () => {
   const router = useRouter()
@@ -18,10 +18,9 @@ const Home = () => {
   }, [router])
 
   return (
-    <Layout title='OONI Test List Platform'>
+    <Layout title='Test lists submission system'>
       <Flex alignItems='center' justifyContent='center' flexDirection='column'>
-        <Heading h={1} mt={3}>OONI Test List platform</Heading>
-
+        <Heading h={1} mt={3} fontSize={[3, 5]}>Test lists submission system</Heading>
         {!loading && user !== null &&
           <Flex alignItems='center' justifyContent='center' flexDirection='column' my='auto'>
             <Heading h={4} my={4}>Which country&apos;s test list would you like to contribute to?</Heading>
@@ -33,9 +32,10 @@ const Home = () => {
 
         {loading && <Loading size={96} />}
 
-        <Flex flexDirection='column' px={[0, 5]} py={4}>
-          <QuickStartGuide />
-        </Flex>
+        <Box bg='blue5' mt={5} color='white' px={4} py={4} fontSize={2} maxWidth="860px">
+          <Text fontWeight='bold'>Important:</Text>
+          <p>Internationally-relevant websites (such as facebook.com) are tested by <NLink href="https://ooni.org/install" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>OONI Probe</Link></NLink> users globally, and are only meant to be included in the Global test list.</p>
+        </Box>
       </Flex>
     </Layout>
   )

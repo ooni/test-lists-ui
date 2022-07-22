@@ -30,9 +30,9 @@ const Footer = () => (
       </FooterColumn>
       <Flex ml={['initial', 'auto']} my={[2, 0]} alignItems={['flex-start', 'center']} flexDirection={['column', 'row']}>
         <FooterItem label='About OONI' link='https://ooni.org' />
-        <FooterItem label='Code of Conduct' link='https://github.com/ooni/ooni.org/blob/master/CODE_OF_CONDUCT.md#ooni-code-of-conduct' />
+        <FooterItem label='About Test Lists' link='https://ooni.org/get-involved/contribute-test-lists' />
         <FooterItem label='Test Lists on Github' link='https://github.com/citizenlab/test-lists/' />
-        <FooterItem label='Source Code' link='https://github.com/ooni/url-prioritization' />
+        <FooterItem label='Source Code' link='https://github.com/ooni/test-lists-ui' />
       </Flex>
     </FooterWrapper>
   </footer>
