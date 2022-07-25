@@ -101,7 +101,7 @@ const Login = () => {
       <Flex alignItems='center' flexDirection='column'>
         <Box bg='blue5' mt={5} color='white' px={4} py={4} maxWidth="860px">
           <Text fontSize={[1, 2]}>
-            To discover the blocking of websites around the world, tools like <NLink href="https://ooni.org/install" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>OONI Probe</Link></NLink> rely on certain lists of websites (&quot;<NLink href="https://ooni.org/get-involved/contribute-test-lists" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>test lists</Link></NLink>&quot;). This platform includes these lists, which you can review and contribute to.<br/>
+            To discover the blocking of websites around the world, tools like <NLink href="https://ooni.org/install" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>OONI Probe</Link></NLink> rely on certain lists of websites (&quot;<NLink href="https://ooni.org/get-involved/contribute-test-lists" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>test lists</Link></NLink>&quot;). This platform includes these lists, which you can review and contribute to.<br/><br/>
             Help the internet freedom community discover website blocks around the world by contributing websites for testing!
           </Text>
         </Box>
