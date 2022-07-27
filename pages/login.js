@@ -62,12 +62,14 @@ const Login = () => {
       <Flex alignItems='center' flexDirection='column'>
         <Heading h={1} mt={3} mb={1} fontSize={[3, 5]}>Test lists submission system</Heading>
         <Heading h={3} mt={1} fontWeight={300} fontSize={[2, 3]}>Contribute websites for censorship testing</Heading>
-        <Text fontSize={1} mt={4} textAlign='center'>Add your email address and click the link sent to your email to log into this platform. <br/>We do not store email addresses.</Text>
       </Flex>
       <Flex mt={4} flexDirection='column'>
         {/* Before logging In */}
         {!token && !submitted &&
-          <LoginForm onLogin={onLoginSubmit} />
+          <>
+            <Text fontSize={1} mb={2} textAlign='center'>Add your email address and click the link sent to your email to log into this platform. <br/>We do not store email addresses.</Text>
+            <LoginForm onLogin={onLoginSubmit} />
+          </>
         }
         {!token && submitted &&
           <Heading h={3} width={[1, 2 / 3]} textAlign='center' mx='auto'>
