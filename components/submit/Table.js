@@ -13,7 +13,7 @@ const EVEN_ROW_BG = theme.colors.gray0
 const Table = styled.table`
   width: 100%;
   .secondary {
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       display: none;
     }
   }
@@ -49,13 +49,13 @@ const TableCell = styled.td`
   margin: 0;
   padding: 0.5rem;
   border-bottom: 1px solid ${props => props.theme.colors.gray6};
-  word-wrap: break-word;
 
   :last-child {
     border-right: 1px solid ${props => props.theme.colors.gray6};
   }
   :first-child {
     border-left: 1px solid ${props => props.theme.colors.gray6};
+    word-wrap: break-word;
   }
 
   input {
@@ -109,21 +109,18 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) => (
 )
 
 const StyledCategoryCell = styled.span`
-  position: relative;
-  > span {
-    position: absolute;
-    font-size: medium;
-    top: -5px;
-    right: -10px;
-    cursor: help;
-  }
+  font-size: medium;
+  cursor: help;
+  margin-top: -6px;
+  position: absolute;
 `
 
 const CategoryCell = React.memo(({ cell: { value } }) => (
   (value in categories) &&
-    <StyledCategoryCell>
-      {categories[value][0]}<span title={categories[value][1]}>ℹ</span>
-    </StyledCategoryCell>
+  <>
+    {categories[value][0]}
+    <StyledCategoryCell title={categories[value][1]}>ℹ</StyledCategoryCell>
+  </>
 ))
 
 CategoryCell.displayName = 'CategoryCell'
