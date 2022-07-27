@@ -18,9 +18,9 @@ const Home = () => {
   }, [router])
 
   return (
-    <Layout title='Test lists submission system'>
+    <Layout title='Test Lists Editor'>
       <Flex alignItems='center' justifyContent='center' flexDirection='column'>
-        <Heading h={1} mt={3} fontSize={[3, 5]}>Test lists submission system</Heading>
+        <Heading h={1} mt={3} fontSize={[3, 5]}>Test Lists Editor</Heading>
         {!loading && user !== null &&
           <Flex alignItems='center' justifyContent='center' flexDirection='column' my='auto'>
             <Heading h={4} my={4}>Which country&apos;s test list would you like to contribute to?</Heading>
