@@ -60,7 +60,7 @@ const Login = () => {
   return (
     <Layout title='Login'>
       <Flex alignItems='center' flexDirection='column'>
-        <Heading h={1} mt={3} mb={1} fontSize={[3, 5]}>Test lists submission system</Heading>
+        <Heading h={1} mt={3} mb={1} fontSize={[3, 5]}>Test Lists Editor</Heading>
         <Heading h={3} mt={1} fontWeight={300} fontSize={[2, 3]}>Contribute websites for censorship testing</Heading>
       </Flex>
       <Flex mt={4} flexDirection='column'>
