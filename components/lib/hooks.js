@@ -32,23 +32,33 @@ export function useUser () {
   }
 }
 
-// export function useUser({ redirectTo, redirectIfFound } = {}) {
-//   const { data, error } = useSWR('/api/user', fetcher)
-//   const user = data?.user
-//   const finished = Boolean(data)
-//   const hasUser = Boolean(user)
+export function useWarnBeforeUnload (active, promptText) {
+  const router = useRouter()
+  useEffect(() => {
+    const handleWindowClose = (e) => {
+      if (!active) return
+      e.preventDefault()
+      return (e.returnValue = promptText)
+    }
 
-//   useEffect(() => {
-//     if (!redirectTo || !finished) return
-//     if (
-//       // If redirectTo is set, redirect if the user was not found.
-//       (redirectTo && !redirectIfFound && !hasUser) ||
-//       // If redirectIfFound is also set, redirect if the user was found
-//       (redirectIfFound && hasUser)
-//     ) {
-//       Router.push(redirectTo)
-//     }
-//   }, [redirectTo, redirectIfFound, finished, hasUser])
+    // const handleRouterChange = (url, obj) => {
+    //   if (!active) return
+    //   if (window.confirm(promptText)) return
+    //   // Since back button changes the URL, we reset it
+    //   if (router.asPath !== window.location.pathname) {
+    //     window.history.pushState(null, null, router.asPath)
+    //   }
+    //   const errMessage = 'routeChange aborted.'
+    //   throw errMessage
+    // }
 
-//   return error ? null : user
-// }
+    window.addEventListener('beforeunload', handleWindowClose)
+    // router.events.on('routeChangeStart', handleRouterChange)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose)
+      // router.events.off('routeChangeStart', handleRouterChange)
+    }
+  }, [active, promptText, router, router.events])
+  return true
+}
