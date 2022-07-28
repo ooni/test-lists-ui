@@ -3,7 +3,7 @@ import { useRouter, NextRouter } from 'next/router'
 import NextLink from 'next/link'
 import { Flex, Box, Link } from 'ooni-components'
 import Image from 'next/image'
-import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
+import OONILogo from 'ooni-components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
 import styled from 'styled-components'
 
 import QuickStartGuideModal from './QuickStartGuideModal'
