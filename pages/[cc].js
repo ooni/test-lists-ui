@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
-import { Heading } from 'ooni-components'
+import { Heading, Box } from 'ooni-components'
 
 import Layout from '../components/Layout'
 import CountryList from '../components/submit/CountryList'
@@ -31,9 +31,12 @@ export default function Submit () {
     <Layout title='Url Submission'>
       <Notification />
       <PageContextProvider countryCode={countryCode}>
+        <Heading h={2} mt={3} mb={4}>Test List Editor</Heading>
         <Changes />
-        <Heading h={1}>Test List</Heading>
-        <CountryList defaultValue={countryCode} onChange={onCountryChange} />
+        <Heading h={4} mb={3}>Country</Heading>
+        <Box mb={4}>
+          <CountryList defaultValue={countryCode} onChange={onCountryChange} />
+        </Box>
         {countryCode && <UrlList cc={countryCode} />}
       </PageContextProvider>
     </Layout>

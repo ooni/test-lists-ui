@@ -29,7 +29,7 @@ const SubmitButton = () => {
   }, [mutate, notify])
 
   return (
-    <Flex flexDirection={['column']} py={3} mb={4}>
+    <Flex flexDirection={['column']} py={2} >
       <Flex my={[2, 2]}>
         {isClean && (
           <Box>
