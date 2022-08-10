@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Flex, Box, Input, Button, Modal } from 'ooni-components'
+import { Flex, Box, Input, Button } from 'ooni-components'
 import styled from 'styled-components'
 
 import { registerUser } from './lib/api'
@@ -22,12 +22,8 @@ const StyledInputContainer = styled(Box).attrs({
   }
 `
 
-export const LoginModal = ({ isShowing, hide, onLogin }) =>
-  <Modal show={isShowing} onHideClick={hide}>
-    <LoginForm onLogin={onLogin} />
-  </Modal>
-
 export const LoginForm = ({ onLogin }) => {
+  const PRODUCTION_URL = 'https://test-lists.ooni.org/'
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setError] = useState(null)
 
@@ -39,9 +35,12 @@ export const LoginForm = ({ onLogin }) => {
 
   const onSubmit = useCallback((data) => {
     const { email_address } = data
+    const redirectTo = process.env.NODE_ENV === 'development'
+      ? PRODUCTION_URL
+      : window.location.origin
     const registerApi = async (email_address) => {
       try {
-        await registerUser(email_address)
+        await registerUser(email_address, redirectTo)
         if (typeof onLogin === 'function') {
           onLogin()
         }
