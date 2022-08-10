@@ -106,27 +106,35 @@ const Changes = () => {
   }
 
   return (
-    <Flex
-      flexDirection='column'
-      mt={2}
-      pb={4}
-    >
-      {data && !error && (
-        <>
-          <Box fontWeight='bold'>
-            <Row change={headerRow} />
-          </Box>
-          <Box>
-            {Object.keys(data.changes)
-              .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
-              .map((cc) => (
-                <ChangeSet key={cc} cc={cc} changes={data.changes[cc]} />
-              ))}
-          </Box>
-          <SubmitButton />
-        </>
-      )}
-    </Flex>
+    <>
+      <Heading h={4} mb={3}>Proposed Changes</Heading>
+      <Flex
+        flexDirection='column'
+        mt={2}
+        px={3}
+        py={2}
+        mb={4}
+        sx={{
+          border: '1px solid black',
+        }}
+      >
+        {data && !error && (
+          <>
+            <Box fontWeight='bold'>
+              <Row change={headerRow} />
+            </Box>
+            <Box>
+              {Object.keys(data.changes)
+                .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
+                .map((cc) => (
+                  <ChangeSet key={cc} cc={cc} changes={data.changes[cc]} />
+                ))}
+            </Box>
+            <SubmitButton />
+          </>
+        )}
+      </Flex>
+    </>
   )
 }
 
