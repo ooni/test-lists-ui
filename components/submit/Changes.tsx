@@ -1,12 +1,11 @@
-import React from 'react'
-import useSWR from 'swr'
+import React, { useContext } from 'react'
 import { Box, Flex, Text, Heading } from 'ooni-components'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { territoryNames } from 'country-util'
 import styled from 'styled-components'
 
+import { SubmissionContext } from './SubmissionContext'
 import SubmitButton from './SubmitButton'
-import { apiEndpoints, fetcher } from '../lib/api'
 
 type Change = {
   action: 'Action' | 'add' | 'delete'
@@ -86,11 +85,8 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
 }
 
 const Changes = () => {
-  const { data, error } = useSWR(apiEndpoints.SUBMISSION_CHANGES, fetcher, {
-    errorRetryCount: 2,
-  })
-
-  const hasChanges = Object.keys(data?.changes ?? {}).length > 0
+  const { changes } = useContext(SubmissionContext)
+  const hasChanges = Object.keys(changes ?? {}).length > 0
 
   const headerRow: Change = {
     action: 'Action',
@@ -111,21 +107,20 @@ const Changes = () => {
       mt={2}
       pb={4}
     >
-      {data && !error && (
-        <>
-          <Box fontWeight='bold'>
-            <Row change={headerRow} />
-          </Box>
-          <Box>
-            {Object.keys(data.changes)
-              .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
-              .map((cc) => (
-                <ChangeSet key={cc} cc={cc} changes={data.changes[cc]} />
-              ))}
-          </Box>
-          <SubmitButton />
-        </>
-      )}
+      <>
+        <Box fontWeight='bold'>
+          <Row change={headerRow} />
+        </Box>
+        <Box>
+          {Object.keys(changes)
+            .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
+            .map((cc) => (
+              <ChangeSet key={cc} cc={cc} changes={changes[cc]} />
+            ))
+          }
+        </Box>
+        <SubmitButton />
+      </>
     </Flex>
   )
 }
