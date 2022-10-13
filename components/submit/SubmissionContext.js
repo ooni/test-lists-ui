@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { apiEndpoints, fetcher, customErrorRetry } from '../lib/api'
@@ -10,15 +10,18 @@ export const PageContextProvider = ({ countryCode, children }) => {
   const router = useRouter()
   const { cc } = router.query
 
-  const [refreshInterval, setRefreshInterval] = useState(0)
+  // const [refreshInterval, setRefreshInterval] = useState(0)
 
   const { data, error, mutate } = useSWR(
     cc ? `${apiEndpoints.SUBMISSION_LIST}/${cc}` : null,
     fetcher,
     {
-      errorRetryCount: 0,
+      revalidateOnMount: false,
+      revalidateIfStale: false,
+      errorRetryCount: 2,
+      dedupingInterval: 6000,
       onErrorRetry: customErrorRetry,
-      refreshInterval,
+      refreshInterval: 0,
     }
   )
 
@@ -39,14 +42,14 @@ export const PageContextProvider = ({ countryCode, children }) => {
     }
   }, [data])
 
-  useEffect(() => {
-    if (submissionState === 'PR_OPEN') {
-      setRefreshInterval(10000)
-    } else if (submissionState !== 'PR_OPEN') {
-      mutate()
-      setRefreshInterval(0)
-    }
-  }, [submissionState, mutate])
+  // useEffect(() => {
+  //   if (submissionState === 'PR_OPEN') {
+  //     setRefreshInterval(10000)
+  //   } else if (submissionState !== 'PR_OPEN') {
+  //     mutate()
+  //     setRefreshInterval(0)
+  //   }
+  // }, [submissionState, mutate])
 
   return (
     <SubmissionContext.Provider
