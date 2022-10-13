@@ -167,7 +167,7 @@ const UrlList = ({ cc }) => {
 
   return (
     <Flex flexDirection='column' my={2}>
-      {testList && (
+      {!!testList?.length && (
         <>
           <Box py={2}>
               <EditForm
@@ -232,7 +232,7 @@ const UrlList = ({ cc }) => {
           )}
         </>
       )}
-      {!testList && error && error.message === 'Country not supported' && (
+      {testList === null && (
         <Heading h={4} px={[1, 5]} py={4} my={4} bg='white' color='gray9'>
           We do not currently have a test list for this country and we do not
           support creating new ones here yet. If you would like to contribute to
@@ -242,7 +242,7 @@ const UrlList = ({ cc }) => {
           </Link>
         </Heading>
       )}
-      {!testList && !error && <Loading size={200} />}
+      {testList === undefined && <Loading size={200} />}
       {error && <Error>{error.message}</Error>}
     </Flex>
   )
