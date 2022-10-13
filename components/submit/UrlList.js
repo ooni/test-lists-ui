@@ -1,8 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import useSWR, { mutate as globalMutate } from 'swr'
 import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
-import { fetchTestList, apiEndpoints, updateURL, addURL, deleteURL, customErrorRetry, fetcher } from '../lib/api'
+import { updateURL, addURL, deleteURL } from '../lib/api'
 import Error from './Error'
 import Table from './Table'
 import { EditForm } from './EditForm'
@@ -29,46 +28,31 @@ const UrlList = ({ cc }) => {
   // error to show when add action fails
   const [addFormError, setAddFormError] = useState(null)
 
-  const { data, error, mutate } = useSWR(
-    [apiEndpoints.SUBMISSION_LIST, cc],
-    fetchTestList,
-    {
-      dedupingInterval: 6000,
-      errorRetryInterval: 1000,
-      errorRetryCount: 2,
-      onErrorRetry: customErrorRetry,
-    }
-  )
-
-  const { submissionState, mutate: mutateSubmissionState } =
-    useContext(SubmissionContext)
+  const {
+    submissionState,
+    testList,
+    mutate: mutateSubmissionState,
+    error
+  } = useContext(SubmissionContext)
 
   const entryToEdit = useMemo(() => {
     let entry = {}
-    if (data) {
+    if (testList?.length) {
       if (editIndex !== null && editIndex > -1) {
-        entry = data[editIndex]
+        entry = testList[editIndex]
       }
       if (deleteIndex !== null) {
-        entry = data[deleteIndex]
+        entry = testList[deleteIndex]
       }
     }
     delete entry.category_description
     return entry
-  }, [data, editIndex, deleteIndex])
+  }, [testList, editIndex, deleteIndex])
 
   const onEdit = useCallback((index) => {
     setSkipPageResest(true)
     setEditIndex(index)
     setEditFormError(null)
-  }, [])
-
-  const mutateChanges = useCallback(async () => {
-    globalMutate(
-      apiEndpoints.SUBMISSION_CHANGES,
-      await fetcher(apiEndpoints.SUBMISSION_CHANGES),
-      false
-    )
   }, [])
 
   const handleSubmit = useCallback(
@@ -80,14 +64,8 @@ const UrlList = ({ cc }) => {
             .then(() => {
               setDeleteIndex(null)
               setEditFormError(null)
-              const updatedData = data.filter((i) => i.url !== entryToEdit.url)
-              mutate(updatedData, true)
-
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
-              // Update the changes section
-              mutateChanges()
-
               resolve()
             })
             .catch((e) => {
@@ -104,14 +82,8 @@ const UrlList = ({ cc }) => {
             .then((newEntry) => {
               setEditIndex(null)
               setAddFormError(null)
-              const updatedData = [...data, newEntry]
-              mutate(updatedData, true)
-
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
-              // Update the changes section
-              mutateChanges()
-
               resolve()
             })
             .catch((e) => {
@@ -125,15 +97,8 @@ const UrlList = ({ cc }) => {
             .then((updatedEntry) => {
               setEditIndex(null)
               setEditFormError(null)
-              const updatedData = data.map((v, i) =>
-                editIndex === i ? updatedEntry : v
-              )
-              mutate(updatedData, true)
               // Revalidate the submission state to show the submit button
               mutateSubmissionState()
-              // Update the changes section
-              mutateChanges()
-
               resolve()
             })
             .catch((e) => {
@@ -172,10 +137,7 @@ const UrlList = ({ cc }) => {
       editIndex,
       cc,
       entryToEdit,
-      data,
-      mutate,
       mutateSubmissionState,
-      mutateChanges,
     ]
   )
 
@@ -195,7 +157,7 @@ const UrlList = ({ cc }) => {
 
   useEffect(() => {
     setSkipPageResest(false)
-  }, [data])
+  }, [testList])
 
   useEffect(() => {
     // NOTE: addFormError isn't reset even when the page navigates to another country list
@@ -205,7 +167,7 @@ const UrlList = ({ cc }) => {
 
   return (
     <Flex flexDirection='column' my={2}>
-      {data && !error && (
+      {!!testList?.length && (
         <>
           <Box py={2}>
               <EditForm
@@ -217,7 +179,7 @@ const UrlList = ({ cc }) => {
           </Box>
 
           <Table
-            data={data}
+            data={testList}
             onEdit={onEdit}
             onDelete={onDelete}
             skipPageReset={skipPageReset}
@@ -270,7 +232,7 @@ const UrlList = ({ cc }) => {
           )}
         </>
       )}
-      {!data && error && error.message === 'Country not supported' && (
+      {testList === null && (
         <Heading h={4} px={[1, 5]} py={4} my={4} bg='white' color='gray9'>
           We do not currently have a test list for this country and we do not
           support creating new ones here yet. If you would like to contribute to
@@ -280,7 +242,7 @@ const UrlList = ({ cc }) => {
           </Link>
         </Heading>
       )}
-      {!data && !error && <Loading size={200} />}
+      {testList === undefined && <Loading size={200} />}
       {error && <Error>{error.message}</Error>}
     </Flex>
   )

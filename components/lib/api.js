@@ -9,7 +9,7 @@ export const apiEndpoints = {
   RULE_UPDATE: '/api/_/url-priorities/update',
   COUNTRIES_LIST: '/api/_/countries',
   // Submissions
-  SUBMISSION_LIST: '/api/v1/url-submission/test-list',
+  SUBMISSION_LIST: '/api/_/url-submission/test-list',
   SUBMISSION_ADD: '/api/v1/url-submission/add-url',
   SUBMISSION_UPDATE: '/api/v1/url-submission/update-url',
   SUBMISSION_STATE: '/api/v1/url-submission/state',
