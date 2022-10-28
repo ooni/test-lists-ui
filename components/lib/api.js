@@ -39,8 +39,8 @@ export const getAPI = async (endpoint, params = {}, config = {}) => {
     method: config.method ?? 'GET',
     url: endpoint,
     params: params,
-    Authorization: `Bearer ${token()}`,
-    ...config
+    ...config,
+    headers: { Authorization: `Bearer ${token()}` }
   })
     .then(res => res.data)
     .catch(e => {
