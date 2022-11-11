@@ -2,6 +2,7 @@ import Axios from 'axios'
 
 export const apiEndpoints = {
   ACCOUNT_METADATA: '/api/_/account_metadata',
+  TOKEN_REFRESH: '/api/v1/user_refresh_token',
   USER_REGISTER: '/api/v1/user_register',
   USER_LOGIN: '/api/v1/user_login',
   USER_LOGOUT: '/api/v1/user_logout',
@@ -21,6 +22,26 @@ const token = () => {
 const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_OONI_API,
 })
+
+export const userFetcher = async (url) => {
+  try {
+    if (token()) {
+      await axios
+        .get(apiEndpoints.TOKEN_REFRESH, { headers: { Authorization: `Bearer ${token()}` } })
+        .then(({ data }) => {
+          localStorage.setItem('bearer', data.bearer)
+        })
+    }
+
+    const res = await axios.get(url, { headers: { Authorization: `Bearer ${token()}` } })
+    return res.data.rules ?? res.data
+  } catch (e) {
+    const error = new Error(e?.response?.data?.error ?? e.message)
+    error.info = e?.response?.statusText
+    error.status = e?.response?.status
+    throw error
+  }
+}
 
 export const fetcher = async (url) => {
   try {
