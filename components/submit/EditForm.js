@@ -86,7 +86,7 @@ export const EditForm = ({ oldEntry, error, onSubmit, onCancel, layout = 'column
             name="url"
             type="text"
             required={true}
-            pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
+            pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
             placeholder="https://example.com/"
             defaultValue={oldEntry.url}
           />
