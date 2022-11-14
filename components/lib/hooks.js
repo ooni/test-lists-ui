@@ -2,11 +2,11 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSWR from 'swr'
 
-import { userFetcher, apiEndpoints, customErrorRetry } from './api'
+import { fetcher, apiEndpoints, customErrorRetry } from './api'
 
 export function useUser () {
-  const { data, error, mutate } = useSWR(apiEndpoints.ACCOUNT_METADATA, userFetcher, {
-    dedupingInterval: 1800000,
+  const { data, error, mutate } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher, {
+    dedupingInterval: 60000,
     onErrorRetry: customErrorRetry
   })
   const router = useRouter()

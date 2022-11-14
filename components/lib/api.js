@@ -16,38 +16,39 @@ export const apiEndpoints = {
 }
 
 const token = () => {
-  return typeof localStorage !== 'undefined' ? localStorage.getItem('bearer') : ''
+  return typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('bearer'))?.token : ''
 }
 
 const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_OONI_API,
 })
 
-export const userFetcher = async (url) => {
-  try {
-    if (token()) {
-      await axios
+const refreshToken = async () => {
+  const tokenCreatedAt = JSON.parse(localStorage.getItem('bearer'))?.created_at
+  if (tokenCreatedAt) {
+    const twelveHours = 1000 * 60 * 60 * 12
+    const tokenExpiry = tokenCreatedAt + twelveHours
+
+    if (tokenExpiry < Date.now()) {
+      return await axios
         .get(apiEndpoints.TOKEN_REFRESH, { headers: { Authorization: `Bearer ${token()}` } })
         .then(({ data }) => {
-          localStorage.setItem('bearer', data.bearer)
+          localStorage.setItem('bearer', JSON.stringify({ token: data.bearer, created_at: Date.now() }))
+        })
+        .catch((e) => {
+          if (e?.response?.status === 401) localStorage.removeItem('bearer')
         })
     }
-
-    const res = await axios.get(url, { headers: { Authorization: `Bearer ${token()}` } })
-    return res.data.rules ?? res.data
-  } catch (e) {
-    const error = new Error(e?.response?.data?.error ?? e.message)
-    error.info = e?.response?.statusText
-    error.status = e?.response?.status
-    throw error
   }
 }
 
 export const fetcher = async (url) => {
   try {
+    await refreshToken()
     const res = await axios.get(url, { headers: { Authorization: `Bearer ${token()}` } })
     return res.data.rules ?? res.data
   } catch (e) {
+    if (e?.response?.status === 401) localStorage.removeItem('bearer')
     const error = new Error(e?.response?.data?.error ?? e.message)
     error.info = e?.response?.statusText
     error.status = e?.response?.status
@@ -56,6 +57,7 @@ export const fetcher = async (url) => {
 }
 
 export const getAPI = async (endpoint, params = {}, config = {}) => {
+  await refreshToken()
   return await axios.request({
     method: config.method ?? 'GET',
     url: endpoint,
@@ -65,6 +67,7 @@ export const getAPI = async (endpoint, params = {}, config = {}) => {
   })
     .then(res => res.data)
     .catch(e => {
+      if (e?.response?.status === 401) localStorage.removeItem('bearer')
       const error = new Error(e?.response?.data?.error ?? e.message)
       error.info = e?.response?.statusText
       error.status = e?.response?.status
@@ -88,7 +91,7 @@ export const registerUser = async (email_address, redirect_to) => {
 export const loginUser = async (token) => {
   return await getAPI(apiEndpoints.USER_LOGIN, { k: token })
     .then((response) => {
-      localStorage.setItem('bearer', response.bearer)
+      localStorage.setItem('bearer', JSON.stringify({ token: response.bearer, created_at: Date.now() }))
     })
 }
 
