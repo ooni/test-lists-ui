@@ -15,7 +15,7 @@ export const apiEndpoints = {
   SUBMISSION_SUBMIT: '/api/v1/url-submission/submit'
 }
 
-const token = () => {
+const getBearerToken = () => {
   return typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('bearer'))?.token : ''
 }
 
@@ -25,7 +25,7 @@ const axios = Axios.create({
 
 export const refreshToken = async () => {
   return axios
-    .get(apiEndpoints.TOKEN_REFRESH, { headers: { Authorization: `Bearer ${token()}` } })
+    .get(apiEndpoints.TOKEN_REFRESH, { headers: { Authorization: `Bearer ${getBearerToken()}` } })
     .then(({ data }) => {
       localStorage.setItem('bearer', JSON.stringify({ token: data.bearer, created_at: Date.now() }))
     })
@@ -33,7 +33,7 @@ export const refreshToken = async () => {
 
 export const fetcher = async (url) => {
   try {
-    const res = await axios.get(url, { headers: { Authorization: `Bearer ${token()}` } })
+    const res = await axios.get(url, { headers: { Authorization: `Bearer ${getBearerToken()}` } })
     return res.data.rules ?? res.data
   } catch (e) {
     const error = new Error(e?.response?.data?.error ?? e.message)
@@ -49,7 +49,7 @@ export const getAPI = async (endpoint, params = {}, config = {}) => {
     url: endpoint,
     params: params,
     ...config,
-    headers: { Authorization: `Bearer ${token()}` }
+    headers: { Authorization: `Bearer ${getBearerToken()}` }
   })
     .then(res => res.data)
     .catch(e => {
