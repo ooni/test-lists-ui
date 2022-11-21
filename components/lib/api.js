@@ -2,6 +2,7 @@ import Axios from 'axios'
 
 export const apiEndpoints = {
   ACCOUNT_METADATA: '/api/_/account_metadata',
+  TOKEN_REFRESH: '/api/v1/user_refresh_token',
   USER_REGISTER: '/api/v1/user_register',
   USER_LOGIN: '/api/v1/user_login',
   USER_LOGOUT: '/api/v1/user_logout',
@@ -10,21 +11,29 @@ export const apiEndpoints = {
   COUNTRIES_LIST: '/api/_/countries',
   // Submissions
   SUBMISSION_LIST: '/api/_/url-submission/test-list',
-  SUBMISSION_ADD: '/api/v1/url-submission/add-url',
   SUBMISSION_UPDATE: '/api/v1/url-submission/update-url',
-  SUBMISSION_STATE: '/api/v1/url-submission/state',
-  SUBMISSION_CHANGES: '/api/v1/url-submission/changes',
   SUBMISSION_SUBMIT: '/api/v1/url-submission/submit'
+}
+
+const getBearerToken = () => {
+  return typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('bearer'))?.token : ''
 }
 
 const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_OONI_API,
-  withCredentials: true
 })
+
+export const refreshToken = async () => {
+  return axios
+    .get(apiEndpoints.TOKEN_REFRESH, { headers: { Authorization: `Bearer ${getBearerToken()}` } })
+    .then(({ data }) => {
+      localStorage.setItem('bearer', JSON.stringify({ token: data.bearer, created_at: Date.now() }))
+    })
+}
 
 export const fetcher = async (url) => {
   try {
-    const res = await axios.get(url)
+    const res = await axios.get(url, { headers: { Authorization: `Bearer ${getBearerToken()}` } })
     return res.data.rules ?? res.data
   } catch (e) {
     const error = new Error(e?.response?.data?.error ?? e.message)
@@ -34,24 +43,13 @@ export const fetcher = async (url) => {
   }
 }
 
-export const fetchTestList = async (url, cc) => {
-  try {
-    const res = await axios.get(`${url}/${cc}`)
-    return res.data
-  } catch (e) {
-    const error = new Error(e.response?.data?.error ?? e.message)
-    error.info = e.response.statusText
-    error.status = e.response.status
-    throw error
-  }
-}
-
 export const getAPI = async (endpoint, params = {}, config = {}) => {
   return await axios.request({
     method: config.method ?? 'GET',
     url: endpoint,
     params: params,
-    ...config
+    ...config,
+    headers: { Authorization: `Bearer ${getBearerToken()}` }
   })
     .then(res => res.data)
     .catch(e => {
@@ -76,7 +74,10 @@ export const registerUser = async (email_address, redirect_to) => {
 }
 
 export const loginUser = async (token) => {
-  return await getAPI(apiEndpoints.USER_LOGIN, { k: token })
+  return await axios.get(apiEndpoints.USER_LOGIN, { params: { k: token } })
+    .then(({ data }) => {
+      localStorage.setItem('bearer', JSON.stringify({ token: data?.bearer, created_at: Date.now() }))
+    })
 }
 
 export const logoutUser = async (token) => {
@@ -142,7 +143,6 @@ export const customErrorRetry = (error, key, config, revalidate, opts) => {
   // limit the retries
   const maxRetryCount = config.errorRetryCount
   if (maxRetryCount !== undefined && opts.retryCount > maxRetryCount) return
-
   // Never retry on 4xx errors
   if (Math.floor(error.status / 100) === 4) return
 

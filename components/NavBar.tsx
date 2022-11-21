@@ -8,8 +8,6 @@ import styled from 'styled-components'
 
 import QuickStartGuideModal from './QuickStartGuideModal'
 import { useUser } from './lib/hooks'
-import { useNotifier } from './lib/notifier'
-import { logoutUser } from './lib/api'
 
 const NavItem = styled(Box).attrs({
   fontSize: 2
@@ -25,20 +23,14 @@ const NavItem = styled(Box).attrs({
 const NavBar = () => {
   const router: NextRouter = useRouter()
   const { user, loading, mutate } = useUser()
-  const { notify } = useNotifier()
   const [showModal, setShowModal] = useState(false)
 
   const onLogout = useCallback((e: MouseEvent) => {
     e.preventDefault()
-    logoutUser().then(() => {
-      console.debug('Logged out')
-      router.push('/login')
-    }).catch((e: Error) => {
-      notify.error(`Logout failed: ${e}`)
-    }).finally(() => {
-      mutate()
-    })
-  }, [mutate, notify, router])
+    localStorage.removeItem('bearer')
+    router.push('/login')
+    mutate()
+  }, [mutate, router])
 
   return (
     <>

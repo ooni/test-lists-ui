@@ -10,7 +10,7 @@ import Loading from '../components/Loading'
 
 const Home = () => {
   const router = useRouter()
-  const { user, loading } = useUser()
+  const { user, loading } = useUser({ periodicTokenRefresh: true })
 
   const onCountryChange = useCallback((e) => {
     const selectedCountry = e.target.value
