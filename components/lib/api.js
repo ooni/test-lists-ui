@@ -86,7 +86,7 @@ export const logoutUser = async (token) => {
 
 export const updateRule = (oldEntry, newEntry) => {
   console.debug('Called updateRule with old_entry', oldEntry, 'new_entry', newEntry)
-  return axios.post(apiEndpoints.RULE_UPDATE, {
+  return postAPI(apiEndpoints.RULE_UPDATE, {
     old_entry: oldEntry,
     new_entry: newEntry
   })
