@@ -1,8 +1,10 @@
 import Link from 'next/link'
-import { Flex, Box, Heading, Text } from 'ooni-components'
+import { Flex, Box, Heading, Text, Button } from 'ooni-components'
 import useSWR from 'swr'
 
 import { fetcher, apiEndpoints } from '../components/lib/api'
+import { useUser } from '../components/lib/hooks'
+
 import Layout from '../components/Layout'
 import List from '../components/List'
 import AddRule from '../components/AddRule'
@@ -12,7 +14,9 @@ const swrOptions = {
 }
 
 export default function Home () {
-  // const { user } = useUser()
+  const { user } = useUser()
+
+  const isAdminUser = user?.role === "admin"
 
   const { data, error, isValidating, mutate } = useSWR(
     apiEndpoints.RULE_LIST,
@@ -27,7 +31,7 @@ export default function Home () {
         <button onClick={() => mutate()}> Refresh Data </button>
         <Text ml={3}>Status: {isValidating ? 'Loading...' : 'Ready'}</Text>
       </Flex>
-      <AddRule />
+      {isAdminUser ? <AddRule /> : <a href="https://forms.gle/oEUFkLxWtR6EbZmZ7" target="blank"><Button>Propose priorities</Button></a>}
 
       {data && <List data={data} mutateRules={mutate} />}
       {error && !data &&

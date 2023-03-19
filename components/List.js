@@ -4,7 +4,9 @@ import { theme, Flex } from 'ooni-components'
 import styled from 'styled-components'
 import { MdDelete, MdEdit, MdClose, MdCheck, MdArrowUpward, MdArrowDownward } from 'react-icons/md'
 import { updateRule, deleteRule } from './lib/api'
+import { useUser } from './lib/hooks'
 import { useRouter } from 'next/router'
+
 
 const BORDER_COLOR = theme.colors.gray6
 const ODD_ROW_BG = theme.colors.gray2
@@ -177,6 +179,10 @@ const List = ({ data, mutateRules }) => {
   const skipPageResetRef = React.useRef()
   const router = useRouter()
 
+  const { user } = useUser()
+
+  const isAdminUser = user?.role === "admin"
+
   const columns = useMemo(() => [
     {
       Header: 'Category Code',
@@ -332,22 +338,24 @@ const List = ({ data, mutateRules }) => {
   useRowState,
   useSortBy,
   hooks => {
-    hooks.visibleColumns.push(columns => [
-      {
-        id: 'edit',
-        maxWidth: 32,
-        Cell: EditButton
-      },
-      ...columns,
-      {
-        id: 'delete',
-        maxWidth: 16,
-        // eslint-disable-next-line react/display-name
-        Cell: ({ row: { index } }) => (
-            <DeleteButton onClick={() => onRowDelete(index)} />
-        )
-      }
-    ])
+    if (isAdminUser) {
+      hooks.visibleColumns.push(columns => [
+        {
+          id: 'edit',
+          maxWidth: 32,
+          Cell: EditButton
+        },
+        ...columns,
+        {
+          id: 'delete',
+          maxWidth: 16,
+          // eslint-disable-next-line react/display-name
+          Cell: ({ row: { index } }) => (
+              <DeleteButton onClick={() => onRowDelete(index)} />
+          )
+        }
+      ])
+    }
   }
   )
 

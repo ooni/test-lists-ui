@@ -22,15 +22,13 @@ const NavItem = styled(Box).attrs({
 
 const NavBar = () => {
   const router: NextRouter = useRouter()
-  const { user, loading, mutate } = useUser()
+  const { user, logout } = useUser()
   const [showModal, setShowModal] = useState(false)
 
-  const onLogout = useCallback((e: MouseEvent) => {
+  const onLogout = (e) => {
     e.preventDefault()
-    localStorage.removeItem('bearer')
-    router.push('/login')
-    mutate()
-  }, [mutate, router])
+    logout()
+  }
 
   return (
     <>
@@ -40,7 +38,7 @@ const NavBar = () => {
           <Image alt='OONI Logo' src={OONILogo} height='32px' width='115px' />
         </NextLink></NavItem>
         <Box ml='auto'>
-        {!loading && user.loggedIn &&
+        {user?.logged_in &&
             <>
               <Link href='#logout' color='white' mr={4} onClick={() => setShowModal(true)}>Help</Link>
               <Link href='#logout' color='white' onClick={onLogout}>Logout</Link>
