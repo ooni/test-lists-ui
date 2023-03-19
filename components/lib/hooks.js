@@ -1,22 +1,54 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useContext, createContext, useMemo } from 'react'
 import useSWR from 'swr'
 
-import { fetcher, apiEndpoints, customErrorRetry, refreshToken } from './api'
+import { apiEndpoints, loginUser, refreshToken, getAPI } from './api'
 
 const TWELVE_HOURS = 1000 * 60 * 60 * 12
 const TEN_MINUTES = 1000 * 60 * 10
 
-export function useUser (props = {}) {
-  const [tokenRefreshErrored, setTokenRefreshErrored] = useState(false)
-  const { data, error, mutate } = useSWR(apiEndpoints.ACCOUNT_METADATA, fetcher, {
-    dedupingInterval: 1000,
-    onErrorRetry: customErrorRetry
-  })
+const UserContext = createContext({})
+
+export const UserProvider = ({children}) => {
   const router = useRouter()
+  const { token } = router.query
+  const [user, setUser] = useState()
+  const [error, setError] = useState()
+  const [loading, setLoading] = useState(false)
+  const [loadingInitial, setLoadingInitial] = useState(true)
+
+  const getUser = () => {
+    return getAPI(apiEndpoints.ACCOUNT_METADATA)
+      .then((user) => setUser(user))
+      .catch(() => setUser(undefined))
+      .finally(() => setLoadingInitial(false))
+  }
+
+  const afterLogin = useCallback((redirectTo) => {
+    const { pathname, searchParams } = new URL(redirectTo)
+    setTimeout(() => {
+      router.push({ pathname, query: Object.fromEntries([...searchParams]) })
+    }, 3000)
+  }, [router])
 
   useEffect(() => {
-    if (!props.periodicTokenRefresh) return
+    if (token && router.pathname === '/login') {
+      loginUser(token)
+        .then((data) => {
+          getUser()
+          if (data?.redirect_to) afterLogin(data.redirect_to)
+        }).catch((e)=> {
+          console.log(e)
+          setError(e.message)
+        })
+    } else {
+      setError(null)
+    }
+  }, [afterLogin, token, router.pathname])
+
+  // periodically check if the token need to be refreshed and request a
+  // new one if needed
+  useEffect(() => {
     const interval = setInterval(() => {
       const tokenCreatedAt = JSON.parse(localStorage.getItem('bearer'))?.created_at
       if (tokenCreatedAt) {
@@ -26,7 +58,7 @@ export function useUser (props = {}) {
           refreshToken().catch((e) => {
             if (e?.response?.status === 401) {
               localStorage.removeItem('bearer')
-              setTokenRefreshErrored(true)
+              getUser()
             }
           })
         }
@@ -36,47 +68,47 @@ export function useUser (props = {}) {
     return () => clearInterval(interval)
   }, [])
 
-  const loading = !data && !error
-  // If API returned `401 Unauthorized`, assume the user is not logged in
-  const loggedOut = (error && error.status === 401) || tokenRefreshErrored
-
-  // Automatically redirect to /login from anywhere the hook is called before logging in
-  // Additionally, it can pass in the path to return to via `returnTo` query param, but
-  // this is not supported by the API yet.
   useEffect(() => {
-    if (loggedOut && router.pathname !== '/login') {
-      // router.push(`/login?returnTo=${encodeURIComponent(router.asPath)}`)
-      router.push('/login')
-    }
-  }, [router, loggedOut])
+    getUser()
+  }, [])
 
-  return {
-    loading,
-    loggedOut,
-    user: {
-      loggedIn: !loggedOut
-    },
-    mutate,
+  function login(email, password) {
+    setLoading(true)
+    loginUser(token)
+      .then((data) => {
+        setUser(data)
+        if (data?.redirect_to) afterLogin(data.redirect_to)
+      }).catch((e)=> {
+        console.log(e)
+        setError(error)
+      }).finally(() => setLoading(false))
   }
+
+  function logout() {
+    localStorage.removeItem('bearer')
+    getUser()
+  }
+
+  const memoedValue = useMemo(
+    () => ({
+      user,
+      loading,
+      error,
+      login,
+      logout,
+    }),
+    [user, loading, error]
+  )
+
+  return (
+    <UserContext.Provider value={memoedValue}>
+      {children}
+    </UserContext.Provider>
+  )
 }
 
-// export function useUser({ redirectTo, redirectIfFound } = {}) {
-//   const { data, error } = useSWR('/api/user', fetcher)
-//   const user = data?.user
-//   const finished = Boolean(data)
-//   const hasUser = Boolean(user)
+export const useUser = () => {
+  return useContext(UserContext)
+}
 
-//   useEffect(() => {
-//     if (!redirectTo || !finished) return
-//     if (
-//       // If redirectTo is set, redirect if the user was not found.
-//       (redirectTo && !redirectIfFound && !hasUser) ||
-//       // If redirectIfFound is also set, redirect if the user was found
-//       (redirectIfFound && hasUser)
-//     ) {
-//       Router.push(redirectTo)
-//     }
-//   }, [redirectTo, redirectIfFound, finished, hasUser])
-
-//   return error ? null : user
-// }
+export default useUser
