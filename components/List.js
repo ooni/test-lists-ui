@@ -7,7 +7,6 @@ import { updateRule, deleteRule } from './lib/api'
 import { useUser } from './lib/hooks'
 import { useRouter } from 'next/router'
 
-
 const BORDER_COLOR = theme.colors.gray6
 const ODD_ROW_BG = theme.colors.gray2
 const EVEN_ROW_BG = theme.colors.gray0
@@ -181,7 +180,7 @@ const List = ({ data, mutateRules }) => {
 
   const { user } = useUser()
 
-  const isAdminUser = user?.role === "admin"
+  const isAdminUser = user?.role === 'admin'
 
   const columns = useMemo(() => [
     {

@@ -3,7 +3,6 @@ import NextHead from 'next/head'
 import styled from 'styled-components'
 import { Container, Flex } from 'ooni-components'
 
-
 import NavBar from './NavBar'
 import Footer from './Footer'
 

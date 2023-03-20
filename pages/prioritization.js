@@ -16,7 +16,7 @@ const swrOptions = {
 export default function Home () {
   const { user } = useUser()
 
-  const isAdminUser = user?.role === "admin"
+  const isAdminUser = user?.role === 'admin'
 
   const { data, error, isValidating, mutate } = useSWR(
     apiEndpoints.RULE_LIST,

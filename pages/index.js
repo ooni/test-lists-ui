@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Flex, Box, Heading, Text, Link, Button } from 'ooni-components'
 import NLink from 'next/link'
@@ -39,8 +39,8 @@ const Home = () => {
         </Box>}
 
         <Box pt={2}>
-          {!isLoggedIn && <NLink href="/login"><Button mr={2}>Register to contribute URLs</Button></NLink>}
-          <NLink href="/prioritization"><Button hollow>Show URL priorities</Button></NLink>
+          {!isLoggedIn && <NLink href="/login" passHref><a><Button mr={2}>Register to contribute URLs</Button></a></NLink>}
+          <NLink href="/prioritization" passHref><a><Button hollow>Show URL priorities</Button></a></NLink>
         </Box>
       </Flex>
     </Layout>
