@@ -1,27 +1,30 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState, useCallback, useContext, createContext, useMemo } from 'react'
-import useSWR from 'swr'
 
 import { apiEndpoints, loginUser, refreshToken, getAPI } from './api'
 
 const TWELVE_HOURS = 1000 * 60 * 60 * 12
 const TEN_MINUTES = 1000 * 60 * 10
 
-const UserContext = createContext({})
+const UserContext = createContext({
+  user: undefined,
+  loading: false,
+  error: undefined,
+  login: () => {},
+  logout: () => {},
+})
 
-export const UserProvider = ({children}) => {
+export const UserProvider = ({ children }) => {
   const router = useRouter()
   const { token } = router.query
   const [user, setUser] = useState()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
-  const [loadingInitial, setLoadingInitial] = useState(true)
 
   const getUser = () => {
     return getAPI(apiEndpoints.ACCOUNT_METADATA)
       .then((user) => setUser(user))
       .catch(() => setUser(undefined))
-      .finally(() => setLoadingInitial(false))
   }
 
   const afterLogin = useCallback((redirectTo) => {
@@ -37,7 +40,7 @@ export const UserProvider = ({children}) => {
         .then((data) => {
           getUser()
           if (data?.redirect_to) afterLogin(data.redirect_to)
-        }).catch((e)=> {
+        }).catch((e) => {
           console.log(e)
           setError(e.message)
         })
@@ -72,19 +75,19 @@ export const UserProvider = ({children}) => {
     getUser()
   }, [])
 
-  function login(email, password) {
+  function login (email, password) {
     setLoading(true)
     loginUser(token)
       .then((data) => {
         setUser(data)
         if (data?.redirect_to) afterLogin(data.redirect_to)
-      }).catch((e)=> {
+      }).catch((e) => {
         console.log(e)
         setError(error)
       }).finally(() => setLoading(false))
   }
 
-  function logout() {
+  function logout () {
     localStorage.removeItem('bearer')
     getUser()
   }

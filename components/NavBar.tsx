@@ -1,5 +1,4 @@
-import React, { useCallback, useState } from 'react'
-import { useRouter, NextRouter } from 'next/router'
+import React, { useState } from 'react'
 import NextLink from 'next/link'
 import { Flex, Box, Link } from 'ooni-components'
 import Image from 'next/image'
@@ -21,7 +20,6 @@ const NavItem = styled(Box).attrs({
 `
 
 const NavBar = () => {
-  const router: NextRouter = useRouter()
   const { user, logout } = useUser()
   const [showModal, setShowModal] = useState(false)
 
