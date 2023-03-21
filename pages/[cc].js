@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Heading } from 'ooni-components'
 
@@ -7,6 +7,7 @@ import CountryList from '../components/submit/CountryList'
 import UrlList from '../components/submit/UrlList'
 import { PageContextProvider } from '../components/submit/SubmissionContext'
 import { useNotifier } from '../components/lib/notifier'
+import { useUser } from '../components/lib/hooks'
 import Changes from '../components/submit/Changes'
 
 export default function Submit () {
@@ -15,7 +16,15 @@ export default function Submit () {
     query: { cc },
   } = router
 
+  const { user, loading } = useUser()
+
   const countryCode = typeof cc === 'string' ? cc.toUpperCase() : cc
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace('/login')
+    }
+  }, [user, loading, router])
 
   const onCountryChange = useCallback(
     (e) => {
