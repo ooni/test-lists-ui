@@ -1,4 +1,4 @@
-# User interface for managing test lists
+# Test Lists UI
 
 In this repository you will find the codebase for:
 * User interface for contributing to test lists
