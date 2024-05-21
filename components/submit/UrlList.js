@@ -1,16 +1,16 @@
+import { Box, Container, Flex, Heading, Link } from 'ooni-components'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Box, Flex, Container, Heading, Link } from 'ooni-components'
 
-import { updateURL, addURL, deleteURL } from '../lib/api'
-import Error from './Error'
-import Table from './Table'
-import { EditForm } from './EditForm'
-import ModalWithEsc from './ModalWithEsc'
-import DeleteForm from './DeleteForm'
 import Loading from '../Loading'
-import { getPrettyErrorMessage } from '../lib/translateErrors'
-import { SubmissionContext } from './SubmissionContext'
+import { addURL, deleteURL, updateURL } from '../lib/api'
 import { useNotifier } from '../lib/notifier'
+import { getPrettyErrorMessage } from '../lib/translateErrors'
+import DeleteForm from './DeleteForm'
+import { EditForm } from './EditForm'
+import Error from './Error'
+import ModalWithEsc from './ModalWithEsc'
+import { SubmissionContext } from './SubmissionContext'
+import Table from './Table'
 
 // Does these
 // * Decides what data to pass down to the table
@@ -237,7 +237,7 @@ const UrlList = ({ cc }) => {
           We do not currently have a test list for this country and we do not
           support creating new ones here yet. If you would like to contribute to
           this country test list, send an email to{' '}
-          <Link href='mailto:contact@openobservatoyr.org'>
+          <Link href='mailto:contact@openobservatory.org'>
             <em>contact@openobservatory.org</em>
           </Link>
         </Heading>

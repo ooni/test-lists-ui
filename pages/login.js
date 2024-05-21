@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Box, Flex, Heading, Text, Link } from 'ooni-components'
-import { useRouter } from 'next/router'
 import NLink from 'next/link'
+import { useRouter } from 'next/router'
+import { Box, Flex, Heading, Link, Text } from 'ooni-components'
+import React, { useCallback, useEffect, useState } from 'react'
 
+import { mutate } from 'swr'
 import Layout from '../components/Layout'
+import Loading from '../components/Loading'
 import LoginForm from '../components/LoginForm'
 import { apiEndpoints, loginUser } from '../components/lib/api'
-import { mutate } from 'swr'
-import Loading from '../components/Loading'
 import { useUser } from '../components/lib/hooks'
 
 const Login = () => {
@@ -103,7 +103,7 @@ const Login = () => {
       <Flex alignItems='center' flexDirection='column'>
         <Box bg='blue5' mt={5} color='white' px={4} py={4} maxWidth="860px">
           <Text fontSize={[1, 2]}>
-            To discover the blocking of websites around the world, tools like <NLink href="https://ooni.org/install" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>OONI Probe</Link></NLink> rely on certain lists of websites (&quot;<NLink href="https://ooni.org/get-involved/contribute-test-lists" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>test lists</Link></NLink>&quot;). This platform includes these lists, which you can review and contribute to.<br/><br/>
+            To discover the blocking of websites around the world, tools like <NLink href="https://ooni.org/install">OONI Probe</NLink> rely on certain lists of websites (&quot;<NLink href="https://ooni.org/get-involved/contribute-test-lists">test lists</NLink>&quot;). This platform includes these lists, which you can review and contribute to.<br/><br/>
             Help the internet freedom community discover website blocks around the world by contributing websites for testing!
           </Text>
         </Box>

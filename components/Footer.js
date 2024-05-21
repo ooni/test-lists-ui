@@ -1,4 +1,4 @@
-import { Flex, Box, Link } from 'ooni-components'
+import { Box, Flex, Link } from 'ooni-components'
 import styled from 'styled-components'
 
 const FooterWrapper = styled(Flex).attrs({
@@ -25,7 +25,7 @@ const Footer = () => (
     <FooterWrapper>
       <FooterColumn color='white' fontSize={1}>
         <Box>
-          © 2020 Open Observatory of Network Interference (OONI)
+          © 2024 Open Observatory of Network Interference (OONI)
         </Box>
       </FooterColumn>
       <Flex ml={['initial', 'auto']} my={[2, 0]} alignItems={['flex-start', 'center']} flexDirection={['column', 'row']}>

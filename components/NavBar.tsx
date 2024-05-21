@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
-import NextLink from 'next/link'
-import { Flex, Box, Link } from 'ooni-components'
 import Image from 'next/image'
-import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
+import NextLink from 'next/link'
+import { Box, Flex, Link } from 'ooni-components'
+import OONILogo from 'ooni-components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
+// import OONILogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
+
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import QuickStartGuideModal from './QuickStartGuideModal'
@@ -33,7 +35,7 @@ const NavBar = () => {
       <QuickStartGuideModal show={showModal} setShowModal={setShowModal} />
       <Flex bg='blue5' color='white' p={3} alignItems='center'>
         <NavItem><NextLink href='/' passHref>
-          <Image alt='OONI Logo' src={OONILogo} height='32px' width='115px' />
+          <Image alt='OONI Logo' src={OONILogo} height={32} width={115} />
         </NextLink></NavItem>
         <Box ml='auto'>
         {user?.logged_in &&

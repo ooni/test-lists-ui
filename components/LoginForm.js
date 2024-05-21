@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { Flex, Box, Input, Button } from 'ooni-components'
+import { Box, Button, Flex, Input } from 'ooni-components'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
 import { registerUser } from './lib/api'
@@ -27,8 +27,9 @@ export const LoginForm = ({ onLogin }) => {
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setError] = useState(null)
 
-  const { handleSubmit, register, formState, reset } = useForm({
+  const { handleSubmit, control, formState, reset } = useForm({
     mode: 'onTouched',
+    defaultValues: { email_address: '' }
   })
 
   const { errors, isValid, isDirty } = formState
@@ -70,7 +71,7 @@ export const LoginForm = ({ onLogin }) => {
         alignItems={'center'}
       >
         <StyledInputContainer>
-          <Input type='email' placeholder='Email *'
+          {/* <Input type='email' placeholder='Email *'
             {...register('email_address', {
               required: {
                 value: true,
@@ -81,8 +82,25 @@ export const LoginForm = ({ onLogin }) => {
                 message: 'Invalid email address format'
               }
             })}
+          /> */}
+          <Controller
+            render={({field}) => (
+              <Input 
+                placeholder='Email *'
+                error={errors?.email_address?.message}
+                {...field}
+              />
+            )}
+            rules={{
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 
+              },
+              required: true,
+            }}
+            name='email_address'
+            control={control}
           />
-          <StyledError>{errors?.email_address?.message}</StyledError>
+          {/* <StyledError>{errors?.email_address?.message}</StyledError> */}
         </StyledInputContainer>
         <Box my={2}>
           <StyledError>{loginError ?? <>&nbsp;</>}</StyledError>

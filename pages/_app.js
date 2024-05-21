@@ -1,8 +1,13 @@
 // import '../scripts/wdyr' // eslint-disable-line no-unused-vars
+import { Fira_Sans } from 'next/font/google'
 import { theme } from 'ooni-components'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import 'fontsource-fira-sans/latin.css'
 import { UserProvider } from '../components/lib/hooks'
+
+export const firaSans = Fira_Sans({
+  weight: ['300', '400', '600'],
+  subsets: ['latin'],
+})
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -12,10 +17,10 @@ const GlobalStyle = createGlobalStyle`
   body, html {
     margin: 0;
     padding: 0;
-    font-family: "Fira Sans";
     font-size: 14px;
     height: 100%;
     background-color: #ffffff;
+    font-family: ${firaSans.style.fontFamily};
   }
 `
 

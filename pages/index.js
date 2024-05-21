@@ -1,12 +1,12 @@
-import { useCallback } from 'react'
-import { useRouter } from 'next/router'
-import { Flex, Box, Heading, Text, Link, Button } from 'ooni-components'
 import NLink from 'next/link'
+import { useRouter } from 'next/router'
+import { Box, Button, Flex, Heading, Link, Text } from 'ooni-components'
+import { useCallback } from 'react'
 
 import Layout from '../components/Layout'
-import CountryList from '../components/submit/CountryList'
-import { useUser } from '../components/lib/hooks'
 import Loading from '../components/Loading'
+import { useUser } from '../components/lib/hooks'
+import CountryList from '../components/submit/CountryList'
 
 const Home = () => {
   const router = useRouter()
@@ -35,12 +35,12 @@ const Home = () => {
 
         {isLoggedIn && <Box bg='blue5' mt={5} color='white' px={4} py={4} fontSize={2} maxWidth="860px">
           <Text fontWeight='bold'>Important:</Text>
-          <p>Internationally-relevant websites (such as facebook.com) are tested by <NLink href="https://ooni.org/install" passHref={true}><Link color="white" css={{ textDecoration: 'underline' }}>OONI Probe</Link></NLink> users globally, and are only meant to be included in the Global test list.</p>
+          <p>Internationally-relevant websites (such as facebook.com) are tested by <NLink href="https://ooni.org/install">OONI Probe</NLink> users globally, and are only meant to be included in the Global test list.</p>
         </Box>}
 
         <Box pt={2}>
-          {!isLoggedIn && <NLink href="/login" passHref><a><Button mr={2}>Register to contribute URLs</Button></a></NLink>}
-          <NLink href="/prioritization" passHref><a><Button hollow>Show URL priorities</Button></a></NLink>
+          {!isLoggedIn && <NLink href="/login"><Button mr={2}>Register to contribute URLs</Button></NLink>}
+          <NLink href="/prioritization"><Button hollow>Show URL priorities</Button></NLink>
         </Box>
       </Flex>
     </Layout>
