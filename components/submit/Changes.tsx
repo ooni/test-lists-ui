@@ -1,7 +1,8 @@
-import React, { useContext } from 'react'
-import { Box, Flex, Text, Heading } from 'ooni-components'
-import { MdDelete, MdEdit } from 'react-icons/md'
 import { territoryNames } from 'country-util'
+import { Box, Flex, Heading, Text } from 'ooni-components'
+import type React from 'react'
+import { useContext } from 'react'
+import { MdDelete, MdEdit } from 'react-icons/md'
 import styled from 'styled-components'
 
 import { SubmissionContext } from './SubmissionContext'
@@ -73,7 +74,8 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
   return (
     <Flex flexDirection='column'>
       <Box mx={3}>
-        <Heading h={5}>{countryName}</Heading>
+        {/* <Heading h={5}>{countryName}</Heading> */}
+        <h5>{countryName}</h5>
       </Box>
       <Box>
         {changes.map((change) => (
