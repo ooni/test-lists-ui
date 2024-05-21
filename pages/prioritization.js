@@ -13,7 +13,7 @@ const swrOptions = {
   // dedupingInterval: 10 * 60 * 1000,
 }
 
-export default function Home () {
+export default function Home() {
   const { user } = useUser()
 
   const isAdminUser = user?.role === 'admin'
@@ -21,25 +21,37 @@ export default function Home () {
   const { data, error, isValidating, mutate } = useSWR(
     apiEndpoints.RULE_LIST,
     fetcher,
-    swrOptions
+    swrOptions,
   )
 
   return (
     <Layout title='URL Prioritization'>
-      <Heading h={1} textAlign='center'>URL Priorities</Heading>
+      <Heading h={1} textAlign='center'>
+        URL Priorities
+      </Heading>
       <Flex alignItems='center' mb={3}>
         <button onClick={() => mutate()}> Refresh Data </button>
         <Text ml={3}>Status: {isValidating ? 'Loading...' : 'Ready'}</Text>
       </Flex>
-      {isAdminUser ? <AddRule /> : <a href="https://forms.gle/oEUFkLxWtR6EbZmZ7" target="blank"><Button>Propose priorities</Button></a>}
+      {isAdminUser ? (
+        <AddRule />
+      ) : (
+        <a href='https://forms.gle/oEUFkLxWtR6EbZmZ7' target='blank'>
+          <Button>Propose priorities</Button>
+        </a>
+      )}
 
       {data && <List data={data} mutateRules={mutate} />}
-      {error && !data &&
+      {error && !data && (
         <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
-          <Box>{error.status} {error.message}</Box>
-          <Box><Link href='/login'> Login </Link></Box>
+          <Box>
+            {error.status} {error.message}
+          </Box>
+          <Box>
+            <Link href='/login'> Login </Link>
+          </Box>
         </Flex>
-      }
+      )}
     </Layout>
   )
 }

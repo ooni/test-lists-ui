@@ -8,11 +8,12 @@ const CountryList = ({ defaultValue, ...rest }) => {
       <option value=''>Select a country</option>
       <option value='GLOBAL'>Global</option>
       {countryUtil.countryList
-        .sort((c1, c2) => c1.iso3166_name > c2.iso3166_name ? 1 : -1)
+        .sort((c1, c2) => (c1.iso3166_name > c2.iso3166_name ? 1 : -1))
         .map(({ iso3166_alpha2, name }, index) => (
-          <option key={index} value={iso3166_alpha2}>{name}</option>
-        ))
-      }
+          <option key={index} value={iso3166_alpha2}>
+            {name}
+          </option>
+        ))}
     </Select>
   )
 }

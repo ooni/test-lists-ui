@@ -1,9 +1,17 @@
-import { Box, Heading, Text, Modal, Container, Flex, Button } from 'ooni-components'
+import {
+  Box,
+  Heading,
+  Text,
+  Modal,
+  Container,
+  Flex,
+  Button,
+} from 'ooni-components'
 import styled from 'styled-components'
 import instructions from './submit/quick_start_guide.json'
 
 const StyledModal = styled(Modal).attrs({
-  minWidth: 340
+  minWidth: 340,
 })``
 
 const QuickStartGuideModal = ({ show, setShowModal }) => {
@@ -14,12 +22,14 @@ const QuickStartGuideModal = ({ show, setShowModal }) => {
           <Heading h={4} textAlign='center'>
             Quick Start Guide
           </Heading>
-          <Box as="ol" fontSize={1} pl={3} my={[0, 2]} px={5}>
-            {instructions.filter((_, i) => i > 1).map((line, index) => (
-              <Text as="li" key={index} my={2}>
-                {line}
-              </Text>
-            ))}
+          <Box as='ol' fontSize={1} pl={3} my={[0, 2]} px={5}>
+            {instructions
+              .filter((_, i) => i > 1)
+              .map((line, index) => (
+                <Text as='li' key={index} my={2}>
+                  {line}
+                </Text>
+              ))}
           </Box>
         </Flex>
       </Container>

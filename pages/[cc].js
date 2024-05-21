@@ -10,7 +10,7 @@ import { useNotifier } from '../components/lib/notifier'
 import { useUser } from '../components/lib/hooks'
 import Changes from '../components/submit/Changes'
 
-export default function Submit () {
+export default function Submit() {
   const router = useRouter()
   const {
     query: { cc },
@@ -31,7 +31,7 @@ export default function Submit () {
       const selectedCountry = e.target.value
       router.push(`/${selectedCountry}`, undefined, { shallow: true })
     },
-    [router]
+    [router],
   )
 
   const { Notification } = useNotifier()

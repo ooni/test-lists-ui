@@ -60,51 +60,78 @@ const Login = () => {
   return (
     <Layout title='Login'>
       <Flex alignItems='center' flexDirection='column'>
-        <Heading h={1} mt={3} mb={1} fontSize={[3, 5]}>Test Lists Editor</Heading>
-        <Heading h={3} mt={1} fontWeight={300} fontSize={[2, 3]}>Contribute websites for censorship testing</Heading>
+        <Heading h={1} mt={3} mb={1} fontSize={[3, 5]}>
+          Test Lists Editor
+        </Heading>
+        <Heading h={3} mt={1} fontWeight={300} fontSize={[2, 3]}>
+          Contribute websites for censorship testing
+        </Heading>
       </Flex>
       <Flex mt={4} flexDirection='column'>
         {/* Before logging In */}
-        {!token && !submitted &&
+        {!token && !submitted && (
           <>
-            <Text fontSize={1} mb={2} textAlign='center'>Add your email address and click the link sent to your email to log into this platform. <br/>We do not store email addresses.</Text>
+            <Text fontSize={1} mb={2} textAlign='center'>
+              Add your email address and click the link sent to your email to
+              log into this platform. <br />
+              We do not store email addresses.
+            </Text>
             <LoginForm onLogin={onLoginSubmit} />
           </>
-        }
-        {!token && submitted &&
+        )}
+        {!token && submitted && (
           <Heading h={3} width={[1, 2 / 3]} textAlign='center' mx='auto'>
-            Your login request has been submitted. Please check your email for a link to activate and log in to your account.
+            Your login request has been submitted. Please check your email for a
+            link to activate and log in to your account.
           </Heading>
-        }
+        )}
 
         {/* While logging In */}
-        {token && !loggedIn && !error &&
+        {token && !loggedIn && !error && (
           <>
             <Loading size={96} dir={-1} speed={2} />
-            <Heading h={2} my={2} mx='auto'> Logging in... </Heading>
+            <Heading h={2} my={2} mx='auto'>
+              {' '}
+              Logging in...{' '}
+            </Heading>
           </>
-        }
+        )}
 
         {/* After loggin in */}
-        {loggedIn && !error &&
+        {loggedIn && !error && (
           <>
-            <Heading h={2} my={2} mx='auto'> Logged in. Redirecting to dashboard... </Heading>
+            <Heading h={2} my={2} mx='auto'>
+              {' '}
+              Logged in. Redirecting to dashboard...{' '}
+            </Heading>
           </>
-        }
+        )}
 
         {/* Errors */}
-        {error &&
+        {error && (
           <Box width={[1, 1 / 3]} mx='auto' textAlign={'center'}>
-            <Box mb={3} p={4} bg='red1'>{error}</Box>
+            <Box mb={3} p={4} bg='red1'>
+              {error}
+            </Box>
             <NLink href='/login'>Try logging in again</NLink>
           </Box>
-        }
+        )}
       </Flex>
       <Flex alignItems='center' flexDirection='column'>
-        <Box bg='blue5' mt={5} color='white' px={4} py={4} maxWidth="860px">
+        <Box bg='blue5' mt={5} color='white' px={4} py={4} maxWidth='860px'>
           <Text fontSize={[1, 2]}>
-            To discover the blocking of websites around the world, tools like <NLink href="https://ooni.org/install">OONI Probe</NLink> rely on certain lists of websites (&quot;<NLink href="https://ooni.org/get-involved/contribute-test-lists">test lists</NLink>&quot;). This platform includes these lists, which you can review and contribute to.<br/><br/>
-            Help the internet freedom community discover website blocks around the world by contributing websites for testing!
+            To discover the blocking of websites around the world, tools like{' '}
+            <NLink href='https://ooni.org/install'>OONI Probe</NLink> rely on
+            certain lists of websites (&quot;
+            <NLink href='https://ooni.org/get-involved/contribute-test-lists'>
+              test lists
+            </NLink>
+            &quot;). This platform includes these lists, which you can review
+            and contribute to.
+            <br />
+            <br />
+            Help the internet freedom community discover website blocks around
+            the world by contributing websites for testing!
           </Text>
         </Box>
       </Flex>

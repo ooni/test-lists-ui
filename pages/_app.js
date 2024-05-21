@@ -1,4 +1,4 @@
-// import '../scripts/wdyr' // eslint-disable-line no-unused-vars
+// import '../scripts/wdyr'
 import { Fira_Sans } from 'next/font/google'
 import { theme } from 'ooni-components'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
@@ -24,7 +24,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-function MyApp ({ Component, pageProps }) {
+function MyApp({ Component, pageProps }) {
   return (
     <UserProvider>
       <GlobalStyle />

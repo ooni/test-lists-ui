@@ -32,7 +32,7 @@ const UrlList = ({ cc }) => {
     submissionState,
     testList,
     mutate: mutateSubmissionState,
-    error
+    error,
   } = useContext(SubmissionContext)
 
   const entryToEdit = useMemo(() => {
@@ -71,7 +71,7 @@ const UrlList = ({ cc }) => {
             .catch((e) => {
               const prettyErrorMessage = getPrettyErrorMessage(
                 e.message,
-                'delete'
+                'delete',
               )
               setEditFormError(prettyErrorMessage)
               reject(prettyErrorMessage)
@@ -104,7 +104,7 @@ const UrlList = ({ cc }) => {
             .catch((e) => {
               const prettyErrorMessage = getPrettyErrorMessage(
                 e.message,
-                'edit'
+                'edit',
               )
               setEditFormError(prettyErrorMessage)
               reject(prettyErrorMessage)
@@ -127,18 +127,11 @@ const UrlList = ({ cc }) => {
           style: {
             maxWidth: '600px',
           },
-        }
+        },
       )
       return actionPromise
     },
-    [
-      notify,
-      deleteIndex,
-      editIndex,
-      cc,
-      entryToEdit,
-      mutateSubmissionState,
-    ]
+    [notify, deleteIndex, editIndex, cc, entryToEdit, mutateSubmissionState],
   )
 
   const onCancel = () => {
@@ -170,12 +163,12 @@ const UrlList = ({ cc }) => {
       {!!testList?.length && (
         <>
           <Box py={2}>
-              <EditForm
-                layout='row'
-                onSubmit={handleSubmit}
-                oldEntry={{}}
-                error={addFormError}
-              />
+            <EditForm
+              layout='row'
+              onSubmit={handleSubmit}
+              oldEntry={{}}
+              error={addFormError}
+            />
           </Box>
 
           <Table

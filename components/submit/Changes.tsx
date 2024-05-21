@@ -24,7 +24,7 @@ type RowProps = {
 
 const OddEvenRow = styled(Flex)`
   :nth-child(even) {
-    background: ${props => props.theme.colors.gray2};
+    background: ${(props) => props.theme.colors.gray2};
   }
   @media (max-width: 640px) {
     flex-wrap: wrap;
@@ -102,11 +102,7 @@ const Changes = () => {
   }
 
   return (
-    <Flex
-      flexDirection='column'
-      mt={2}
-      pb={4}
-    >
+    <Flex flexDirection='column' mt={2} pb={4}>
       <>
         <Box fontWeight='bold'>
           <Row change={headerRow} />
@@ -116,8 +112,7 @@ const Changes = () => {
             .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
             .map((cc) => (
               <ChangeSet key={cc} cc={cc} changes={changes[cc]} />
-            ))
-          }
+            ))}
         </Box>
         <SubmitButton />
       </>

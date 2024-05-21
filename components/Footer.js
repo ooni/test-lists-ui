@@ -7,32 +7,46 @@ const FooterWrapper = styled(Flex).attrs({
   color: 'gray2',
   px: [1, 4],
   py: 3,
-  mt: 4
+  mt: 4,
 })``
 
 const FooterColumn = styled(Flex).attrs({
   flexDirection: 'column',
   justifyContent: 'center',
-  mx: 3
+  mx: 3,
 })``
 
 const FooterItem = ({ label, link }) => (
-  <Link my={1} mx={3} color='gray2' href={link}>{label}</Link>
+  <Link my={1} mx={3} color='gray2' href={link}>
+    {label}
+  </Link>
 )
 
 const Footer = () => (
   <footer>
     <FooterWrapper>
       <FooterColumn color='white' fontSize={1}>
-        <Box>
-          © 2024 Open Observatory of Network Interference (OONI)
-        </Box>
+        <Box>© 2024 Open Observatory of Network Interference (OONI)</Box>
       </FooterColumn>
-      <Flex ml={['initial', 'auto']} my={[2, 0]} alignItems={['flex-start', 'center']} flexDirection={['column', 'row']}>
+      <Flex
+        ml={['initial', 'auto']}
+        my={[2, 0]}
+        alignItems={['flex-start', 'center']}
+        flexDirection={['column', 'row']}
+      >
         <FooterItem label='About OONI' link='https://ooni.org' />
-        <FooterItem label='About Test Lists' link='https://ooni.org/get-involved/contribute-test-lists' />
-        <FooterItem label='Test Lists on Github' link='https://github.com/citizenlab/test-lists/' />
-        <FooterItem label='Source Code' link='https://github.com/ooni/test-lists-ui' />
+        <FooterItem
+          label='About Test Lists'
+          link='https://ooni.org/get-involved/contribute-test-lists'
+        />
+        <FooterItem
+          label='Test Lists on Github'
+          link='https://github.com/citizenlab/test-lists/'
+        />
+        <FooterItem
+          label='Source Code'
+          link='https://github.com/ooni/test-lists-ui'
+        />
       </Flex>
     </FooterWrapper>
   </footer>

@@ -11,7 +11,7 @@ import QuickStartGuideModal from './QuickStartGuideModal'
 import { useUser } from './lib/hooks'
 
 const NavItem = styled(Box).attrs({
-  fontSize: 2
+  fontSize: 2,
 })`
   cursor: pointer;
 
@@ -34,16 +34,27 @@ const NavBar = () => {
     <>
       <QuickStartGuideModal show={showModal} setShowModal={setShowModal} />
       <Flex bg='blue5' color='white' p={3} alignItems='center'>
-        <NavItem><NextLink href='/' passHref>
-          <Image alt='OONI Logo' src={OONILogo} height={32} width={115} />
-        </NextLink></NavItem>
+        <NavItem>
+          <NextLink href='/' passHref>
+            <Image alt='OONI Logo' src={OONILogo} height={32} width={115} />
+          </NextLink>
+        </NavItem>
         <Box ml='auto'>
-        {user?.logged_in &&
+          {user?.logged_in && (
             <>
-              <Link href='#logout' color='white' mr={4} onClick={() => setShowModal(true)}>Help</Link>
-              <Link href='#logout' color='white' onClick={onLogout}>Logout</Link>
+              <Link
+                href='#logout'
+                color='white'
+                mr={4}
+                onClick={() => setShowModal(true)}
+              >
+                Help
+              </Link>
+              <Link href='#logout' color='white' onClick={onLogout}>
+                Logout
+              </Link>
             </>
-        }
+          )}
         </Box>
       </Flex>
     </>

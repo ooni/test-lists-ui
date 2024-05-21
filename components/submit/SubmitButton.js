@@ -39,8 +39,7 @@ const SubmitButton = () => {
         )}
         {isSubmitted && (
           <Box>
-            Your submission is being reviewed{' '}
-            <Link href={linkToPR}>here.</Link>
+            Your submission is being reviewed <Link href={linkToPR}>here.</Link>
           </Box>
         )}
         {isEditing && (
