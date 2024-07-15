@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
+import { useIntl } from 'react-intl'
 import { registerUser } from './lib/api'
 import Loading from './Loading'
 
@@ -26,6 +27,7 @@ export const LoginForm = ({ onLogin }) => {
   const PRODUCTION_URL = 'https://test-lists.ooni.org/'
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setError] = useState(null)
+  const { formatMessage } = useIntl()
 
   const { handleSubmit, control, formState, reset } = useForm({
     mode: 'onTouched',
@@ -72,18 +74,6 @@ export const LoginForm = ({ onLogin }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Flex flexDirection={['column']} alignItems={'center'}>
         <StyledInputContainer>
-          {/* <Input type='email' placeholder='Email *'
-            {...register('email_address', {
-              required: {
-                value: true,
-                message: 'Email address is required'
-              },
-              pattern: {
-                value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                message: 'Invalid email address format'
-              }
-            })}
-          /> */}
           <Controller
             render={({ field }) => (
               <Input
@@ -101,18 +91,17 @@ export const LoginForm = ({ onLogin }) => {
             name='email_address'
             control={control}
           />
-          {/* <StyledError>{errors?.email_address?.message}</StyledError> */}
         </StyledInputContainer>
         <Box my={2}>
+          {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
           <StyledError>{loginError ?? <>&nbsp;</>}</StyledError>
         </Box>
         <Box my={2}>
           <Button type='submit' disabled={submitting || !isDirty || !isValid}>
-            {' '}
-            Login{' '}
+            {formatMessage({ id: 'LoginForm.Login' })}
           </Button>
         </Box>
-        {submitting ? <Loading size={96} /> : <Box my={50}></Box>}
+        {submitting ? <Loading size={96} /> : <Box my={50} />}
       </Flex>
     </form>
   )

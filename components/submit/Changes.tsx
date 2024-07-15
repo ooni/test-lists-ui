@@ -1,10 +1,11 @@
 import { territoryNames } from 'country-util'
-import { Box, Flex, Heading, Text } from 'ooni-components'
+import { Box, Flex, Text } from 'ooni-components'
 import type React from 'react'
 import { useContext } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import styled from 'styled-components'
 
+import { useIntl } from 'react-intl'
 import { SubmissionContext } from './SubmissionContext'
 import SubmitButton from './SubmitButton'
 
@@ -24,7 +25,7 @@ type RowProps = {
 }
 
 const OddEvenRow = styled(Flex)`
-  :nth-child(even) {
+  &:nth-child(even) {
     background: ${(props) => props.theme.colors.gray2};
   }
   @media (max-width: 640px) {
@@ -33,6 +34,7 @@ const OddEvenRow = styled(Flex)`
 `
 
 const Row: React.FunctionComponent<RowProps> = ({ change }) => {
+  const { formatMessage } = useIntl()
   return (
     <OddEvenRow key={change.url} py={2}>
       <Flex width={[1, 2 / 8, 1 / 8]}>
@@ -41,8 +43,12 @@ const Row: React.FunctionComponent<RowProps> = ({ change }) => {
           {change.action === 'delete' && <MdDelete />}
         </Cell>
         <Cell>
-          {change.action === 'add' && <Text>Edited/Added</Text>}
-          {change.action === 'delete' && <Text>Deleted</Text>}
+          {change.action === 'add' && (
+            <Text>{formatMessage({ id: 'Changes.EditedAdded' })}</Text>
+          )}
+          {change.action === 'delete' && (
+            <Text>{formatMessage({ id: 'Deleted' })}</Text>
+          )}
         </Cell>
       </Flex>
       <Cell pr={2} width={[1, 3 / 8]}>
@@ -62,9 +68,11 @@ const Row: React.FunctionComponent<RowProps> = ({ change }) => {
 }
 
 const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
+  const { formatMessage } = useIntl()
+
   let countryName = ''
   if (cc === 'global') {
-    countryName = 'Global'
+    countryName = formatMessage({ id: 'CountryList.Global' })
   } else if (cc.length === 2) {
     countryName =
       cc.toUpperCase() in territoryNames
@@ -74,8 +82,7 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
   return (
     <Flex flexDirection='column'>
       <Box mx={3}>
-        {/* <Heading h={5}>{countryName}</Heading> */}
-        <h5>{countryName}</h5>
+        <h4>{countryName}</h4>
       </Box>
       <Box>
         {changes.map((change) => (
@@ -87,16 +94,17 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
 }
 
 const Changes = () => {
+  const { formatMessage } = useIntl()
   const { changes } = useContext(SubmissionContext)
   const hasChanges = Object.keys(changes ?? {}).length > 0
 
   const headerRow: Change = {
     action: 'Action',
-    url: 'URL',
-    category_description: 'Category',
-    date_added: 'Date Added',
-    source: 'Source',
-    notes: 'Notes',
+    url: formatMessage({ id: 'Changes.URL' }),
+    category_description: formatMessage({ id: 'Changes.Category' }),
+    date_added: formatMessage({ id: 'Changes.DateAdded' }),
+    source: formatMessage({ id: 'Changes.Source' }),
+    notes: formatMessage({ id: 'Changes.Notes' }),
   }
 
   if (!hasChanges) {

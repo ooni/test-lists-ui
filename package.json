@@ -8,9 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "category_codes": "bash scripts/fetchCategoryCodes.sh"
+    "category_codes": "bash scripts/fetchCategoryCodes.sh",
+    "script:build-translations": "node ./scripts/build-translations.js"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^14.2.3",
     "axios": "^1.7.1",
     "country-util": "^0.2.0",
     "next": "^14.2.3",
@@ -20,7 +22,7 @@
     "react-hook-form": "^7.51.4",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.1",
-    "react-lottie-player": "^2.0.0",
+    "react-intl": "^6.6.8",
     "react-table": "^7.8.0",
     "styled-components": "^6.1.11",
     "swr": "^2.2.5"
@@ -31,6 +33,7 @@
     "@types/react": "^18.3.2",
     "@types/styled-components": "^5.1.34",
     "@welldone-software/why-did-you-render": "^8.0.1",
+    "glob": "^11.0.0",
     "ts-migrate": "^0.1.35",
     "typescript": "^5.4.5"
   }

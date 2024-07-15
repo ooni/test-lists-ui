@@ -1,14 +1,14 @@
 import { useRouter } from 'next/router'
 import {
-  useEffect,
-  useState,
+  createContext,
   useCallback,
   useContext,
-  createContext,
+  useEffect,
   useMemo,
+  useState,
 } from 'react'
 
-import { apiEndpoints, loginUser, refreshToken, getAPI } from './api'
+import { apiEndpoints, getAPI, loginUser, refreshToken } from './api'
 
 const TWELVE_HOURS = 1000 * 60 * 60 * 12
 const TEN_MINUTES = 1000 * 60 * 10
@@ -44,6 +44,7 @@ export const UserProvider = ({ children }) => {
     [router],
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (token && router.pathname === '/login') {
       loginUser(token)
@@ -62,6 +63,7 @@ export const UserProvider = ({ children }) => {
 
   // periodically check if the token need to be refreshed and request a
   // new one if needed
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const interval = setInterval(() => {
       const tokenCreatedAt = JSON.parse(
@@ -84,6 +86,7 @@ export const UserProvider = ({ children }) => {
     return () => clearInterval(interval)
   }, [])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     getUser()
   }, [])
@@ -107,6 +110,7 @@ export const UserProvider = ({ children }) => {
     getUser()
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const memoedValue = useMemo(
     () => ({
       user,

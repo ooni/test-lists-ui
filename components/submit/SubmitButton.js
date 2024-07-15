@@ -1,11 +1,13 @@
+import { Box, Button, Flex, Link } from 'ooni-components'
 import React, { useCallback, useContext } from 'react'
-import { Box, Button, Link, Flex } from 'ooni-components'
 
+import { useIntl } from 'react-intl'
 import { submitChanges } from '../lib/api'
-import { SubmissionContext } from './SubmissionContext'
 import { useNotifier } from '../lib/notifier'
+import { SubmissionContext } from './SubmissionContext'
 
 const SubmitButton = () => {
+  const { formatMessage } = useIntl()
   const { notify } = useNotifier()
   const { submissionState, linkToPR, mutate } = useContext(SubmissionContext)
   const isSubmitted = submissionState === 'PR_OPEN'
@@ -32,20 +34,22 @@ const SubmitButton = () => {
     <Flex flexDirection={['column']} py={3} mb={4}>
       <Flex my={[2, 2]}>
         {isClean && (
-          <Box>
-            Add, Edit or Delete URLs in the list. Then submit your changes for
-            review.
-          </Box>
+          <Box>{formatMessage({ id: 'SubmitButton.CleanState' })}</Box>
         )}
         {isSubmitted && (
           <Box>
-            Your submission is being reviewed <Link href={linkToPR}>here.</Link>
+            {formatMessage(
+              { id: 'SubmitButton.SubmittedState' },
+              { link: (string) => <Link href={linkToPR}>{string}</Link> },
+            )}
           </Box>
         )}
         {isEditing && (
           <Box>
-            When you are done making changes, click <strong>Submit</strong> to
-            propose your changes.
+            {formatMessage(
+              { id: 'SubmitButton.EditingState' },
+              { strong: (string) => <strong>{string}</strong> },
+            )}
           </Box>
         )}
       </Flex>
@@ -55,7 +59,7 @@ const SubmitButton = () => {
           title={`Current state: ${submissionState}`}
           disabled={isSubmitted || isClean}
         >
-          Submit
+          {formatMessage({ id: 'SubmitButton.Submit' })}
         </Button>
       </Flex>
     </Flex>

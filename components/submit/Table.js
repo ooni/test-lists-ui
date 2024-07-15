@@ -9,6 +9,7 @@ import {
 import { useFlexLayout, useSortBy, useTable } from 'react-table'
 import styled from 'styled-components'
 
+import { useIntl } from 'react-intl'
 import categories from '../lib/category_codes.json'
 
 const BORDER_COLOR = theme.colors.gray6
@@ -36,16 +37,16 @@ const TableHeader = styled.thead`
 `
 
 const TableRow = styled.tr`
-  :nth-child(odd) {
+  &:nth-child(odd) {
     background-color: ${ODD_ROW_BG};
   }
-  :nth-child(even) {
+  &:nth-child(even) {
     background-color: ${EVEN_ROW_BG};
   }
-  :first-child {
+  &:first-child {
     border-top: 1px solid ${BORDER_COLOR};
   }
-  :last-child {
+  &:last-child {
     border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
   }
 `
@@ -55,10 +56,10 @@ const TableCell = styled.td`
   padding: 0.5rem;
   border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
 
-  :last-child {
+  &:last-child {
     border-right: 1px solid ${(props) => props.theme.colors.gray6};
   }
-  :first-child {
+  &:first-child {
     border-left: 1px solid ${(props) => props.theme.colors.gray6};
     word-wrap: break-word;
   }
@@ -152,10 +153,12 @@ const TableView = ({
   skipPageReset,
   submissionState,
 }) => {
+  const { formatMessage } = useIntl()
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const columns = useMemo(
     () => [
       {
-        Header: 'URL',
+        Header: formatMessage({ id: 'Changes.URL' }),
         accessor: 'url',
         minWidth: 100,
         inputAttrs: {
@@ -164,7 +167,7 @@ const TableView = ({
         },
       },
       {
-        Header: 'Category',
+        Header: formatMessage({ id: 'Changes.Category' }),
         accessor: 'category_code',
         id: 'category_code',
         Cell: CategoryCell,
@@ -177,20 +180,20 @@ const TableView = ({
         },
       },
       {
-        Header: 'Date Added',
+        Header: formatMessage({ id: 'Changes.DateAdded' }),
         accessor: 'date_added',
         maxWidth: 40,
         Cell: DateCell,
         className: 'secondary',
       },
       {
-        Header: 'Source',
+        Header: formatMessage({ id: 'Changes.Source' }),
         accessor: 'source',
         maxWidth: 40,
         className: 'secondary',
       },
       {
-        Header: 'Notes',
+        Header: formatMessage({ id: 'Changes.Notes' }),
         accessor: 'notes',
         minWidth: 100,
         inputAttrs: {
@@ -241,14 +244,17 @@ const TableView = ({
       <TableHeader>
         {
           // Loop over the header rows
-          headerGroups.map((headerGroup) => (
+          headerGroups.map((headerGroup, i) => (
             // Apply the header row props
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
               {
                 // Loop over the headers in each row
-                headerGroup.headers.map((column) => (
+                headerGroup.headers.map((column, j) => (
                   // Apply the header cell props
                   <th
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    key={j}
                     {...column.getHeaderProps([
                       column.getSortByToggleProps(),
                       { className: column.className },
@@ -274,19 +280,22 @@ const TableView = ({
       <tbody {...getTableBodyProps()}>
         {
           // Loop over the table rows
-          rows.map((row) => {
+          rows.map((row, i) => {
             // Prepare the row for display
             prepareRow(row)
 
             return (
               // Apply the row props
-              <TableRow {...row.getRowProps()} index={row.index}>
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <TableRow key={i} {...row.getRowProps()} index={row.index}>
                 {
                   // Loop over the rows cells
-                  row.cells.map((cell) => {
+                  row.cells.map((cell, j) => {
                     // Apply the cell props
                     return (
                       <TableCell
+                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                        key={j}
                         {...cell.getCellProps([
                           { className: cell.column.className },
                         ])}

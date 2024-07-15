@@ -39,16 +39,16 @@ const TableHeader = styled.thead`
 `
 
 const TableRow = styled.tr`
-  :nth-child(odd) {
+  &:nth-child(odd) {
     background-color: ${ODD_ROW_BG};
   }
-  :nth-child(even) {
+  &:nth-child(even) {
     background-color: ${EVEN_ROW_BG};
   }
-  :first-child {
+  &:first-child {
     border-top: 1px solid ${BORDER_COLOR};
   }
-  :last-child {
+  &:last-child {
     border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
   }
 `
@@ -58,10 +58,10 @@ const TableCell = styled.td`
   padding: 0.5rem;
   border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
 
-  :last-child {
+  &:last-child {
     border-right: 1px solid ${(props) => props.theme.colors.gray6};
   }
-  :first-child {
+  &:first-child {
     border-left: 1px solid ${(props) => props.theme.colors.gray6};
   }
 
@@ -126,9 +126,8 @@ const EditableCell = ({
         onBlur={onBlur}
       />
     )
-  } else {
-    return <Cell value={value} />
   }
+  return <Cell value={value} />
 }
 
 // Set our editable cell renderer as the default Cell renderer
@@ -432,14 +431,19 @@ const List = ({ data, mutateRules }) => {
       <TableHeader>
         {
           // Loop over the header rows
-          headerGroups.map((headerGroup) => (
+          headerGroups.map((headerGroup, i) => (
             // Apply the header row props
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
               {
                 // Loop over the headers in each row
-                headerGroup.headers.map((column) => (
+                headerGroup.headers.map((column, j) => (
                   // Apply the header cell props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <th
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    key={j}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                  >
                     {
                       // Render the header
                       column.render('Header')
@@ -460,19 +464,21 @@ const List = ({ data, mutateRules }) => {
       <tbody {...getTableBodyProps()}>
         {
           // Loop over the table rows
-          rows.map((row) => {
+          rows.map((row, i) => {
             // Prepare the row for display
             prepareRow(row)
 
             return (
               // Apply the row props
-              <TableRow {...row.getRowProps()} index={row.index}>
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <TableRow key={i} {...row.getRowProps()} index={row.index}>
                 {
                   // Loop over the rows cells
-                  row.cells.map((cell) => {
+                  row.cells.map((cell, j) => {
                     // Apply the cell props
                     return (
-                      <TableCell {...cell.getCellProps()}>
+                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                      <TableCell key={j} {...cell.getCellProps()}>
                         {
                           // Render the cell contents
                           cell.render('Cell')

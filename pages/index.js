@@ -1,14 +1,16 @@
 import NLink from 'next/link'
 import { useRouter } from 'next/router'
-import { Box, Button, Flex, Heading, Link, Text } from 'ooni-components'
+import { Box, Button, Flex, Heading, Text } from 'ooni-components'
 import { useCallback } from 'react'
 
+import { useIntl } from 'react-intl'
 import Layout from '../components/Layout'
 import Loading from '../components/Loading'
 import { useUser } from '../components/lib/hooks'
 import CountryList from '../components/submit/CountryList'
 
 const Home = () => {
+  const { formatMessage } = useIntl()
   const router = useRouter()
   const { user, loading } = useUser({ periodicTokenRefresh: true })
 
@@ -22,10 +24,10 @@ const Home = () => {
   )
 
   return (
-    <Layout title='Test Lists Editor'>
+    <Layout title={formatMessage({ id: 'Index.Title' })}>
       <Flex alignItems='center' justifyContent='center' flexDirection='column'>
         <Heading h={1} mt={3} fontSize={[3, 5]}>
-          Test Lists Editor
+          {formatMessage({ id: 'Index.Title' })}
         </Heading>
         {!loading && isLoggedIn && (
           <Flex
@@ -35,7 +37,7 @@ const Home = () => {
             my='auto'
           >
             <Heading h={4} my={4}>
-              Which country&apos;s test list would you like to contribute to?
+              {formatMessage({ id: 'Index.WhichContribution' })}
             </Heading>
             <Box my={2}>
               <CountryList onChange={onCountryChange} />
@@ -55,25 +57,34 @@ const Home = () => {
             fontSize={2}
             maxWidth='860px'
           >
-            <Text fontWeight='bold'>Important:</Text>
-            <p>
-              Internationally-relevant websites (such as facebook.com) are
-              tested by{' '}
-              <NLink href='https://ooni.org/install'>OONI Probe</NLink> users
-              globally, and are only meant to be included in the Global test
-              list.
-            </p>
+            {formatMessage(
+              { id: 'Index.NoticeMessage' },
+              {
+                strong: (string) => (
+                  <Text fontWeight='bold' mb={3}>
+                    {string}
+                  </Text>
+                ),
+                link: (string) => (
+                  <NLink href='https://ooni.org/install'>{string}</NLink>
+                ),
+              },
+            )}
           </Box>
         )}
 
         <Box pt={2}>
           {!isLoggedIn && (
             <NLink href='/login'>
-              <Button mr={2}>Register to contribute URLs</Button>
+              <Button mr={2}>
+                {formatMessage({ id: 'Index.RegisterButton' })}
+              </Button>
             </NLink>
           )}
           <NLink href='/prioritization'>
-            <Button hollow>Show URL priorities</Button>
+            <Button hollow>
+              {formatMessage({ id: 'Index.ShowPrioritiesButton' })}
+            </Button>
           </NLink>
         </Box>
       </Flex>

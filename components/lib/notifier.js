@@ -1,4 +1,4 @@
-import { Flex, Box, Button } from 'ooni-components'
+import { Box, Button, Flex } from 'ooni-components'
 import React from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -23,7 +23,7 @@ export const useNotifier = () => {
         )
       },
       {
-        duration: Infinity,
+        duration: Number.Infinity,
         position: 'top-right',
         style: { maxWidth: '600px' },
       },

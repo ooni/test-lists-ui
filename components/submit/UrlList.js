@@ -1,13 +1,13 @@
 import { Box, Container, Flex, Heading, Link } from 'ooni-components'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-
+import { useIntl } from 'react-intl'
 import Loading from '../Loading'
 import { addURL, deleteURL, updateURL } from '../lib/api'
 import { useNotifier } from '../lib/notifier'
 import { getPrettyErrorMessage } from '../lib/translateErrors'
 import DeleteForm from './DeleteForm'
 import { EditForm } from './EditForm'
-import Error from './Error'
+import ErrorComponent from './Error'
 import ModalWithEsc from './ModalWithEsc'
 import { SubmissionContext } from './SubmissionContext'
 import Table from './Table'
@@ -17,6 +17,8 @@ import Table from './Table'
 // * Controls when the table is allowed to reset its state
 //   e.g when editing is going on, no resetting sort order
 const UrlList = ({ cc }) => {
+  const { formatMessage } = useIntl()
+
   const { notify } = useNotifier()
   // holds rowIndex of row being edited
   const [editIndex, setEditIndex] = useState(null)
@@ -45,7 +47,7 @@ const UrlList = ({ cc }) => {
         entry = testList[deleteIndex]
       }
     }
-    delete entry.category_description
+    entry.category_description = undefined
     return entry
   }, [testList, editIndex, deleteIndex])
 
@@ -114,14 +116,15 @@ const UrlList = ({ cc }) => {
       notify.promise(
         actionPromise,
         {
-          loading: 'Saving changes...',
+          loading: formatMessage({ id: 'UrlList.SavingChanges' }),
           success:
             deleteIndex !== null
-              ? 'Deleted'
+              ? formatMessage({ id: 'Changes.Deleted' })
               : editIndex === null
-                ? 'Added'
-                : 'Updated',
-          error: (err) => `Failed: ${err}`,
+                ? formatMessage({ id: 'UrlList.Added' })
+                : formatMessage({ id: 'UrlList.Updated' }),
+          error: (err) =>
+            formatMessage({ id: 'UrlList.Failed' }, { error: err }),
         },
         {
           style: {
@@ -131,7 +134,15 @@ const UrlList = ({ cc }) => {
       )
       return actionPromise
     },
-    [notify, deleteIndex, editIndex, cc, entryToEdit, mutateSubmissionState],
+    [
+      notify,
+      deleteIndex,
+      editIndex,
+      cc,
+      entryToEdit,
+      mutateSubmissionState,
+      formatMessage,
+    ],
   )
 
   const onCancel = () => {
@@ -148,10 +159,12 @@ const UrlList = ({ cc }) => {
     setEditFormError(null)
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setSkipPageResest(false)
   }, [testList])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     // NOTE: addFormError isn't reset even when the page navigates to another country list
     // This manually removes the error message under the "Add new URL" section when a new `{cc}` is selected
@@ -227,16 +240,20 @@ const UrlList = ({ cc }) => {
       )}
       {testList === null && (
         <Heading h={4} px={[1, 5]} py={4} my={4} bg='white' color='gray9'>
-          We do not currently have a test list for this country and we do not
-          support creating new ones here yet. If you would like to contribute to
-          this country test list, send an email to{' '}
-          <Link href='mailto:contact@openobservatory.org'>
-            <em>contact@openobservatory.org</em>
-          </Link>
+          {formatMessage(
+            { id: 'UrlList.CountryNotSupported' },
+            {
+              email_address: (
+                <Link href='mailto:contact@openobservatory.org'>
+                  <em>contact@openobservatory.org</em>
+                </Link>
+              ),
+            },
+          )}
         </Heading>
       )}
       {testList === undefined && <Loading size={200} />}
-      {error && <Error>{error.message}</Error>}
+      {error && <ErrorComponent>{error.message}</ErrorComponent>}
     </Flex>
   )
 }

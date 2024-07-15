@@ -1,6 +1,6 @@
 import { Box, Flex, Heading } from 'ooni-components'
 
-const Error = ({ children, ...rest }) => (
+const ErrorComponent = ({ children, ...rest }) => (
   <Flex
     my={2}
     px={4}
@@ -15,4 +15,4 @@ const Error = ({ children, ...rest }) => (
   </Flex>
 )
 
-export default Error
+export default ErrorComponent

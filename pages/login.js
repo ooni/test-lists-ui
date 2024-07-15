@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { Box, Flex, Heading, Link, Text } from 'ooni-components'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { useIntl } from 'react-intl'
 import { mutate } from 'swr'
 import Layout from '../components/Layout'
 import Loading from '../components/Loading'
@@ -11,6 +12,7 @@ import { apiEndpoints, loginUser } from '../components/lib/api'
 import { useUser } from '../components/lib/hooks'
 
 const Login = () => {
+  const { formatMessage } = useIntl()
   const [submitted, setSubmitted] = useState(false)
   const [loggedIn, setLoggedIn] = useState(false)
   const [error, setError] = useState(null)
@@ -61,28 +63,30 @@ const Login = () => {
     <Layout title='Login'>
       <Flex alignItems='center' flexDirection='column'>
         <Heading h={1} mt={3} mb={1} fontSize={[3, 5]}>
-          Test Lists Editor
+          {formatMessage({ id: 'Index.Title' })}
         </Heading>
         <Heading h={3} mt={1} fontWeight={300} fontSize={[2, 3]}>
-          Contribute websites for censorship testing
+          {formatMessage({ id: 'Index.Subtitle' })}
         </Heading>
       </Flex>
       <Flex mt={4} flexDirection='column'>
         {/* Before logging In */}
         {!token && !submitted && (
           <>
-            <Text fontSize={1} mb={2} textAlign='center'>
-              Add your email address and click the link sent to your email to
-              log into this platform. <br />
-              We do not store email addresses.
+            <Text
+              fontSize={1}
+              mb={2}
+              textAlign='center'
+              sx={{ whiteSpace: 'pre-line', lineHeight: 1 }}
+            >
+              {formatMessage({ id: 'Login.Instructions' })}
             </Text>
             <LoginForm onLogin={onLoginSubmit} />
           </>
         )}
         {!token && submitted && (
           <Heading h={3} width={[1, 2 / 3]} textAlign='center' mx='auto'>
-            Your login request has been submitted. Please check your email for a
-            link to activate and log in to your account.
+            {formatMessage({ id: 'Login.Submitted' })}
           </Heading>
         )}
 
@@ -91,8 +95,7 @@ const Login = () => {
           <>
             <Loading size={96} dir={-1} speed={2} />
             <Heading h={2} my={2} mx='auto'>
-              {' '}
-              Logging in...{' '}
+              {formatMessage({ id: 'Login.LoggingIn' })}
             </Heading>
           </>
         )}
@@ -101,8 +104,7 @@ const Login = () => {
         {loggedIn && !error && (
           <>
             <Heading h={2} my={2} mx='auto'>
-              {' '}
-              Logged in. Redirecting to dashboard...{' '}
+              {formatMessage({ id: 'Login.LoggedIn' })}
             </Heading>
           </>
         )}
@@ -113,25 +115,31 @@ const Login = () => {
             <Box mb={3} p={4} bg='red1'>
               {error}
             </Box>
-            <NLink href='/login'>Try logging in again</NLink>
+            <NLink href='/login'>
+              {formatMessage({ id: 'Login.TryAgain' })}
+            </NLink>
           </Box>
         )}
       </Flex>
       <Flex alignItems='center' flexDirection='column'>
         <Box bg='blue5' mt={5} color='white' px={4} py={4} maxWidth='860px'>
-          <Text fontSize={[1, 2]}>
-            To discover the blocking of websites around the world, tools like{' '}
-            <NLink href='https://ooni.org/install'>OONI Probe</NLink> rely on
-            certain lists of websites (&quot;
-            <NLink href='https://ooni.org/get-involved/contribute-test-lists'>
-              test lists
-            </NLink>
-            &quot;). This platform includes these lists, which you can review
-            and contribute to.
-            <br />
-            <br />
-            Help the internet freedom community discover website blocks around
-            the world by contributing websites for testing!
+          <Text
+            fontSize={[1, 2]}
+            sx={{ whiteSpace: 'pre-line', lineHeight: 1.2 }}
+          >
+            {formatMessage(
+              { id: 'Login.CTA' },
+              {
+                'probe-link': (string) => (
+                  <NLink href='https://ooni.org/install'>{string}</NLink>
+                ),
+                'testlists-link': (string) => (
+                  <NLink href='https://ooni.org/get-involved/contribute-test-lists'>
+                    {string}
+                  </NLink>
+                ),
+              },
+            )}
           </Text>
         </Box>
       </Flex>

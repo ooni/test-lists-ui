@@ -1,13 +1,13 @@
 import Link from 'next/link'
-import { Flex, Box, Heading, Text, Button } from 'ooni-components'
+import { Box, Button, Flex, Heading, Text } from 'ooni-components'
 import useSWR from 'swr'
 
-import { fetcher, apiEndpoints } from '../components/lib/api'
+import { apiEndpoints, fetcher } from '../components/lib/api'
 import { useUser } from '../components/lib/hooks'
 
+import AddRule from '../components/AddRule'
 import Layout from '../components/Layout'
 import List from '../components/List'
-import AddRule from '../components/AddRule'
 
 const swrOptions = {
   // dedupingInterval: 10 * 60 * 1000,
@@ -30,7 +30,9 @@ export default function Home() {
         URL Priorities
       </Heading>
       <Flex alignItems='center' mb={3}>
-        <button onClick={() => mutate()}> Refresh Data </button>
+        <button type='button' onClick={() => mutate()}>
+          Refresh Data
+        </button>
         <Text ml={3}>Status: {isValidating ? 'Loading...' : 'Ready'}</Text>
       </Flex>
       {isAdminUser ? (

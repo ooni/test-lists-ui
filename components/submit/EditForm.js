@@ -1,7 +1,8 @@
-import { useCallback, useState, useContext } from 'react'
-import { Button, Flex, Heading, Label as LLabel, Input } from 'ooni-components'
+import { Button, Flex, Heading, Input, Label as LLabel } from 'ooni-components'
+import { useCallback, useContext, useState } from 'react'
 import styled from 'styled-components'
 
+import { useIntl } from 'react-intl'
 import CategoryList from './CategoryList'
 import { SubmissionContext } from './SubmissionContext'
 
@@ -35,6 +36,7 @@ export const EditForm = ({
   onCancel,
   layout = 'column',
 }) => {
+  const { formatMessage } = useIntl()
   const [submitting, setSubmitting] = useState(false)
   const { countryCode } = useContext(SubmissionContext)
 
@@ -42,23 +44,24 @@ export const EditForm = ({
 
   const handleSubmit = useCallback(
     async (e) => {
+      console.log(e.target)
       e.preventDefault()
       setSubmitting(true)
 
       const formData = new FormData(e.target)
       const categoryCode = formData.get('category_code')
       const today = new Date().toISOString().split('T')[0]
-
+      console.log('formData', formData)
       // Add a trailing slash to the URL
       // * if not already added by user
       // * if the URL doesn't contain a path component (e.g "https://ooni.org/blog/test-lists")
       let url = formData.get('url')
       if (!url.endsWith('/') && !url.match(/\..+\/.+/)) {
-        url = url + '/'
+        url = `${url}/`
       }
 
       const newEntry = {
-        url: url,
+        url,
         category_code: categoryCode,
         date_added: oldEntry.date_added ?? today,
         source: oldEntry.source ?? defaultSource,
@@ -88,26 +91,29 @@ export const EditForm = ({
   return (
     <form onSubmit={handleSubmit}>
       <Heading h={4} mx={0} px={0}>
-        {isEdit ? `Editing ${oldEntry.url}` : 'Add new URL'}
+        {isEdit
+          ? formatMessage({ id: 'EditForm.AddNew' }, { url: oldEntry.url })
+          : formatMessage({ id: 'EditForm.AddNew' })}
       </Heading>
       <Flex flexDirection={layout} my={2} alignItems='center' flexWrap='wrap'>
         <Flex flexDirection='column' my={2} width={width}>
           <Label htmlFor='url' required={true}>
-            URL
+            {formatMessage({ id: 'Changes.URL' })}
           </Label>
-          <Input
+          <input
             name='url'
+            id='url'
             type='text'
             required={true}
-            pattern='https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
+            // pattern='https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
             placeholder='https://example.com/'
-            defaultValue={oldEntry.url}
+            defaultValue={oldEntry.url || ''}
           />
         </Flex>
 
         <Flex flexDirection='column' m={2} width={width}>
           <Label htmlFor='category_code' required={true}>
-            Category
+            {formatMessage({ id: 'Changes.Category' })}
           </Label>
           <CategoryList
             name='category_code'
@@ -117,11 +123,14 @@ export const EditForm = ({
         </Flex>
 
         <Flex flexDirection='column' m={2} width={width}>
-          <Label htmlFor='notes'>Notes</Label>
-          <Input
+          <Label htmlFor='notes'>
+            {formatMessage({ id: 'Changes.Notes' })}
+          </Label>
+          <input
             name='notes'
+            id='notes'
             type='text'
-            placeholder='Document any useful context for this URL'
+            placeholder={formatMessage({ id: 'EditForm.NotesPlaceholder' })}
             defaultValue={oldEntry.notes}
           />
         </Flex>
@@ -131,13 +140,13 @@ export const EditForm = ({
         {isEdit && (
           <Flex flexDirection='column' my={2} width={width} flexGrow={'auto'}>
             <Label htmlFor='comment' required={true}>
-              Comment
+              {formatMessage({ id: 'EditForm.Comment' })}
             </Label>
             <Input
               name='comment'
               type='text'
               required={true}
-              placeholder='Please share why you are updating this URL'
+              placeholder={formatMessage({ id: 'EditForm.CommentPlaceholder' })}
               defaultValue={oldEntry.comment}
             />
           </Flex>
@@ -146,15 +155,17 @@ export const EditForm = ({
         {isEdit && (
           <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
             <Button inverted onClick={onCancel} mr={3}>
-              Cancel
+              {formatMessage({ id: 'DeleteForm.Cancel' })}
             </Button>
-            <Button type='submit'>Done</Button>
+            <Button type='submit'>
+              {formatMessage({ id: 'EditForm.Done' })}
+            </Button>
           </Flex>
         )}
 
         {!isEdit && (
           <Button ml='auto' type='submit' hollow disabled={submitting}>
-            Add
+            {formatMessage({ id: 'EditForm.Add' })}
           </Button>
         )}
       </Flex>

@@ -1,6 +1,6 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { Flex, Box, Input, Button } from 'ooni-components'
 import { useRouter } from 'next/router'
+import { Box, Button, Flex, Input } from 'ooni-components'
+import React, { useCallback, useRef, useState } from 'react'
 
 import { updateRule } from '../components/lib/api'
 
@@ -58,6 +58,7 @@ const AddRule = ({ onAddRule }) => {
     <form onSubmit={handleSubmit} ref={formRef}>
       <Flex alignItems='center' justifyContent='space-between' my={2}>
         {fields.map((field, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           <Input key={index} {...field} placeholder={field.name} />
         ))}
         <Button mx={3} p={3} type='submit'>

@@ -1,7 +1,9 @@
-import { useCallback } from 'react'
 import { Button, Flex, Heading, Input } from 'ooni-components'
+import { useCallback } from 'react'
+import { useIntl } from 'react-intl'
 
 const DeleteForm = ({ oldEntry, onDelete, onCancel, error }) => {
+  const { formatMessage } = useIntl()
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault()
@@ -14,22 +16,23 @@ const DeleteForm = ({ oldEntry, onDelete, onCancel, error }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Heading h={4} my={3}>
-        Why are you deleting {oldEntry.url}?
+      <Heading h={5} my={3}>
+        {formatMessage({ id: 'DeleteForm.Why' }, { url: oldEntry.url })}
       </Heading>
       <Flex flexDirection='column' my={4} mx={2}>
         <Input
           name='comment'
-          placeholder='Enter reason for deletion'
+          placeholder={formatMessage({ id: 'DeleteForm.Reason' })}
           required
         />
       </Flex>
       <Flex justifyContent='space-between' width={1} my={3}>
         <Button hollow onClick={onCancel}>
-          {' '}
-          Cancel{' '}
+          {formatMessage({ id: 'DeleteForm.Cancel' })}
         </Button>
-        <Button type='submit'> Delete </Button>
+        <Button type='submit'>
+          {formatMessage({ id: 'DeleteForm.Delete' })}
+        </Button>
       </Flex>
     </form>
   )

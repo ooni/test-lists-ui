@@ -1,4 +1,5 @@
 import { Box, Flex, Link } from 'ooni-components'
+import { useIntl } from 'react-intl'
 import styled from 'styled-components'
 
 const FooterWrapper = styled(Flex).attrs({
@@ -22,34 +23,43 @@ const FooterItem = ({ label, link }) => (
   </Link>
 )
 
-const Footer = () => (
-  <footer>
-    <FooterWrapper>
-      <FooterColumn color='white' fontSize={1}>
-        <Box>© 2024 Open Observatory of Network Interference (OONI)</Box>
-      </FooterColumn>
-      <Flex
-        ml={['initial', 'auto']}
-        my={[2, 0]}
-        alignItems={['flex-start', 'center']}
-        flexDirection={['column', 'row']}
-      >
-        <FooterItem label='About OONI' link='https://ooni.org' />
-        <FooterItem
-          label='About Test Lists'
-          link='https://ooni.org/get-involved/contribute-test-lists'
-        />
-        <FooterItem
-          label='Test Lists on Github'
-          link='https://github.com/citizenlab/test-lists/'
-        />
-        <FooterItem
-          label='Source Code'
-          link='https://github.com/ooni/test-lists-ui'
-        />
-      </Flex>
-    </FooterWrapper>
-  </footer>
-)
+const Footer = () => {
+  const { formatMessage } = useIntl()
+  return (
+    <footer>
+      <FooterWrapper>
+        <FooterColumn color='white' fontSize={1}>
+          <Box>
+            © {new Date().getFullYear()} Open Observatory of Network
+            Interference (OONI)
+          </Box>
+        </FooterColumn>
+        <Flex
+          ml={['initial', 'auto']}
+          my={[2, 0]}
+          alignItems={['flex-start', 'center']}
+          flexDirection={['column', 'row']}
+        >
+          <FooterItem
+            label={formatMessage({ id: 'Footer.AboutOONI' })}
+            link='https://ooni.org'
+          />
+          <FooterItem
+            label={formatMessage({ id: 'Footer.AboutTestLists' })}
+            link='https://ooni.org/get-involved/contribute-test-lists'
+          />
+          <FooterItem
+            label={formatMessage({ id: 'Footer.TestListsGithub' })}
+            link='https://github.com/citizenlab/test-lists/'
+          />
+          <FooterItem
+            label={formatMessage({ id: 'Footer.SourceCode' })}
+            link='https://github.com/ooni/test-lists-ui'
+          />
+        </Flex>
+      </FooterWrapper>
+    </footer>
+  )
+}
 
 export default Footer
