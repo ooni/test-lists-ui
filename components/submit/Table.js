@@ -244,35 +244,38 @@ const TableView = ({
       <TableHeader>
         {
           // Loop over the header rows
-          headerGroups.map((headerGroup, i) => (
+          headerGroups.map((headerGroup) => {
+            const { key: headerGroupKey, ...headerGroupProps } =
+              headerGroup.getHeaderGroupProps()
             // Apply the header row props
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
-              {
-                // Loop over the headers in each row
-                headerGroup.headers.map((column, j) => (
-                  // Apply the header cell props
-                  <th
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    key={j}
-                    {...column.getHeaderProps([
-                      column.getSortByToggleProps(),
-                      { className: column.className },
-                    ])}
-                  >
-                    {
-                      // Render the header
-                      column.render('Header')
-                    }
-                    <TableSortLabel
-                      active={column.isSorted}
-                      direction={column.isSortedDesc ? 'desc' : 'asc'}
-                    />
-                  </th>
-                ))
-              }
-            </tr>
-          ))
+            return (
+              <tr key={headerGroupKey} {...headerGroupProps}>
+                {
+                  // Loop over the headers in each row
+                  headerGroup.headers.map((column) => {
+                    const { key: headerKey, ...headerProps } =
+                      column.getHeaderProps([
+                        column.getSortByToggleProps(),
+                        { className: column.className },
+                      ])
+                    // Apply the header cell props
+                    return (
+                      <th key={headerKey} {...headerProps}>
+                        {
+                          // Render the header
+                          column.render('Header')
+                        }
+                        <TableSortLabel
+                          active={column.isSorted}
+                          direction={column.isSortedDesc ? 'desc' : 'asc'}
+                        />
+                      </th>
+                    )
+                  })
+                }
+              </tr>
+            )
+          })
         }
       </TableHeader>
 
@@ -280,26 +283,22 @@ const TableView = ({
       <tbody {...getTableBodyProps()}>
         {
           // Loop over the table rows
-          rows.map((row, i) => {
+          rows.map((row) => {
             // Prepare the row for display
             prepareRow(row)
-
+            const { key: rowKey, ...rowProps } = row.getRowProps()
             return (
               // Apply the row props
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              <TableRow key={i} {...row.getRowProps()} index={row.index}>
+              <TableRow key={rowKey} {...rowProps} index={row.index}>
                 {
                   // Loop over the rows cells
-                  row.cells.map((cell, j) => {
+                  row.cells.map((cell) => {
+                    const { key: cellKey, ...cellProps } = cell.getCellProps([
+                      { className: cell.column.className },
+                    ])
                     // Apply the cell props
                     return (
-                      <TableCell
-                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                        key={j}
-                        {...cell.getCellProps([
-                          { className: cell.column.className },
-                        ])}
-                      >
+                      <TableCell key={cellKey} {...cellProps}>
                         {
                           // Render the cell contents
                           cell.render('Cell')

@@ -425,60 +425,64 @@ const List = ({ data, mutateRules }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     tableInstance
 
+  const { key: tableBodyKey, ...tableBodyProps } = getTableBodyProps()
   return (
     // apply the table props
     <Table {...getTableProps()}>
       <TableHeader>
         {
           // Loop over the header rows
-          headerGroups.map((headerGroup, i) => (
-            // Apply the header row props
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
-              {
-                // Loop over the headers in each row
-                headerGroup.headers.map((column, j) => (
-                  // Apply the header cell props
-                  <th
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    key={j}
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                  >
-                    {
-                      // Render the header
-                      column.render('Header')
-                    }
-                    <TableSortLabel
-                      active={column.isSorted}
-                      direction={column.isSortedDesc ? 'desc' : 'asc'}
-                    />
-                  </th>
-                ))
-              }
-            </tr>
-          ))
-        }
-      </TableHeader>
-
-      {/* Apply the table body props */}
-      <tbody {...getTableBodyProps()}>
-        {
-          // Loop over the table rows
-          rows.map((row, i) => {
-            // Prepare the row for display
-            prepareRow(row)
+          headerGroups.map((headerGroup) => {
+            const { key: headerGroupKey, ...headerGroupProps } =
+              headerGroup.getHeaderGroupProps()
 
             return (
+              // Apply the header row props
+              <tr key={headerGroupKey} {...headerGroupProps}>
+                {
+                  // Loop over the headers in each row
+                  headerGroup.headers.map((column) => {
+                    const { key: columnHeaderKey, ...columnHeaderProps } =
+                      column.getHeaderProps(column.getSortByToggleProps())
+
+                    return (
+                      // Apply the header cell props
+                      <th key={columnHeaderKey} {...columnHeaderProps}>
+                        {
+                          // Render the header
+                          column.render('Header')
+                        }
+                        <TableSortLabel
+                          active={column.isSorted}
+                          direction={column.isSortedDesc ? 'desc' : 'asc'}
+                        />
+                      </th>
+                    )
+                  })
+                }
+              </tr>
+            )
+          })
+        }
+      </TableHeader>
+      {/* Apply the table body props */}
+      <tbody key={tableBodyKey} {...tableBodyProps}>
+        {
+          // Loop over the table rows
+          rows.map((row) => {
+            // Prepare the row for display
+            prepareRow(row)
+            const { key: rowKey, ...rowProps } = row.getRowProps()
+            return (
               // Apply the row props
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              <TableRow key={i} {...row.getRowProps()} index={row.index}>
+              <TableRow key={rowKey} {...rowProps} index={row.index}>
                 {
                   // Loop over the rows cells
-                  row.cells.map((cell, j) => {
+                  row.cells.map((cell) => {
                     // Apply the cell props
+                    const { key: cellKey, ...cellProps } = cell.getCellProps()
                     return (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                      <TableCell key={j} {...cell.getCellProps()}>
+                      <TableCell key={cellKey} {...cellProps}>
                         {
                           // Render the cell contents
                           cell.render('Cell')
