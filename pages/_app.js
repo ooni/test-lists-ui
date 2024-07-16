@@ -1,4 +1,17 @@
 // import '../scripts/wdyr'
+
+import '@formatjs/intl-displaynames/polyfill'
+
+import '@formatjs/intl-displaynames/locale-data/ar'
+import '@formatjs/intl-displaynames/locale-data/de'
+import '@formatjs/intl-displaynames/locale-data/en'
+import '@formatjs/intl-displaynames/locale-data/es'
+import '@formatjs/intl-displaynames/locale-data/fr'
+import '@formatjs/intl-displaynames/locale-data/km'
+import '@formatjs/intl-displaynames/locale-data/my'
+import '@formatjs/intl-displaynames/locale-data/pt'
+import '@formatjs/intl-displaynames/locale-data/ru'
+import '@formatjs/intl-displaynames/locale-data/tr'
 import { Fira_Sans } from 'next/font/google'
 import { useRouter } from 'next/router'
 import { theme } from 'ooni-components'

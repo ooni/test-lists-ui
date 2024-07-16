@@ -77,7 +77,7 @@ appearance: none;
 }
 `
 
-const languages = process.env.LOCALES
+const languages = process.env.LOCALES as unknown as string[]
 
 const NavBar = () => {
   const router = useRouter()
