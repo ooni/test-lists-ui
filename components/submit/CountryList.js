@@ -1,10 +1,25 @@
 import countryUtil from 'country-util'
 import { Select } from 'ooni-components'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useIntl } from 'react-intl'
+import { getLocalisedRegionName } from '../../utils/i18n'
 
 const CountryList = ({ defaultValue, ...rest }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage, locale } = useIntl()
+
+  const countryOptions = useMemo(
+    () =>
+      countryUtil.countryList
+        .map((cc) => {
+          console.log(cc)
+          return {
+            label: getLocalisedRegionName(cc.iso3166_alpha2, locale),
+            value: cc.iso3166_alpha2,
+          }
+        })
+        .sort((a, b) => new Intl.Collator(locale).compare(a.label, b.label)),
+    [locale],
+  )
 
   return (
     <Select {...rest} value={defaultValue}>
@@ -12,13 +27,11 @@ const CountryList = ({ defaultValue, ...rest }) => {
       <option value='GLOBAL'>
         {formatMessage({ id: 'CountryList.Global' })}
       </option>
-      {countryUtil.countryList
-        .sort((c1, c2) => (c1.iso3166_name > c2.iso3166_name ? 1 : -1))
-        .map(({ iso3166_alpha2, name }) => (
-          <option key={iso3166_alpha2} value={iso3166_alpha2}>
-            {name}
-          </option>
-        ))}
+      {countryOptions.map(({ value, label }) => (
+        <option key={value} value={value}>
+          {label}
+        </option>
+      ))}
     </Select>
   )
 }

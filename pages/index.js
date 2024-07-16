@@ -56,6 +56,11 @@ const Home = () => {
             py={4}
             fontSize={2}
             maxWidth='860px'
+            sx={{
+              a: {
+                color: 'white',
+              },
+            }}
           >
             {formatMessage(
               { id: 'Index.NoticeMessage' },

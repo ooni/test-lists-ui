@@ -125,7 +125,13 @@ const Login = () => {
         <Box bg='blue5' mt={5} color='white' px={4} py={4} maxWidth='860px'>
           <Text
             fontSize={[1, 2]}
-            sx={{ whiteSpace: 'pre-line', lineHeight: 1.2 }}
+            sx={{
+              whiteSpace: 'pre-line',
+              lineHeight: 1.2,
+              a: {
+                color: 'white',
+              },
+            }}
           >
             {formatMessage(
               { id: 'Login.CTA' },

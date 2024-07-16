@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
+import { getLocalisedLanguageName } from '../utils/i18n'
 import QuickStartGuideModal from './QuickStartGuideModal'
 import { useUser } from './lib/hooks'
 
@@ -18,24 +19,6 @@ export const getDirection = (locale) => {
       return 'rtl'
     default:
       return 'ltr'
-  }
-}
-
-const getLocale = (locale) => {
-  if (locale === 'zh-CN') return 'zh-Hans'
-  if (locale === 'pt-BR') return 'pt'
-  return locale
-}
-
-export const getLocalisedLanguageName = (regionCode, locale) => {
-  locale = getLocale(locale)
-
-  try {
-    return new Intl.DisplayNames([locale], { type: 'language' }).of(
-      String(regionCode),
-    )
-  } catch (e) {
-    return regionCode
   }
 }
 
@@ -53,23 +36,18 @@ const NavItem = styled(Box).attrs({
 const LanguageSelect = styled.select`
 color: ${(props) => props.theme.colors.white};
 background: none;
-opacity: 0.6;
 border: none;
 text-transform: capitalize;
 cursor: pointer;
 font-family: inherit;
 font-size: inherit;
 padding: 0;
-padding-bottom: 6px;
 outline: none;
 appearance: none;
 -webkit-appearance: none;
 -moz-appearance: none;
 -ms-appearance: none;
 -o-appearance: none;
-&:hover {
-  opacity: 1;
-}
 // reset option styling for browsers that apply it to its native styling (Brave)
 > option {
   color: initial;
@@ -107,13 +85,12 @@ const NavBar = () => {
             <Image alt='OONI Logo' src={OONILogo} height={32} width={115} />
           </NextLink>
         </NavItem>
-        <Box ml='auto'>
+        <Flex alignItems='center' sx={{ gap: 3 }} ml='auto'>
           {user?.logged_in && (
             <>
               <Link
                 href='#logout'
                 color='white'
-                mr={4}
                 onClick={() => setShowModal(true)}
               >
                 {formatMessage({ id: 'NavBar.Help' })}
@@ -123,14 +100,14 @@ const NavBar = () => {
               </Link>
             </>
           )}
-        </Box>
-        <LanguageSelect onChange={handleLocaleChange} value={locale}>
-          {languages.map((c) => (
-            <option className='text-inherit opacity-100' key={c} value={c}>
-              {getLocalisedLanguageName(c, c)}
-            </option>
-          ))}
-        </LanguageSelect>
+          <LanguageSelect onChange={handleLocaleChange} value={locale}>
+            {languages.map((c) => (
+              <option className='text-inherit opacity-100' key={c} value={c}>
+                {getLocalisedLanguageName(c, c)}
+              </option>
+            ))}
+          </LanguageSelect>
+        </Flex>
       </Flex>
     </>
   )
