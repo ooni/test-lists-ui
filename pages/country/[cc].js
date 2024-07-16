@@ -3,13 +3,13 @@ import { Heading } from 'ooni-components'
 import { useCallback, useEffect } from 'react'
 
 import { useIntl } from 'react-intl'
-import Layout from '../components/Layout'
-import { useUser } from '../components/lib/hooks'
-import { useNotifier } from '../components/lib/notifier'
-import Changes from '../components/submit/Changes'
-import CountryList from '../components/submit/CountryList'
-import { PageContextProvider } from '../components/submit/SubmissionContext'
-import UrlList from '../components/submit/UrlList'
+import Layout from '../../components/Layout'
+import { useUser } from '../../components/lib/hooks'
+import { useNotifier } from '../../components/lib/notifier'
+import Changes from '../../components/submit/Changes'
+import CountryList from '../../components/submit/CountryList'
+import { PageContextProvider } from '../../components/submit/SubmissionContext'
+import UrlList from '../../components/submit/UrlList'
 
 export default function Submit() {
   const { formatMessage } = useIntl()
@@ -30,8 +30,9 @@ export default function Submit() {
 
   const onCountryChange = useCallback(
     (e) => {
+      console.log('bebe')
       const selectedCountry = e.target.value
-      router.push(`/${selectedCountry}`, undefined, { shallow: true })
+      router.push(`/country/${selectedCountry}`, undefined, { shallow: true })
     },
     [router],
   )

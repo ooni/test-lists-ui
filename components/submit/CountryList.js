@@ -10,13 +10,10 @@ const CountryList = ({ defaultValue, ...rest }) => {
   const countryOptions = useMemo(
     () =>
       countryUtil.countryList
-        .map((cc) => {
-          console.log(cc)
-          return {
-            label: getLocalisedRegionName(cc.iso3166_alpha2, locale),
-            value: cc.iso3166_alpha2,
-          }
-        })
+        .map((cc) => ({
+          label: getLocalisedRegionName(cc.iso3166_alpha2, locale),
+          value: cc.iso3166_alpha2,
+        }))
         .sort((a, b) => new Intl.Collator(locale).compare(a.label, b.label)),
     [locale],
   )

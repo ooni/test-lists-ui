@@ -18,7 +18,7 @@ const Home = () => {
   const onCountryChange = useCallback(
     (e) => {
       const selectedCountry = e.target.value
-      router.push(`/${selectedCountry}`, undefined, { shallow: true })
+      router.push(`/country/${selectedCountry}`, undefined, { shallow: true })
     },
     [router],
   )
