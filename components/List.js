@@ -334,7 +334,7 @@ const List = ({ data, mutateRules }) => {
           })
           .catch((e) => {
             // TODO: Update failed. Now what?
-            console.log(e.response.data.error)
+            console.log(e?.response?.data?.error)
             router.reload()
           })
       }
@@ -362,7 +362,7 @@ const List = ({ data, mutateRules }) => {
             }
           })
           .catch((e) => {
-            console.log(e.response.data.error)
+            console.log(e?.response?.data?.error)
             router.reload()
           })
       }

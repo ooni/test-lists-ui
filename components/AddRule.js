@@ -27,7 +27,7 @@ const fields = [
   },
 ]
 
-const AddRule = ({ onAddRule }) => {
+const AddRule = () => {
   const formRef = useRef()
   const [error, setError] = useState(null)
   const router = useRouter()
@@ -48,7 +48,7 @@ const AddRule = ({ onAddRule }) => {
         })
         .catch((e) => {
           // TODO: Show this error somewhere. maybe where the action was performed
-          setError(`addRule failed: ${e.response.data.error}`)
+          setError(`addRule failed: ${e?.response?.data?.error}`)
         })
     },
     [router],
@@ -57,9 +57,8 @@ const AddRule = ({ onAddRule }) => {
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
       <Flex alignItems='center' justifyContent='space-between' my={2}>
-        {fields.map((field, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          <Input key={index} {...field} placeholder={field.name} />
+        {fields.map((field) => (
+          <Input key={field.name} {...field} placeholder={field.name} />
         ))}
         <Button mx={3} p={3} type='submit'>
           {' '}
