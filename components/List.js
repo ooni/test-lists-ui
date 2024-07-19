@@ -222,6 +222,7 @@ const List = ({ data, mutateRules }) => {
 
   const isAdminUser = user?.role === 'admin'
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const columns = useMemo(
     () => [
       {

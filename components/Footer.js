@@ -17,11 +17,15 @@ const FooterColumn = styled(Flex).attrs({
   mx: 3,
 })``
 
-const FooterItem = ({ label, link }) => (
-  <Link my={1} mx={3} color='gray2' href={link}>
-    {label}
-  </Link>
-)
+const FooterItem = styled(Link).attrs({
+  my: 1,
+  mx: 3,
+  color: 'gray2',
+})`
+&:hover {
+  color: white;
+}
+`
 
 const Footer = () => {
   const { formatMessage } = useIntl()
@@ -40,22 +44,18 @@ const Footer = () => {
           alignItems={['flex-start', 'center']}
           flexDirection={['column', 'row']}
         >
-          <FooterItem
-            label={formatMessage({ id: 'Footer.AboutOONI' })}
-            link='https://ooni.org'
-          />
-          <FooterItem
-            label={formatMessage({ id: 'Footer.AboutTestLists' })}
-            link='https://ooni.org/get-involved/contribute-test-lists'
-          />
-          <FooterItem
-            label={formatMessage({ id: 'Footer.TestListsGithub' })}
-            link='https://github.com/citizenlab/test-lists/'
-          />
-          <FooterItem
-            label={formatMessage({ id: 'Footer.SourceCode' })}
-            link='https://github.com/ooni/test-lists-ui'
-          />
+          <FooterItem href='https://ooni.org'>
+            {formatMessage({ id: 'Footer.AboutOONI' })}
+          </FooterItem>
+          <FooterItem href='https://ooni.org/get-involved/contribute-test-lists'>
+            {formatMessage({ id: 'Footer.AboutTestLists' })}{' '}
+          </FooterItem>
+          <FooterItem href='https://github.com/citizenlab/test-lists/'>
+            {formatMessage({ id: 'Footer.TestListsGithub' })}
+          </FooterItem>
+          <FooterItem href='https://github.com/ooni/test-lists-ui'>
+            {formatMessage({ id: 'Footer.SourceCode' })}
+          </FooterItem>
         </Flex>
       </FooterWrapper>
     </footer>

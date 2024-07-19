@@ -1,6 +1,6 @@
 const glob = require('glob')
-const { dirname, basename, resolve } = require('path')
-const { readFileSync, writeFileSync } = require('fs')
+const { dirname, basename, resolve } = require('node:path')
+const { readFileSync, writeFileSync } = require('node:fs')
 
 const LANG_DIR = './public/static/lang/'
 const TRANSLATED_STRINGS_DIR = '../translations/test-lists-editor'
@@ -10,6 +10,7 @@ const supportedLanguages = glob
   .map((f) => basename(dirname(f, '.json')))
 
 // Copy latest files from `translations`
+// biome-ignore lint/complexity/noForEach: <explanation>
 supportedLanguages.forEach((lang) => {
   console.log('> Getting latest translations for:', lang)
   const formattedLang = lang.replace('_', '-')
