@@ -121,5 +121,15 @@
   "CategoryCode.COMM.Description": "Ticari hizmet ve ürünlerle ilgili siteler.",
   "CategoryCode.CTRL.Description": "Denetim için kullanılan iyi niyetli ya da bilinçsiz içerikler.",
   "CategoryCode.IGO.Description": "Birleşmiş Milletler gibi hükümetlerarası kuruluşların siteleri.",
-  "CategoryCode.MISC.Description": "Herhangi bir kategoriye uymayan siteler. (Buradaki XXX sınıflandırılmalıdır)"
+  "CategoryCode.MISC.Description": "Herhangi bir kategoriye uymayan siteler. (Buradaki XXX sınıflandırılmalıdır)",
+  "Prioritization.UrlPriorities": "URL Priorities",
+  "Prioritization.Refresh": "Refresh Data",
+  "Prioritization.Status": "Durum",
+  "Prioritization.Status.Loading": "Yükleniyor...",
+  "Prioritization.Status.Ready": "Hazır",
+  "Prioritization.ProposePriorities": "Propose priorities",
+  "Prioritization.List.CategoryCode": "Kategori kodu",
+  "Prioritization.List.CountryCode": "Country Code",
+  "Prioritization.List.Domain": "Etki alanı",
+  "Prioritization.List.Priority": "Öncelik"
 }

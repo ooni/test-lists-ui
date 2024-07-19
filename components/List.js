@@ -9,6 +9,7 @@ import {
   MdDelete,
   MdEdit,
 } from 'react-icons/md'
+import { useIntl } from 'react-intl'
 import {
   defaultRenderer as Cell,
   useFlexLayout,
@@ -211,6 +212,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) =>
   ) : null
 
 const List = ({ data, mutateRules }) => {
+  const intl = useIntl()
   const [originalData, setOriginalData] = useState(data)
   const updateOriginalData = useCallback(() => setOriginalData(data), [data])
   const skipPageResetRef = React.useRef()
@@ -223,7 +225,7 @@ const List = ({ data, mutateRules }) => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Category Code',
+        Header: intl.formatMessage({ id: 'Prioritization.List.CategoryCode' }),
         accessor: 'category_code',
         width: 50,
         // minWidth: 100,
@@ -235,7 +237,7 @@ const List = ({ data, mutateRules }) => {
         },
       },
       {
-        Header: 'Country Code',
+        Header: intl.formatMessage({ id: 'Prioritization.List.CountryCode' }),
         accessor: 'cc',
         width: 50,
         inputAttrs: {
@@ -245,7 +247,7 @@ const List = ({ data, mutateRules }) => {
         },
       },
       {
-        Header: 'Domain',
+        Header: intl.formatMessage({ id: 'Prioritization.List.Domain' }),
         accessor: 'domain',
         width: 100,
         inputAttrs: {
@@ -254,7 +256,7 @@ const List = ({ data, mutateRules }) => {
         },
       },
       {
-        Header: 'URL',
+        Header: intl.formatMessage({ id: 'Changes.URL' }),
         accessor: 'url',
         // maxWidth: 400,
         inputAttrs: {
@@ -263,7 +265,7 @@ const List = ({ data, mutateRules }) => {
         },
       },
       {
-        Header: 'Priority',
+        Header: intl.formatMessage({ id: 'Prioritization.List.Priority' }),
         accessor: 'priority',
         type: 'number',
         maxWidth: 40,

@@ -121,5 +121,15 @@
   "CategoryCode.COMM.Description": "វេបសាយរបស់សេវាកម្មពាណិជ្ជកម្ម និងផលិតផល។",
   "CategoryCode.CTRL.Description": "មាតិកាដែលគ្មានគ្រោះថ្នាក់ត្រូវបានគេប្រើដើម្បីគ្រប់គ្រង។",
   "CategoryCode.IGO.Description": "វេបសាយរបស់អង្គការអន្តររដ្ឋាភិបាល ដូចជា អង្គការសហប្រជាជាតិ។",
-  "CategoryCode.MISC.Description": "វេបសាយដែលមិនចូលទៅក្នុងផ្នែកណាមួយ។ (គ្រប់វេបសាយទាំងអស់ត្រូវតែដាក់ចូលតាមផ្នែក)"
+  "CategoryCode.MISC.Description": "វេបសាយដែលមិនចូលទៅក្នុងផ្នែកណាមួយ។ (គ្រប់វេបសាយទាំងអស់ត្រូវតែដាក់ចូលតាមផ្នែក)",
+  "Prioritization.UrlPriorities": "URL Priorities",
+  "Prioritization.Refresh": "Refresh Data",
+  "Prioritization.Status": "ស្ថានភាព៖",
+  "Prioritization.Status.Loading": "Loading\u2026",
+  "Prioritization.Status.Ready": "រួចរាល់",
+  "Prioritization.ProposePriorities": "Propose priorities",
+  "Prioritization.List.CategoryCode": "Category Code",
+  "Prioritization.List.CountryCode": "Country Code",
+  "Prioritization.List.Domain": "ដែន",
+  "Prioritization.List.Priority": "Priority"
 }

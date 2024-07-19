@@ -121,5 +121,15 @@
   "CategoryCode.COMM.Description": "مواقع لخدمات ومنتوجات تجارية.",
   "CategoryCode.CTRL.Description": "محتوى حميد أو غير ضار يُستخدم للتحكّم.",
   "CategoryCode.IGO.Description": "مواقع المنظمات الحكومية الدولية مثل الأمم المتحدة.",
-  "CategoryCode.MISC.Description": "المواقع التي لا تندرج تحت أي فئة. (يجب تصنيف الأشياء XXX هنا)"
+  "CategoryCode.MISC.Description": "المواقع التي لا تندرج تحت أي فئة. (يجب تصنيف الأشياء XXX هنا)",
+  "Prioritization.UrlPriorities": "URL Priorities",
+  "Prioritization.Refresh": "Refresh Data",
+  "Prioritization.Status": "الحالة:",
+  "Prioritization.Status.Loading": "يجري التحميل…",
+  "Prioritization.Status.Ready": "جاهز",
+  "Prioritization.ProposePriorities": "Propose priorities",
+  "Prioritization.List.CategoryCode": "رمز الفئة",
+  "Prioritization.List.CountryCode": "Country Code",
+  "Prioritization.List.Domain": "النطاق",
+  "Prioritization.List.Priority": "الأولويّة"
 }

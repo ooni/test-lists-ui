@@ -121,5 +121,15 @@
   "CategoryCode.COMM.Description": "Сайты коммерческих услуг и продуктов.",
   "CategoryCode.CTRL.Description": "Доброкачественный или безобидный контент, используемый для контроля.",
   "CategoryCode.IGO.Description": "Веб-сайты межправительственных организаций, таких как Организация Объединенных Наций (ООН).",
-  "CategoryCode.MISC.Description": "Сайты, не подходящие ни под одну категорию. (XXX пункты должны быть классифицированы)"
+  "CategoryCode.MISC.Description": "Сайты, не подходящие ни под одну категорию. (XXX пункты должны быть классифицированы)",
+  "Prioritization.UrlPriorities": "URL Priorities",
+  "Prioritization.Refresh": "Refresh Data",
+  "Prioritization.Status": "Статус:",
+  "Prioritization.Status.Loading": "Загружается...",
+  "Prioritization.Status.Ready": "Готов",
+  "Prioritization.ProposePriorities": "Propose priorities",
+  "Prioritization.List.CategoryCode": "Код категории",
+  "Prioritization.List.CountryCode": "Country Code",
+  "Prioritization.List.Domain": "Домен",
+  "Prioritization.List.Priority": "Приоритет"
 }

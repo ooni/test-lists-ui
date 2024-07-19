@@ -121,5 +121,15 @@
   "CategoryCode.COMM.Description": "Sites de serviços e produtos comerciais.",
   "CategoryCode.CTRL.Description": "Conteúdo benigno ou inócuo usado como controle.",
   "CategoryCode.IGO.Description": "Sites de organizações intergovernamentais como as Nações Unidas.",
-  "CategoryCode.MISC.Description": "Sites que não se encaixam em nenhuma categoria. (XXX As coisas aqui devem ser categorizadas)"
+  "CategoryCode.MISC.Description": "Sites que não se encaixam em nenhuma categoria. (XXX As coisas aqui devem ser categorizadas)",
+  "Prioritization.UrlPriorities": "URL Priorities",
+  "Prioritization.Refresh": "Refresh Data",
+  "Prioritization.Status": "Status:",
+  "Prioritization.Status.Loading": "Carregando...",
+  "Prioritization.Status.Ready": "Pronto",
+  "Prioritization.ProposePriorities": "Propose priorities",
+  "Prioritization.List.CategoryCode": "Código da Categoria",
+  "Prioritization.List.CountryCode": "Country Code",
+  "Prioritization.List.Domain": "Domínio",
+  "Prioritization.List.Priority": "Prioridade"
 }

@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { apiEndpoints, fetcher } from '../components/lib/api'
 import { useUser } from '../components/lib/hooks'
 
+import { useIntl } from 'react-intl'
 import AddRule from '../components/AddRule'
 import Layout from '../components/Layout'
 import List from '../components/List'
@@ -15,7 +16,7 @@ const swrOptions = {
 
 export default function Home() {
   const { user } = useUser()
-
+  const intl = useIntl()
   const isAdminUser = user?.role === 'admin'
 
   const { data, error, isValidating, mutate } = useSWR(
@@ -27,19 +28,26 @@ export default function Home() {
   return (
     <Layout title='URL Prioritization'>
       <Heading h={1} textAlign='center'>
-        URL Priorities
+        {intl.formatMessage({ id: 'Prioritization.UrlPriorities' })}
       </Heading>
       <Flex alignItems='center' mb={3}>
         <button type='button' onClick={() => mutate()}>
-          Refresh Data
+          {intl.formatMessage({ id: 'Prioritization.Refresh' })}
         </button>
-        <Text ml={3}>Status: {isValidating ? 'Loading...' : 'Ready'}</Text>
+        <Text ml={3}>
+          {intl.formatMessage({ id: 'Prioritization.Status' })}{' '}
+          {isValidating
+            ? intl.formatMessage({ id: 'Prioritization.Status.Loading' })
+            : intl.formatMessage({ id: 'Prioritization.Status.Ready' })}
+        </Text>
       </Flex>
       {isAdminUser ? (
         <AddRule />
       ) : (
         <a href='https://forms.gle/oEUFkLxWtR6EbZmZ7' target='blank'>
-          <Button>Propose priorities</Button>
+          <Button>
+            {intl.formatMessage({ id: 'Prioritization.ProposePriorities' })}
+          </Button>
         </a>
       )}
 
@@ -50,7 +58,9 @@ export default function Home() {
             {error.status} {error.message}
           </Box>
           <Box>
-            <Link href='/login'> Login </Link>
+            <Link href='/login'>
+              {intl.formatMessage({ id: 'LoginForm.Login' })}
+            </Link>
           </Box>
         </Flex>
       )}

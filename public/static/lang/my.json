@@ -121,5 +121,15 @@
   "CategoryCode.COMM.Description": "စီးပွားဖြစ် ဝန်ဆောင်မှုများနှင့် ထုတ်ကုန်များ၏ ဝဘ်ဆိုဒ်များ။",
   "CategoryCode.CTRL.Description": "ထိန်းချုပ်ရန် အသုံးပြုသည့် နူးညံ့သိမ်မွေ့သော သို့မဟုတ် အပြစ်ကင်းသော အကြောင်းအရာ။",
   "CategoryCode.IGO.Description": "ကုလသမဂ္ဂကဲ့သို့သော အစိုးရအဖွဲ့အစည်းများ၏ ဝဘ်ဆိုဒ်များ။",
-  "CategoryCode.MISC.Description": "မည်သည့်အမျိုးအစားနှင့်မျှ မကိုက်ညီသောဆိုဒ်များ။ (ဤနေရာတွင် XXX အရာများကို အမျိုးအစားခွဲသင့်သည်)"
+  "CategoryCode.MISC.Description": "မည်သည့်အမျိုးအစားနှင့်မျှ မကိုက်ညီသောဆိုဒ်များ။ (ဤနေရာတွင် XXX အရာများကို အမျိုးအစားခွဲသင့်သည်)",
+  "Prioritization.UrlPriorities": "URL Priorities",
+  "Prioritization.Refresh": "Refresh Data",
+  "Prioritization.Status": "အနေအထား -",
+  "Prioritization.Status.Loading": "တင်နေပါသည်...",
+  "Prioritization.Status.Ready": "အဆင်သင့်",
+  "Prioritization.ProposePriorities": "Propose priorities",
+  "Prioritization.List.CategoryCode": "ကုဒ်အမျိုးအစား",
+  "Prioritization.List.CountryCode": "Country Code",
+  "Prioritization.List.Domain": "ဒိုမိန်း",
+  "Prioritization.List.Priority": "Priority"
 }
