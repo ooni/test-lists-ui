@@ -12,11 +12,13 @@ export const apiEndpoints = {
   // Submissions
   SUBMISSION_LIST: '/api/_/url-submission/test-list',
   SUBMISSION_UPDATE: '/api/v1/url-submission/update-url',
-  SUBMISSION_SUBMIT: '/api/v1/url-submission/submit'
+  SUBMISSION_SUBMIT: '/api/v1/url-submission/submit',
 }
 
 const getBearerToken = () => {
-  return typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('bearer'))?.token : ''
+  return typeof localStorage !== 'undefined'
+    ? JSON.parse(localStorage.getItem('bearer'))?.token
+    : ''
 }
 
 const axios = Axios.create({
@@ -25,15 +27,22 @@ const axios = Axios.create({
 
 export const refreshToken = async () => {
   return axios
-    .get(apiEndpoints.TOKEN_REFRESH, { headers: { Authorization: `Bearer ${getBearerToken()}` } })
+    .get(apiEndpoints.TOKEN_REFRESH, {
+      headers: { Authorization: `Bearer ${getBearerToken()}` },
+    })
     .then(({ data }) => {
-      localStorage.setItem('bearer', JSON.stringify({ token: data.bearer, created_at: Date.now() }))
+      localStorage.setItem(
+        'bearer',
+        JSON.stringify({ token: data.bearer, created_at: Date.now() }),
+      )
     })
 }
 
 export const fetcher = async (url) => {
   try {
-    const res = await axios.get(url, { headers: { Authorization: `Bearer ${getBearerToken()}` } })
+    const res = await axios.get(url, {
+      headers: { Authorization: `Bearer ${getBearerToken()}` },
+    })
     return res.data.rules ?? res.data
   } catch (e) {
     const error = new Error(e?.response?.data?.error ?? e.message)
@@ -44,15 +53,16 @@ export const fetcher = async (url) => {
 }
 
 export const getAPI = async (endpoint, params = {}, config = {}) => {
-  return await axios.request({
-    method: config.method ?? 'GET',
-    url: endpoint,
-    params: params,
-    ...config,
-    headers: { Authorization: `Bearer ${getBearerToken()}` }
-  })
-    .then(res => res.data)
-    .catch(e => {
+  return await axios
+    .request({
+      method: config.method ?? 'GET',
+      url: endpoint,
+      params: params,
+      ...config,
+      headers: { Authorization: `Bearer ${getBearerToken()}` },
+    })
+    .then((res) => res.data)
+    .catch((e) => {
       const error = new Error(e?.response?.data?.error ?? e.message)
       error.info = e?.response?.statusText
       error.status = e?.response?.status
@@ -68,15 +78,19 @@ export const registerUser = async (email_address, redirect_to) => {
   console.debug('Called registerUser with', email_address)
   const data = await postAPI(apiEndpoints.USER_REGISTER, {
     email_address,
-    redirect_to
+    redirect_to,
   })
   return data
 }
 
 export const loginUser = async (token) => {
-  return await axios.get(apiEndpoints.USER_LOGIN, { params: { k: token } })
+  return await axios
+    .get(apiEndpoints.USER_LOGIN, { params: { k: token } })
     .then(({ data }) => {
-      localStorage.setItem('bearer', JSON.stringify({ token: data?.bearer, created_at: Date.now() }))
+      localStorage.setItem(
+        'bearer',
+        JSON.stringify({ token: data?.bearer, created_at: Date.now() }),
+      )
     })
 }
 
@@ -85,12 +99,16 @@ export const logoutUser = async (token) => {
 }
 
 export const updateRule = (oldEntry, newEntry) => {
-  console.debug('Called updateRule with old_entry', oldEntry, 'new_entry', newEntry)
+  console.debug(
+    'Called updateRule with old_entry',
+    oldEntry,
+    'new_entry',
+    newEntry,
+  )
   return postAPI(apiEndpoints.RULE_UPDATE, {
     old_entry: oldEntry,
-    new_entry: newEntry
-  })
-    .then(res => res.data)
+    new_entry: newEntry,
+  }).then((res) => res.data)
 }
 
 export const deleteRule = (oldEntry) => {
@@ -104,18 +122,23 @@ export const addURL = async (newEntry, cc, comment) => {
     country_code: cc,
     comment: comment,
     new_entry: newEntry,
-    old_entry: {}
+    old_entry: {},
   })
   return data.updated_entry
 }
 
 export const updateURL = async (cc, comment, oldEntry, newEntry) => {
-  console.debug('Called updateURL with old_entry', oldEntry, 'new_entry', newEntry)
+  console.debug(
+    'Called updateURL with old_entry',
+    oldEntry,
+    'new_entry',
+    newEntry,
+  )
   const data = await postAPI(apiEndpoints.SUBMISSION_UPDATE, {
     country_code: cc,
     comment: comment,
     old_entry: oldEntry,
-    new_entry: newEntry
+    new_entry: newEntry,
   })
   return data.updated_entry
 }
@@ -126,7 +149,7 @@ export const deleteURL = async (cc, comment, oldEntry) => {
     country_code: cc,
     comment: comment,
     old_entry: oldEntry,
-    new_entry: {}
+    new_entry: {},
   })
   return data.updated_entry
 }
