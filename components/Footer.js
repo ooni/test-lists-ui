@@ -3,6 +3,7 @@ import { useIntl } from 'react-intl'
 import styled from 'styled-components'
 
 const FooterWrapper = styled(Flex).attrs({
+  justifyContent: 'space-between',
   flexDirection: ['column', 'row'],
   bg: 'blue9',
   color: 'gray2',
@@ -39,7 +40,6 @@ const Footer = () => {
           </Box>
         </FooterColumn>
         <Flex
-          ml={['initial', 'auto']}
           my={[2, 0]}
           alignItems={['flex-start', 'center']}
           flexDirection={['column', 'row']}

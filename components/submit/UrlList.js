@@ -199,7 +199,7 @@ const UrlList = ({ cc }) => {
               onHideClick={onCancel}
             >
               <Container
-                sx={{ width: ['90vw', '40vw'] }}
+                sx={{ width: ['90vw', '90vw', '90vw', '50vw'] }}
                 px={[2, 5]}
                 py={[2, 3]}
                 color='gray8'

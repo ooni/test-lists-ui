@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Input, Select } from 'ooni-components'
+import { Box, Button, Flex, Heading, Input, Select } from 'ooni-components'
 import { useCallback, useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useIntl } from 'react-intl'
@@ -75,7 +75,7 @@ export const EditForm = ({
     [countryCode, oldEntry.date_added, oldEntry.source, onSubmit],
   )
 
-  const width = layout === 'row' ? [1, 2 / 8] : 1
+  const width = layout === 'row' ? [1, 1, 2 / 8] : 1
 
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -85,101 +85,110 @@ export const EditForm = ({
           : formatMessage({ id: 'EditForm.AddNew' })}
       </Heading>
       <Flex flexDirection={layout} my={2} alignItems='end' flexWrap='wrap'>
-        <Flex flexDirection='column' my={2} width={width}>
-          <Controller
-            name='url'
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                required
-                pattern='https?:\/\/(www\.)?[\-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,24}\b([\-a-zA-Z0-9@:%_\\+.~#?&\/=]*)'
-                label={`${formatMessage({ id: 'Changes.URL' })}*`}
-                placeholder='https://example.com/'
-              />
-            )}
-          />
-        </Flex>
-
-        <Flex flexDirection='column' m={2} width={width}>
-          <Controller
-            name='category_code'
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                required
-                label={`${formatMessage({ id: 'Changes.Category' })}*`}
-              >
-                <option value=''>
-                  {formatMessage({ id: 'CategoryList.Select' })}
-                </option>
-                {Object.entries(categories)
-                  .sort((c1, c2) => (c1[1] > c2[1] ? 1 : -1))
-                  .map(([code]) => (
-                    <option
-                      key={code}
-                      value={code}
-                      title={formatMessage({
-                        id: `CategoryCode.${code}.Description`,
-                      })}
-                    >
-                      {formatMessage({ id: `CategoryCode.${code}.Name` })}
-                    </option>
-                  ))}
-              </Select>
-            )}
-          />
-        </Flex>
-
-        <Flex flexDirection='column' m={2} width={width}>
-          <Controller
-            name='notes'
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label={formatMessage({ id: 'Changes.Notes' })}
-                placeholder={formatMessage({ id: 'EditForm.NotesPlaceholder' })}
-              />
-            )}
-          />
-        </Flex>
-
-        {isEdit && <HorizontalLine />}
-
-        {isEdit && (
-          <Flex flexDirection='column' my={2} width={width} flexGrow={'auto'}>
+        <Flex flexDirection='column' width={width}>
+          <Box m={2}>
             <Controller
-              name='comment'
+              name='url'
               control={control}
               render={({ field }) => (
                 <Input
                   {...field}
                   required
-                  label={formatMessage({ id: 'EditForm.Comment' })}
+                  pattern='https?:\/\/(www\.)?[\-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,24}\b([\-a-zA-Z0-9@:%_\\+.~#?&\/=]*)'
+                  label={`${formatMessage({ id: 'Changes.URL' })}*`}
+                  placeholder='https://example.com/'
+                />
+              )}
+            />
+          </Box>
+        </Flex>
+
+        <Flex flexDirection='column' width={width}>
+          <Box m={2}>
+            <Controller
+              name='category_code'
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  required
+                  label={`${formatMessage({ id: 'Changes.Category' })}*`}
+                >
+                  <option value=''>
+                    {formatMessage({ id: 'CategoryList.Select' })}
+                  </option>
+                  {Object.entries(categories)
+                    .sort((c1, c2) => (c1[1] > c2[1] ? 1 : -1))
+                    .map(([code]) => (
+                      <option
+                        key={code}
+                        value={code}
+                        title={formatMessage({
+                          id: `CategoryCode.${code}.Description`,
+                        })}
+                      >
+                        {formatMessage({ id: `CategoryCode.${code}.Name` })}
+                      </option>
+                    ))}
+                </Select>
+              )}
+            />
+          </Box>
+        </Flex>
+
+        <Flex
+          flexDirection='column'
+          width={layout === 'row' ? [1, 1, 4 / 8] : 1}
+        >
+          <Box m={2}>
+            <Controller
+              name='notes'
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label={formatMessage({ id: 'Changes.Notes' })}
                   placeholder={formatMessage({
                     id: 'EditForm.NotesPlaceholder',
                   })}
                 />
               )}
             />
-          </Flex>
-        )}
+          </Box>
+        </Flex>
 
         {isEdit && (
-          <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
-            <Button inverted onClick={onCancel} mr={3}>
-              {formatMessage({ id: 'DeleteForm.Cancel' })}
-            </Button>
-            <Button type='submit'>
-              {formatMessage({ id: 'EditForm.Done' })}
-            </Button>
-          </Flex>
+          <Box width={1}>
+            <HorizontalLine />
+            <Flex flexDirection='column' m={2} width={width} flexGrow={'auto'}>
+              <Controller
+                name='comment'
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    required
+                    label={formatMessage({ id: 'EditForm.Comment' })}
+                    placeholder={formatMessage({
+                      id: 'EditForm.NotesPlaceholder',
+                    })}
+                  />
+                )}
+              />
+            </Flex>
+            <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
+              <Button inverted onClick={onCancel} mr={3}>
+                {formatMessage({ id: 'DeleteForm.Cancel' })}
+              </Button>
+              <Button type='submit'>
+                {formatMessage({ id: 'EditForm.Done' })}
+              </Button>
+            </Flex>
+          </Box>
         )}
 
         {!isEdit && (
-          <Button ml='auto' type='submit' mb={2} hollow disabled={submitting}>
+          <Button ml='auto' type='submit' my={2} hollow disabled={submitting}>
             {formatMessage({ id: 'EditForm.Add' })}
           </Button>
         )}

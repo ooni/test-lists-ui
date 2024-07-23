@@ -79,13 +79,19 @@ const NavBar = () => {
   return (
     <>
       <QuickStartGuideModal show={showModal} setShowModal={setShowModal} />
-      <Flex bg='blue5' color='white' p={3} alignItems='center'>
+      <Flex
+        bg='blue5'
+        color='white'
+        p={3}
+        alignItems='center'
+        justifyContent='space-between'
+      >
         <NavItem>
           <NextLink href='/' passHref>
             <Image alt='OONI Logo' src={OONILogo} height={32} width={115} />
           </NextLink>
         </NavItem>
-        <Flex alignItems='center' sx={{ gap: 3 }} ml='auto'>
+        <Flex alignItems='center' sx={{ gap: 3 }}>
           {user?.logged_in && (
             <>
               <Link
