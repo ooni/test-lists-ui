@@ -96,7 +96,7 @@ export const EditForm = ({
                   required
                   pattern='https?:\/\/(www\.)?[\-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,24}\b([\-a-zA-Z0-9@:%_\\+.~#?&\/=]*)'
                   label={`${formatMessage({ id: 'Changes.URL' })}*`}
-                  placeholder='https://example.com/'
+                  placeholder='https://example.com/&lrm;'
                 />
               )}
             />

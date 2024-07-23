@@ -255,6 +255,7 @@ const List = ({ data, mutateRules }) => {
           type: 'url',
           size: 28,
         },
+        cell: ({ cell }) => <bdo dir='ltr'>{cell.original.domain}</bdo>,
       },
       {
         Header: intl.formatMessage({ id: 'Changes.URL' }),

@@ -165,6 +165,7 @@ const TableView = ({
           type: 'url',
           size: 44,
         },
+        cell: ({ cell }) => <bdo dir='ltr'>{cell.original.domain}</bdo>,
       },
       {
         Header: formatMessage({ id: 'Changes.Category' }),

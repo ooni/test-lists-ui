@@ -52,7 +52,7 @@ const Row: React.FunctionComponent<RowProps> = ({ change }) => {
         </Cell>
       </Flex>
       <Cell pr={2} width={[1, 3 / 8]}>
-        {change.url}
+        <bdo dir='ltr'>{change.url}</bdo>
       </Cell>
       <Cell pr={2} width={[1, 1 / 8, 2 / 8]}>
         {change.category_description}
