@@ -2,11 +2,14 @@ import { Modal } from 'ooni-components'
 import { useCallback, useEffect } from 'react'
 
 const ModalWithEsc = ({ onHideClick, onCancel, ...rest }) => {
-  const onKeyPress = useCallback((e) => {
-    if (e.key === 'Escape') {
-      onCancel()
-    }
-  }, [onCancel])
+  const onKeyPress = useCallback(
+    (e) => {
+      if (e.key === 'Escape') {
+        onCancel()
+      }
+    },
+    [onCancel],
+  )
 
   useEffect(() => {
     document.addEventListener('keydown', onKeyPress)
@@ -15,7 +18,7 @@ const ModalWithEsc = ({ onHideClick, onCancel, ...rest }) => {
     }
   }, [onKeyPress])
 
-  return (<Modal {...rest} />)
+  return <Modal {...rest} />
 }
 
 export default ModalWithEsc

@@ -24,7 +24,7 @@ export const PageContextProvider = ({ countryCode, children }) => {
       dedupingInterval: 6000,
       onErrorRetry: customErrorRetry,
       refreshInterval,
-    }
+    },
   )
 
   const { testList, changes, submissionState, linkToPR } = useMemo(() => {
@@ -33,14 +33,14 @@ export const PageContextProvider = ({ countryCode, children }) => {
         testList: data.test_list,
         changes: data.changes,
         submissionState: data.state,
-        linkToPR: data.pr_url
+        linkToPR: data.pr_url,
       }
     }
     return {
       testList: undefined,
       changes: {},
       submissionState: null,
-      linkToPR: null
+      linkToPR: null,
     }
   }, [data])
 
@@ -61,7 +61,7 @@ export const PageContextProvider = ({ countryCode, children }) => {
         testList,
         changes,
         mutate,
-        error
+        error,
       }}
     >
       {children}

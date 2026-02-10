@@ -1,16 +1,18 @@
-import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Heading } from 'ooni-components'
+import { useCallback, useEffect } from 'react'
 
-import Layout from '../components/Layout'
-import CountryList from '../components/submit/CountryList'
-import UrlList from '../components/submit/UrlList'
-import { PageContextProvider } from '../components/submit/SubmissionContext'
-import { useNotifier } from '../components/lib/notifier'
-import { useUser } from '../components/lib/hooks'
-import Changes from '../components/submit/Changes'
+import { useIntl } from 'react-intl'
+import Layout from '../../components/Layout'
+import { useUser } from '../../components/lib/hooks'
+import { useNotifier } from '../../components/lib/notifier'
+import Changes from '../../components/submit/Changes'
+import CountryList from '../../components/submit/CountryList'
+import { PageContextProvider } from '../../components/submit/SubmissionContext'
+import UrlList from '../../components/submit/UrlList'
 
-export default function Submit () {
+export default function Submit() {
+  const { formatMessage } = useIntl()
   const router = useRouter()
   const {
     query: { cc },
@@ -28,10 +30,11 @@ export default function Submit () {
 
   const onCountryChange = useCallback(
     (e) => {
+      console.log('bebe')
       const selectedCountry = e.target.value
-      router.push(`/${selectedCountry}`, undefined, { shallow: true })
+      router.push(`/country/${selectedCountry}`, undefined, { shallow: true })
     },
-    [router]
+    [router],
   )
 
   const { Notification } = useNotifier()
@@ -41,7 +44,7 @@ export default function Submit () {
       <Notification />
       <PageContextProvider countryCode={countryCode}>
         <Changes />
-        <Heading h={1}>Test List</Heading>
+        <Heading h={1}>{formatMessage({ id: 'Country.TestList' })}</Heading>
         <CountryList defaultValue={countryCode} onChange={onCountryChange} />
         {countryCode && <UrlList cc={countryCode} />}
       </PageContextProvider>
