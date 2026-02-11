@@ -113,7 +113,7 @@ export const updateRule = (oldEntry, newEntry) => {
 
 export const deleteRule = (oldEntry) => {
   console.debug('Called deleteRule with old_entry', oldEntry)
-  return updateRule(oldEntry, {})
+  return updateRule(oldEntry, null)
 }
 
 export const addURL = async (newEntry, cc, comment) => {
@@ -122,7 +122,6 @@ export const addURL = async (newEntry, cc, comment) => {
     country_code: cc,
     comment: comment,
     new_entry: newEntry,
-    old_entry: {},
   })
   return data.updated_entry
 }
@@ -149,7 +148,6 @@ export const deleteURL = async (cc, comment, oldEntry) => {
     country_code: cc,
     comment: comment,
     old_entry: oldEntry,
-    new_entry: {},
   })
   return data.updated_entry
 }
