@@ -3,7 +3,7 @@
   "Index.Subtitle": "Aporte sitios web para pruebas de censura",
   "Index.RegisterButton": "Regístrese con URL para contribuir",
   "Index.ShowPrioritiesButton": "Mostrar prioridades de URL",
-  "Index.NoticeMessage": "<strong> Importante:</strong> Los sitios web de relevancia internacional (como facebook.com) son probados por usuarios de <link> OONI Probe </link> a nivel global, y sólo deben ser incluidos en la lista de pruebas Global.",
+  "Index.NoticeMessage": "<strong> Importante:</strong> Los sitios web de relevancia internacional (como facebook.com) son probados por usuarios de <link>OONI Probe</link> a nivel global, y sólo deben ser incluidos en la lista de pruebas Global.",
   "Index.WhichContribution": "¿A qué lista de pruebas de qué país le gustaría contribuir?",
   "NavBar.Help": "Ayuda",
   "NavBar.Logout": "Cerrar sesión",
