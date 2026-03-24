@@ -8,7 +8,7 @@
   "NavBar.Help": "帮助",
   "NavBar.Logout": "退出登录",
   "Login.Instructions": "添加您的电子邮件地址，然后点击发送到您的电子邮件的链接以登录此平台。\n\n我们不存储电子邮件地址。",
-  "Login.Submitted": "您的登录请求已提交。请检查您的电子邮箱中的链接，激活并登录您的账号。",
+  "Login.Submitted": "您的登录请求已提交。请检查您的电子邮件，其中包含用于激活并登录您的账号的链接。",
   "Login.LoggingIn": "正在登录…",
   "Login.LoggedIn": "已登录。正在重定向到面板…",
   "Login.TryAgain": "尝试再次登录",
