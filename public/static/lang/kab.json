@@ -12,7 +12,7 @@
   "UrlList.Added": "Yettwarna",
   "UrlList.Updated": "Yettwarna",
   "QuickStartGuide.Close": "Mdel",
-  "CategoryCode.GAME.Name": "Urar",
+  "CategoryCode.GAME.Name": "Uraren",
   "NavBar.Help": "Tallelt",
   "NavBar.Logout": "Senser tuqqna",
   "LoginForm.Login": "Qqen",
@@ -29,5 +29,7 @@
   "CountryList.Select": "Fren tamurt",
   "CategoryList.Select": "Ften taggayt",
   "EditForm.AddNew": "Rnu URL tamaynut",
-  "Login.LoggingIn": "Iteqqen…"
+  "Login.LoggingIn": "Iteqqen…",
+  "Prioritization.Status": "Addad:",
+  "Prioritization.Status.Loading": "Yessalay-d…"
 }
