@@ -106,7 +106,7 @@ export const updateRule = (oldEntry, newEntry) => {
     newEntry,
   )
   return postAPI(apiEndpoints.RULE_UPDATE, {
-    old_entry: oldEntry,
+    old_entry: Object.keys(oldEntry).length === 0 ? null : oldEntry,
     new_entry: newEntry,
   }).then((res) => res.data)
 }
