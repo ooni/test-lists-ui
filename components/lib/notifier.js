@@ -1,4 +1,3 @@
-import { Box, Button, Flex } from 'ooni-components'
 import React from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -10,16 +9,16 @@ export const useNotifier = () => {
     toast.error(
       (t) => {
         return (
-          <Flex
-            justifyContent='space-between'
-            alignItems='center'
-            sx={{ width: '100%' }}
-          >
-            <Box width={4 / 5}>{message}</Box>
-            <Button inverted fontSize={12} onClick={() => toast.dismiss(t.id)}>
+          <div className="flex w-full items-center justify-between">
+            <span className="w-4/5">{message}</span>
+            <button
+              className="btn btn-dark-hollow text-xs"
+              type="button"
+              onClick={() => toast.dismiss(t.id)}
+            >
               Dismiss
-            </Button>
-          </Flex>
+            </button>
+          </div>
         )
       },
       {

@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { Flex, theme } from 'ooni-components'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   MdArrowDownward,
@@ -17,63 +16,8 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import styled from 'styled-components'
 import { deleteRule, updateRule } from './lib/api'
 import { useUser } from './lib/hooks'
-
-const BORDER_COLOR = theme.colors.gray6
-const ODD_ROW_BG = theme.colors.gray2
-const EVEN_ROW_BG = theme.colors.gray0
-
-const Table = styled.table`
-  width: 100%;
-`
-
-const TableHeader = styled.thead`
-  background-color: white;
-  & th {
-    display: flex;
-    align-items: center;
-    text-align: start;
-    padding: 12px;
-  }
-`
-
-const TableRow = styled.tr`
-  &:nth-child(odd) {
-    background-color: ${ODD_ROW_BG};
-  }
-  &:nth-child(even) {
-    background-color: ${EVEN_ROW_BG};
-  }
-  &:first-child {
-    border-top: 1px solid ${BORDER_COLOR};
-  }
-  &:last-child {
-    border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-`
-
-const TableCell = styled.td`
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
-
-  &:last-child {
-    border-right: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-  &:first-child {
-    border-left: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-
-  input {
-    font-size: 1rem;
-    padding: 0;
-    margin: 0;
-    border: 0;
-  }
-  /* TODO: Input validation styling */
-`
 
 // Dynamic Cell renderer shows either raw value or an editable HTMLInput element when editing the row
 const EditableCell = ({
@@ -136,13 +80,6 @@ const defaultColumn = {
   Cell: EditableCell,
 }
 
-const Button = styled.button`
-  background-color: transparent;
-  border: 0;
-  padding: 0;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')}
-`
-
 // Dynamic button
 // * Starts editing a row
 // * Switches to a two button component to confirm or cancel a row edit operation.
@@ -176,30 +113,30 @@ const EditButton = ({
   }, [onRowUpdate, index, values, setState])
 
   return (
-    <Flex flexDirection='row' justifyContent='space-around'>
+    <div className="flex flex-row justify-around">
       {!isEditing && (
-        <Button mx='auto'>
+        <button type="button" className="icon-button mx-auto">
           <MdEdit onClick={onEdit} size={20} />
-        </Button>
+        </button>
       )}
       {isEditing && (
         <>
-          <Button title='Discard Changes'>
+          <button type="button" className="icon-button" title='Discard Changes'>
             <MdClose onClick={onCancel} size={20} />
-          </Button>
-          <Button title={'Apply Changes'}>
+          </button>
+          <button type="button" className="icon-button" title='Apply Changes'>
             <MdCheck onClick={onUpdate} size={20} />
-          </Button>
+          </button>
         </>
       )}
-    </Flex>
+    </div>
   )
 }
 
 const DeleteButton = ({ onClick }) => (
-  <Button onClick={onClick}>
+  <button type="button" className="icon-button" onClick={onClick}>
     <MdDelete size={18} />
-  </Button>
+  </button>
 )
 
 const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) =>
@@ -430,10 +367,10 @@ const List = ({ data, mutateRules }) => {
     tableInstance
 
   const { key: tableBodyKey, ...tableBodyProps } = getTableBodyProps()
+  const { className: tableClassName, ...tableProps } = getTableProps()
   return (
-    // apply the table props
-    <Table {...getTableProps()}>
-      <TableHeader>
+    <table className={`data-table ${tableClassName ?? ''}`} {...tableProps}>
+      <thead className="data-table-header">
         {
           // Loop over the header rows
           headerGroups.map((headerGroup) => {
@@ -468,8 +405,7 @@ const List = ({ data, mutateRules }) => {
             )
           })
         }
-      </TableHeader>
-      {/* Apply the table body props */}
+      </thead>
       <tbody key={tableBodyKey} {...tableBodyProps}>
         {
           // Loop over the table rows
@@ -478,29 +414,37 @@ const List = ({ data, mutateRules }) => {
             prepareRow(row)
             const { key: rowKey, ...rowProps } = row.getRowProps()
             return (
-              // Apply the row props
-              <TableRow key={rowKey} {...rowProps} index={row.index}>
+              <tr
+                key={rowKey}
+                className="data-table-row"
+                {...rowProps}
+              >
                 {
                   // Loop over the rows cells
                   row.cells.map((cell) => {
                     // Apply the cell props
-                    const { key: cellKey, ...cellProps } = cell.getCellProps()
+                    const { key: cellKey, className: cellClassName, ...cellProps } =
+                      cell.getCellProps()
                     return (
-                      <TableCell key={cellKey} {...cellProps}>
+                      <td
+                        key={cellKey}
+                        className={`data-table-cell ${cellClassName ?? ''}`}
+                        {...cellProps}
+                      >
                         {
                           // Render the cell contents
                           cell.render('Cell')
                         }
-                      </TableCell>
+                      </td>
                     )
                   })
                 }
-              </TableRow>
+              </tr>
             )
           })
         }
       </tbody>
-    </Table>
+    </table>
   )
 }
 

@@ -1,63 +1,41 @@
-import { Box, Flex, Link } from 'ooni-components'
 import { useIntl } from 'react-intl'
-import styled from 'styled-components'
-
-const FooterWrapper = styled(Flex).attrs({
-  justifyContent: 'space-between',
-  flexDirection: ['column', 'row'],
-  bg: 'blue9',
-  color: 'gray2',
-  px: [1, 4],
-  py: 3,
-  mt: 4,
-})``
-
-const FooterColumn = styled(Flex).attrs({
-  flexDirection: 'column',
-  justifyContent: 'center',
-  mx: 3,
-})``
-
-const FooterItem = styled(Link).attrs({
-  my: 1,
-  mx: 3,
-  color: 'gray2',
-})`
-&:hover {
-  color: white;
-}
-`
 
 const Footer = () => {
   const { formatMessage } = useIntl()
   return (
-    <footer>
-      <FooterWrapper>
-        <FooterColumn color='white' fontSize={1}>
-          <Box>
-            © {new Date().getFullYear()} Open Observatory of Network
-            Interference (OONI)
-          </Box>
-        </FooterColumn>
-        <Flex
-          my={[2, 0]}
-          alignItems={['flex-start', 'center']}
-          flexDirection={['column', 'row']}
+    <footer className="mt-8 flex flex-col justify-between bg-blue-900 px-1 py-4 text-gray-200 md:flex-row md:px-8">
+      <div className="mx-4 flex flex-col justify-center text-xs text-white">
+        <p>
+          © {new Date().getFullYear()} Open Observatory of Network
+          Interference (OONI)
+        </p>
+      </div>
+      <nav className="my-4 flex flex-col items-start md:my-0 md:flex-row md:items-center">
+        <a
+          className="mx-4 my-1 text-gray-200 hover:text-white"
+          href='https://ooni.org'
         >
-          <FooterItem href='https://ooni.org'>
-            {formatMessage({ id: 'Footer.AboutOONI' })}
-          </FooterItem>
-          <FooterItem href='https://ooni.org/get-involved/contribute-test-lists'>
-            {formatMessage({ id: 'Footer.AboutTestLists' })}{' '}
-          </FooterItem>
-          <FooterItem href='https://github.com/citizenlab/test-lists/'>
-            {formatMessage({ id: 'Footer.TestListsGithub' })}
-          </FooterItem>
-          <FooterItem href='https://github.com/ooni/test-lists-ui'>
-            {formatMessage({ id: 'Footer.SourceCode' })}
-          </FooterItem>
-        </Flex>
-      </FooterWrapper>
+          {formatMessage({ id: 'Footer.AboutOONI' })}
+        </a>
+        <a
+          className="mx-4 my-1 text-gray-200 hover:text-white"
+          href='https://ooni.org/get-involved/contribute-test-lists'
+        >
+          {formatMessage({ id: 'Footer.AboutTestLists' })}{' '}
+        </a>
+        <a
+          className="mx-4 my-1 text-gray-200 hover:text-white"
+          href='https://github.com/citizenlab/test-lists/'
+        >
+          {formatMessage({ id: 'Footer.TestListsGithub' })}
+        </a>
+        <a
+          className="mx-4 my-1 text-gray-200 hover:text-white"
+          href='https://github.com/ooni/test-lists-ui'
+        >
+          {formatMessage({ id: 'Footer.SourceCode' })}
+        </a>
+      </nav>
     </footer>
   )
 }

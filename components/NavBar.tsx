@@ -1,10 +1,8 @@
 import Image from 'next/image'
 import NextLink from 'next/link'
-import { Box, Flex, Link } from 'ooni-components'
 import OONILogo from 'ooni-components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
 
 import React, { useState } from 'react'
-import styled from 'styled-components'
 
 import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
@@ -21,39 +19,6 @@ export const getDirection = (locale) => {
       return 'ltr'
   }
 }
-
-const NavItem = styled(Box).attrs({
-  fontSize: 2,
-})`
-  cursor: pointer;
-
-  & a, & a:hover, & a:visited, & a:active {
-    color: inherit;
-    text-decoration: none;
-  }
-`
-
-const LanguageSelect = styled.select`
-color: ${(props) => props.theme.colors.white};
-background: none;
-border: none;
-text-transform: capitalize;
-cursor: pointer;
-font-family: inherit;
-font-size: inherit;
-padding: 0;
-outline: none;
-appearance: none;
--webkit-appearance: none;
--moz-appearance: none;
--ms-appearance: none;
--o-appearance: none;
-// reset option styling for browsers that apply it to its native styling (Brave)
-> option {
-  color: initial;
-  opacity: initial;
-}
-`
 
 const languages = JSON.parse(process.env.LOCALES ?? '[]') as string[]
 
@@ -79,42 +44,40 @@ const NavBar = () => {
   return (
     <>
       <QuickStartGuideModal show={showModal} setShowModal={setShowModal} />
-      <Flex
-        bg='blue5'
-        color='white'
-        p={3}
-        alignItems='center'
-        justifyContent='space-between'
-      >
-        <NavItem>
+      <header className="flex items-center justify-between bg-blue-500 p-4 text-white">
+        <div className="cursor-pointer text-sm [&_a]:text-inherit [&_a:active]:text-inherit [&_a:hover]:text-inherit [&_a:visited]:text-inherit [&_a]:no-underline">
           <NextLink href='/' passHref>
             <Image alt='OONI Logo' src={OONILogo} height={32} width={115} />
           </NextLink>
-        </NavItem>
-        <Flex alignItems='center' sx={{ gap: 3 }}>
+        </div>
+        <div className="flex items-center gap-4">
           {user?.logged_in && (
             <>
-              <Link
+              <a
                 href='#logout'
-                color='white'
+                className="text-white"
                 onClick={() => setShowModal(true)}
               >
                 {formatMessage({ id: 'NavBar.Help' })}
-              </Link>
-              <Link href='#logout' color='white' onClick={onLogout}>
+              </a>
+              <a href='#logout' className="text-white" onClick={onLogout}>
                 {formatMessage({ id: 'NavBar.Logout' })}
-              </Link>
+              </a>
             </>
           )}
-          <LanguageSelect onChange={handleLocaleChange} value={locale}>
+          <select
+            className="cursor-pointer appearance-none border-none bg-transparent p-0 text-inherit capitalize outline-none [&>option]:text-inherit [&>option]:opacity-100"
+            onChange={handleLocaleChange}
+            value={locale}
+          >
             {languages.map((c) => (
-              <option className='text-inherit opacity-100' key={c} value={c}>
+              <option key={c} value={c}>
                 {getLocalisedLanguageName(c, c)}
               </option>
             ))}
-          </LanguageSelect>
-        </Flex>
-      </Flex>
+          </select>
+        </div>
+      </header>
     </>
   )
 }

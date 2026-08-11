@@ -1,27 +1,10 @@
-import { Box, Button, Flex, Input } from 'ooni-components'
+import { Input } from 'ooni-components'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import styled from 'styled-components'
 
 import { useIntl } from 'react-intl'
 import { registerUser } from './lib/api'
 import Loading from './Loading'
-
-const StyledError = styled.small`
-  color: ${(props) => props.theme.colors.red5};
-`
-
-const StyledInputContainer = styled(Box).attrs({
-  width: [1, 1 / 3],
-  my: 3,
-})`
-  position: relative;
-  & ${StyledError} {
-    position: absolute;
-    top: -10px;
-    right: 0px;
-  }
-`
 
 export const LoginForm = ({ onLogin }) => {
   const PRODUCTION_URL = 'https://test-lists.ooni.org/'
@@ -51,7 +34,6 @@ export const LoginForm = ({ onLogin }) => {
           }
         } catch (e) {
           setError(e.message)
-          // Reset form to mark `isDirty` as false
           reset({}, { keepValues: true })
         } finally {
           setSubmitting(false)
@@ -64,7 +46,6 @@ export const LoginForm = ({ onLogin }) => {
   )
 
   useEffect(() => {
-    // Remove previous errors when form becomes dirty again
     if (isDirty) {
       setError(null)
     }
@@ -72,8 +53,8 @@ export const LoginForm = ({ onLogin }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex flexDirection={['column']} alignItems={'center'}>
-        <StyledInputContainer>
+      <div className="flex flex-col items-center">
+        <div className="login-input-container">
           <Controller
             render={({ field }) => (
               <Input
@@ -91,18 +72,24 @@ export const LoginForm = ({ onLogin }) => {
             name='email_address'
             control={control}
           />
-        </StyledInputContainer>
-        <Box my={2}>
+        </div>
+        <div className="my-2">
           {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
-          <StyledError>{loginError ?? <>&nbsp;</>}</StyledError>
-        </Box>
-        <Box my={2}>
-          <Button type='submit' disabled={submitting || !isDirty || !isValid}>
+          <small className="login-error text-red-500">
+            {loginError ?? <>&nbsp;</>}
+          </small>
+        </div>
+        <div className="my-2">
+          <button
+            className="btn btn-primary"
+            type='submit'
+            disabled={submitting || !isDirty || !isValid}
+          >
             {formatMessage({ id: 'LoginForm.Login' })}
-          </Button>
-        </Box>
-        {submitting ? <Loading size={96} /> : <Box my={50} />}
-      </Flex>
+          </button>
+        </div>
+        {submitting ? <Loading size={96} /> : <div className="my-[50px]" />}
+      </div>
     </form>
   )
 }

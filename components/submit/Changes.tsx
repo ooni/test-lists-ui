@@ -1,9 +1,7 @@
 import { territoryNames } from 'country-util'
-import { Box, Flex, Text } from 'ooni-components'
 import type React from 'react'
 import { useContext } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md'
-import styled from 'styled-components'
 
 import { useIntl } from 'react-intl'
 import { SubmissionContext } from './SubmissionContext'
@@ -18,52 +16,37 @@ type Change = {
   url: string
 }
 
-const Cell = styled(Box)``
-
 type RowProps = {
   change: Change
 }
 
-const OddEvenRow = styled(Flex)`
-  &:nth-child(even) {
-    background: ${(props) => props.theme.colors.gray2};
-  }
-  @media (max-width: 640px) {
-    flex-wrap: wrap;
-  }
-`
-
 const Row: React.FunctionComponent<RowProps> = ({ change }) => {
   const { formatMessage } = useIntl()
   return (
-    <OddEvenRow key={change.url} py={2}>
-      <Flex width={[1, 2 / 8, 1 / 8]}>
-        <Cell pr={2}>
+    <div className="changes-row flex py-2" key={change.url}>
+      <div className="flex w-full md:w-1/4 lg:w-[12.5%]">
+        <div className="pr-2">
           {change.action === 'add' && <MdEdit />}
           {change.action === 'delete' && <MdDelete />}
-        </Cell>
-        <Cell>
+        </div>
+        <div>
           {change.action === 'add' && (
-            <Text>{formatMessage({ id: 'Changes.EditedAdded' })}</Text>
+            <span>{formatMessage({ id: 'Changes.EditedAdded' })}</span>
           )}
           {change.action === 'delete' && (
-            <Text>{formatMessage({ id: 'Deleted' })}</Text>
+            <span>{formatMessage({ id: 'Deleted' })}</span>
           )}
-        </Cell>
-      </Flex>
-      <Cell pr={2} width={[1, 3 / 8]}>
+        </div>
+      </div>
+      <div className="w-full pr-2 md:w-[37.5%]">
         <bdo dir='ltr'>{change.url}</bdo>
-      </Cell>
-      <Cell pr={2} width={[1, 1 / 8, 2 / 8]}>
+      </div>
+      <div className="w-full pr-2 md:w-[12.5%] lg:w-1/4">
         {change.category_description}
-      </Cell>
-      <Cell pr={2} width={[1, 1 / 8]}>
-        {change.source}
-      </Cell>
-      <Cell pr={2} width={[1, 2 / 8]}>
-        {change.notes}
-      </Cell>
-    </OddEvenRow>
+      </div>
+      <div className="w-full pr-2 md:w-[12.5%]">{change.source}</div>
+      <div className="w-full pr-2 md:w-1/4">{change.notes}</div>
+    </div>
   )
 }
 
@@ -80,16 +63,16 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
         : cc.toUpperCase()
   }
   return (
-    <Flex flexDirection='column'>
-      <Box mx={3}>
+    <div className="flex flex-col">
+      <div className="mx-4">
         <h4>{countryName}</h4>
-      </Box>
-      <Box>
+      </div>
+      <div>
         {changes.map((change) => (
           <Row key={change.url} change={change} />
         ))}
-      </Box>
-    </Flex>
+      </div>
+    </div>
   )
 }
 
@@ -112,21 +95,19 @@ const Changes = () => {
   }
 
   return (
-    <Flex flexDirection='column' mt={2} pb={4}>
-      <>
-        <Box fontWeight='bold'>
-          <Row change={headerRow} />
-        </Box>
-        <Box>
-          {Object.keys(changes)
-            .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
-            .map((cc) => (
-              <ChangeSet key={cc} cc={cc} changes={changes[cc]} />
-            ))}
-        </Box>
-        <SubmitButton />
-      </>
-    </Flex>
+    <div className="mt-2 flex flex-col pb-8">
+      <div className="font-bold">
+        <Row change={headerRow} />
+      </div>
+      <div>
+        {Object.keys(changes)
+          .sort((cc1, cc2) => (cc2 === 'global' ? 1 : -1))
+          .map((cc) => (
+            <ChangeSet key={cc} cc={cc} changes={changes[cc]} />
+          ))}
+      </div>
+      <SubmitButton />
+    </div>
   )
 }
 
