@@ -1,10 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
-
-const webpack = require('webpack')
 const glob = require('glob')
 const { basename } = require('node:path')
 
@@ -21,10 +16,12 @@ function getSupportedLanguages() {
   return [...supportedLanguages]
 }
 
-module.exports = withBundleAnalyzer({
+module.exports = {
   output: 'standalone',
   reactStrictMode: true,
-  swcMinify: true,
+  env: {
+    LOCALES: JSON.stringify(getSupportedLanguages()),
+  },
   i18n: {
     locales: getSupportedLanguages(),
     defaultLocale: DEFAULT_LOCALE,
@@ -35,14 +32,4 @@ module.exports = withBundleAnalyzer({
       ssr: true,
     },
   },
-  webpack: (config, options) => {
-    config.plugins.push(
-      new options.webpack.DefinePlugin({
-        'process.env.DEFAULT_LOCALE': DEFAULT_LOCALE,
-        'process.env.LOCALES': JSON.stringify(getSupportedLanguages()),
-      }),
-    )
-
-    return config
-  },
-})
+}
