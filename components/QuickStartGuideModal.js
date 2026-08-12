@@ -4,8 +4,14 @@ import { useIntl } from 'react-intl'
 const QuickStartGuideModal = ({ show, setShowModal }) => {
   const { formatMessage } = useIntl()
 
+  if (!show) {
+    return null
+  }
+
+  const onClose = () => setShowModal(false)
+
   return (
-    <Modal show={show} className="min-w-[340px]">
+    <Modal show onHideClick={onClose} className="min-w-[340px]">
       <div className="container px-0 md:px-4">
         <div className="flex flex-col">
           <h4 className="text-center">
@@ -25,7 +31,7 @@ const QuickStartGuideModal = ({ show, setShowModal }) => {
         <button
           className="btn btn-primary mx-4 w-1/3"
           type="button"
-          onClick={() => setShowModal(false)}
+          onClick={onClose}
         >
           <span className="font-bold">
             {formatMessage({ id: 'QuickStartGuide.Close' })}

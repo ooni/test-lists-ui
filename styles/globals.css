@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@source "../node_modules/ooni-components/dist/index.esm.js";
+
 @import '../node_modules/ooni-components/dist/tailwind.css';
 
 @layer base {
