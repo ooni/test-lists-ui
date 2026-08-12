@@ -2,7 +2,7 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 import OONILogo from 'ooni-components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
@@ -47,7 +47,13 @@ const NavBar = () => {
       <header className="flex items-center justify-between bg-blue-500 p-4 text-white">
         <div className="cursor-pointer text-sm [&_a]:text-inherit [&_a:active]:text-inherit [&_a:hover]:text-inherit [&_a:visited]:text-inherit [&_a]:no-underline">
           <NextLink href='/' passHref>
-            <Image alt='OONI Logo' src={OONILogo} height={32} width={115} />
+            <Image
+              alt='OONI Logo'
+              src={OONILogo}
+              height={32}
+              width={115}
+              priority
+            />
           </NextLink>
         </div>
         <div className="flex items-center gap-4">

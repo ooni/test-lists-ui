@@ -1,4 +1,4 @@
-import type React from 'react'
+import type { FC } from 'react'
 
 interface LoadingProps {
   readonly size?: number
@@ -6,7 +6,7 @@ interface LoadingProps {
   readonly dir?: number
 }
 
-const Loading: React.FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
+const Loading: FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
   <div
     style={{
       animation: `${dir > 0 ? 'spin-cw' : 'spin-ccw'} ${2 / speed}s linear infinite`,

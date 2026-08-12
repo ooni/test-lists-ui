@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   MdArrowDownward,
   MdArrowUpward,
@@ -32,7 +32,7 @@ const EditableCell = ({
   updateCellData,
 }) => {
   // We need to keep and update the state of the cell normally
-  const [value, setValue] = React.useState(initialValue)
+  const [value, setValue] = useState(initialValue)
 
   const onChange = (e) => {
     setValue(e.target.value)
@@ -58,7 +58,7 @@ const EditableCell = ({
   }
 
   // If the initialValue is changed external, sync it up with our state
-  React.useEffect(() => {
+  useEffect(() => {
     setValue(initialValue)
   }, [initialValue])
 
@@ -152,7 +152,7 @@ const List = ({ data, mutateRules }) => {
   const intl = useIntl()
   const [originalData, setOriginalData] = useState(data)
   const updateOriginalData = useCallback(() => setOriginalData(data), [data])
-  const skipPageResetRef = React.useRef()
+  const skipPageResetRef = useRef()
   const router = useRouter()
 
   const { user } = useUser()

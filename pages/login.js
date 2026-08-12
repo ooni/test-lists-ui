@@ -1,6 +1,6 @@
 import NLink from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { useIntl } from 'react-intl'
 import { mutate } from 'swr'

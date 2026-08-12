@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { Input } from 'ooni-components'
-import React, { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { updateRule } from '../components/lib/api'
 

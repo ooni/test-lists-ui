@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import { createContext, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { apiEndpoints, fetcher, customErrorRetry } from '../lib/api'
 
-export const SubmissionContext = React.createContext()
+export const SubmissionContext = createContext()
 
 // TOOD: Handle when the API request fails
 export const PageContextProvider = ({ countryCode, children }) => {

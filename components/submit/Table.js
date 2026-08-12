@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import {
   MdArrowDownward,
   MdArrowUpward,
@@ -43,7 +43,7 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) =>
     )
   ) : null
 
-const CategoryCell = React.memo(
+const CategoryCell = memo(
   ({ cell: { value } }) =>
     value in categories && (
       <>
@@ -60,7 +60,7 @@ const CategoryCell = React.memo(
 
 CategoryCell.displayName = 'CategoryCell'
 
-const DateCell = React.memo(({ cell: { value } }) => {
+const DateCell = memo(({ cell: { value } }) => {
   try {
     const date = new Date(value)
     const formattedDate = new Intl.DateTimeFormat([], {

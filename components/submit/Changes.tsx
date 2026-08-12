@@ -1,5 +1,5 @@
 import { territoryNames } from 'country-util'
-import type React from 'react'
+import type { FunctionComponent } from 'react'
 import { useContext } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md'
 
@@ -20,7 +20,7 @@ type RowProps = {
   change: Change
 }
 
-const Row: React.FunctionComponent<RowProps> = ({ change }) => {
+const Row: FunctionComponent<RowProps> = ({ change }) => {
   const { formatMessage } = useIntl()
   return (
     <div className="changes-row flex py-2" key={change.url}>
