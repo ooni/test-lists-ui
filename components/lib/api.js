@@ -59,7 +59,9 @@ export const getAPI = async (endpoint, params = {}, config = {}) => {
       url: endpoint,
       params: params,
       ...config,
-      headers: { Authorization: `Bearer ${getBearerToken()}` },
+      ...(getBearerToken() && {
+        headers: { Authorization: `Bearer ${getBearerToken()}` },
+      }),
     })
     .then((res) => res.data)
     .catch((e) => {

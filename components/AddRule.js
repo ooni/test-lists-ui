@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { Box, Button, Flex, Input } from 'ooni-components'
-import React, { useCallback, useRef, useState } from 'react'
+import { Input } from 'ooni-components'
+import { useCallback, useRef, useState } from 'react'
 
 import { updateRule } from '../components/lib/api'
 
@@ -56,20 +56,18 @@ const AddRule = () => {
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
-      <Flex alignItems='center' justifyContent='space-between' my={2}>
+      <div className="my-2 flex items-center justify-between">
         {fields.map((field) => (
           <Input key={field.name} {...field} placeholder={field.name} />
         ))}
-        <Button mx={3} p={3} type='submit'>
-          {' '}
-          Add Rule{' '}
-        </Button>
-      </Flex>
-      <Box as='small' color='red6'>
-        {' '}
+        <button className="btn btn-primary mx-4 p-4" type='submit'>
+          Add Rule
+        </button>
+      </div>
+      <small className="text-red-600">
         {error ||
-          'Note: Page may reload if add/update/delete operations behave unexpectedly.'}{' '}
-      </Box>
+          'Note: Page may reload if add/update/delete operations behave unexpectedly.'}
+      </small>
     </form>
   )
 }

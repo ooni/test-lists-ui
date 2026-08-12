@@ -1,6 +1,6 @@
-// import '../scripts/wdyr'
+import 'styles/globals.css'
 
-import '@formatjs/intl-displaynames/polyfill'
+import '@formatjs/intl-displaynames/polyfill.js'
 
 import '@formatjs/intl-displaynames/locale-data/ar'
 import '@formatjs/intl-displaynames/locale-data/de'
@@ -12,18 +12,11 @@ import '@formatjs/intl-displaynames/locale-data/my'
 import '@formatjs/intl-displaynames/locale-data/pt'
 import '@formatjs/intl-displaynames/locale-data/ru'
 import '@formatjs/intl-displaynames/locale-data/tr'
-import { Fira_Sans } from 'next/font/google'
 import { useRouter } from 'next/router'
-import { theme } from 'ooni-components'
 import { useMemo } from 'react'
 import { IntlProvider } from 'react-intl'
-import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { UserProvider } from '../components/lib/hooks'
-
-export const firaSans = Fira_Sans({
-  weight: ['300', '400', '600'],
-  subsets: ['latin'],
-})
+import { firaSans } from '../lib/firaSans'
 
 export const getDirection = (locale) => {
   switch (locale) {
@@ -34,21 +27,6 @@ export const getDirection = (locale) => {
       return 'ltr'
   }
 }
-
-const GlobalStyle = createGlobalStyle`
-  * {
-    text-rendering: geometricPrecision;
-    box-sizing: border-box;
-  }
-  body, html {
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-    height: 100%;
-    background-color: #ffffff;
-    font-family: ${firaSans.style.fontFamily};
-  }
-`
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -79,10 +57,9 @@ function MyApp({ Component, pageProps }) {
       messages={messages}
     >
       <UserProvider>
-        <GlobalStyle />
-        <ThemeProvider theme={theme}>
+        <main className={firaSans.className}>
           <Component {...pageProps} />
-        </ThemeProvider>
+        </main>
       </UserProvider>
     </IntlProvider>
   )

@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Input } from 'ooni-components'
+import { Input } from 'ooni-components'
 import { useCallback } from 'react'
 import { useIntl } from 'react-intl'
 
@@ -16,24 +16,28 @@ const DeleteForm = ({ oldEntry, onDelete, onCancel, error }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Heading h={5} my={3}>
+      <h5 className="my-4">
         {formatMessage({ id: 'DeleteForm.Why' }, { url: oldEntry.url })}
-      </Heading>
-      <Flex flexDirection='column' my={4} mx={2}>
+      </h5>
+      <div className="mx-2 my-8 flex flex-col">
         <Input
           name='comment'
           placeholder={formatMessage({ id: 'DeleteForm.Reason' })}
           required
         />
-      </Flex>
-      <Flex justifyContent='space-between' width={1} my={3}>
-        <Button hollow onClick={onCancel}>
+      </div>
+      <div className="my-4 flex w-full justify-between">
+        <button
+          className="btn btn-primary-hollow"
+          type="button"
+          onClick={onCancel}
+        >
           {formatMessage({ id: 'DeleteForm.Cancel' })}
-        </Button>
-        <Button type='submit'>
+        </button>
+        <button className="btn btn-primary" type='submit'>
           {formatMessage({ id: 'DeleteForm.Delete' })}
-        </Button>
-      </Flex>
+        </button>
+      </div>
     </form>
   )
 }

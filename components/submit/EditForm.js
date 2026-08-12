@@ -1,8 +1,7 @@
-import { Box, Button, Flex, Heading, Input, Select } from 'ooni-components'
+import { Input, Select } from 'ooni-components'
 import { useCallback, useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useIntl } from 'react-intl'
-import styled from 'styled-components'
 
 import categories from '../lib/category_codes.json'
 import { SubmissionContext } from './SubmissionContext'
@@ -11,11 +10,6 @@ import { SubmissionContext } from './SubmissionContext'
 // https://github.com/citizenlab/test-lists/blob/master/scripts/lint-lists.py#L18
 // FIX: This regex works at https://regexr.com/629v6 but not here. Using a generic regex in the URL input below
 // const urlRegex = /^(?:http)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.|[A-Z0-9-]{2,}\.?)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i
-
-const HorizontalLine = styled.hr`
-  border: 1px solid ${(props) => props.theme.colors.gray5};
-  width: 100%;
-`
 
 const defaultSource = 'test-lists.ooni.org contribution'
 
@@ -29,7 +23,7 @@ export const EditForm = ({
   const [submitting, setSubmitting] = useState(false)
   const { countryCode } = useContext(SubmissionContext)
 
-  const { control, handleSubmit, formState } = useForm({
+  const { control, handleSubmit } = useForm({
     shouldUseNativeValidation: true,
     defaultValues: {
       url: oldEntry.url || '',
@@ -75,18 +69,23 @@ export const EditForm = ({
     [countryCode, oldEntry.date_added, oldEntry.source, onSubmit],
   )
 
-  const width = layout === 'row' ? [1, 1, 2 / 8] : 1
+  const fieldWidthClass =
+    layout === 'row' ? 'w-full md:w-full lg:w-1/4' : 'w-full'
+  const notesWidthClass =
+    layout === 'row' ? 'w-full md:w-full lg:w-1/2' : 'w-full'
 
   return (
     <form onSubmit={handleSubmit(submit)}>
-      <Heading h={4} mx={0} px={0}>
+      <h4 className="mx-0 px-0">
         {isEdit
           ? formatMessage({ id: 'EditForm.AddNew' }, { url: oldEntry.url })
           : formatMessage({ id: 'EditForm.AddNew' })}
-      </Heading>
-      <Flex flexDirection={layout} my={2} alignItems='end' flexWrap='wrap'>
-        <Flex flexDirection='column' width={width}>
-          <Box m={2}>
+      </h4>
+      <div
+        className={`my-2 flex flex-wrap items-end ${layout === 'row' ? 'flex-row' : 'flex-col'}`}
+      >
+        <div className={`flex flex-col ${fieldWidthClass}`}>
+          <div className="m-2">
             <Controller
               name='url'
               control={control}
@@ -100,11 +99,11 @@ export const EditForm = ({
                 />
               )}
             />
-          </Box>
-        </Flex>
+          </div>
+        </div>
 
-        <Flex flexDirection='column' width={width}>
-          <Box m={2}>
+        <div className={`flex flex-col ${fieldWidthClass}`}>
+          <div className="m-2">
             <Controller
               name='category_code'
               control={control}
@@ -133,14 +132,11 @@ export const EditForm = ({
                 </Select>
               )}
             />
-          </Box>
-        </Flex>
+          </div>
+        </div>
 
-        <Flex
-          flexDirection='column'
-          width={layout === 'row' ? [1, 1, 4 / 8] : 1}
-        >
-          <Box m={2}>
+        <div className={`flex flex-col ${notesWidthClass}`}>
+          <div className="m-2">
             <Controller
               name='notes'
               control={control}
@@ -154,13 +150,13 @@ export const EditForm = ({
                 />
               )}
             />
-          </Box>
-        </Flex>
+          </div>
+        </div>
 
         {isEdit && (
-          <Box width={1}>
-            <HorizontalLine />
-            <Flex flexDirection='column' m={2} width={width} flexGrow={'auto'}>
+          <div className="w-full">
+            <hr className="w-full border border-gray-300" />
+            <div className={`m-2 flex grow flex-col ${fieldWidthClass}`}>
               <Controller
                 name='comment'
                 control={control}
@@ -175,24 +171,32 @@ export const EditForm = ({
                   />
                 )}
               />
-            </Flex>
-            <Flex alignSelf={isEdit ? 'flex-end' : 'initial'}>
-              <Button inverted onClick={onCancel} mr={3}>
+            </div>
+            <div className="flex self-end">
+              <button
+                className="btn btn-dark-hollow mr-4"
+                type="button"
+                onClick={onCancel}
+              >
                 {formatMessage({ id: 'DeleteForm.Cancel' })}
-              </Button>
-              <Button type='submit'>
+              </button>
+              <button className="btn btn-primary" type='submit'>
                 {formatMessage({ id: 'EditForm.Done' })}
-              </Button>
-            </Flex>
-          </Box>
+              </button>
+            </div>
+          </div>
         )}
 
         {!isEdit && (
-          <Button ml='auto' type='submit' my={2} hollow disabled={submitting}>
+          <button
+            className="btn btn-primary-hollow my-2 ml-auto"
+            type='submit'
+            disabled={submitting}
+          >
             {formatMessage({ id: 'EditForm.Add' })}
-          </Button>
+          </button>
         )}
-      </Flex>
+      </div>
     </form>
   )
 }

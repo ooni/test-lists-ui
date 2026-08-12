@@ -1,5 +1,4 @@
-import { Box, Button, Flex, Link } from 'ooni-components'
-import React, { useCallback, useContext } from 'react'
+import { useCallback, useContext } from 'react'
 
 import { useIntl } from 'react-intl'
 import { submitChanges } from '../lib/api'
@@ -31,38 +30,40 @@ const SubmitButton = () => {
   }, [mutate, notify])
 
   return (
-    <Flex flexDirection={['column']} py={3} mb={4}>
-      <Flex my={[2, 2]}>
+    <div className="mb-8 flex flex-col py-4">
+      <div className="my-2">
         {isClean && (
-          <Box>{formatMessage({ id: 'SubmitButton.CleanState' })}</Box>
+          <p>{formatMessage({ id: 'SubmitButton.CleanState' })}</p>
         )}
         {isSubmitted && (
-          <Box>
+          <p>
             {formatMessage(
               { id: 'SubmitButton.SubmittedState' },
-              { link: (string) => <Link href={linkToPR}>{string}</Link> },
+              { link: (string) => <a href={linkToPR}>{string}</a> },
             )}
-          </Box>
+          </p>
         )}
         {isEditing && (
-          <Box>
+          <p>
             {formatMessage(
               { id: 'SubmitButton.EditingState' },
               { strong: (string) => <strong>{string}</strong> },
             )}
-          </Box>
+          </p>
         )}
-      </Flex>
-      <Flex>
-        <Button
+      </div>
+      <div>
+        <button
+          className="btn btn-primary"
+          type="button"
           onClick={onSubmit}
           title={`Current state: ${submissionState}`}
           disabled={isSubmitted || isClean}
         >
           {formatMessage({ id: 'SubmitButton.Submit' })}
-        </Button>
-      </Flex>
-    </Flex>
+        </button>
+      </div>
+    </div>
   )
 }
 
