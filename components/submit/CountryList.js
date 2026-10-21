@@ -1,6 +1,6 @@
 import countryUtil from 'country-util'
 import { Select } from 'ooni-components'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { getLocalisedRegionName } from '../../utils/i18n'
 

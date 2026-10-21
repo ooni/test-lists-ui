@@ -1,35 +1,21 @@
-import type React from 'react'
-import styled, { keyframes } from 'styled-components'
-
-const rotate = (dir) => keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(${dir * 360}deg);
-  }
-`
-
-interface SpinnerProps {
-  readonly speed: number
-  readonly $dir: number
-}
-
-const Spinner = styled.div<SpinnerProps>`
-  animation: ${(props) => rotate(props.$dir)} ${(props) => 2 / props.speed}s linear infinite;
-`
+import type { FC } from 'react'
 
 interface LoadingProps {
   readonly size?: number
   readonly speed?: number
   readonly dir?: number
 }
-const Loading: React.FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
-  <Spinner speed={speed} $dir={dir}>
+
+const Loading: FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
+  <div
+    style={{
+      animation: `${dir > 0 ? 'spin-cw' : 'spin-ccw'} ${2 / speed}s linear infinite`,
+    }}
+  >
     {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      style={{ margin: 'auto', display: 'block' }}
+      className="mx-auto block"
       width={`${size}px`}
       height={`${size}px`}
       viewBox='0 0 100 100'
@@ -42,7 +28,7 @@ const Loading: React.FC<LoadingProps> = ({ size = 64, speed = 1, dir = 1 }) => (
         </g>
       </g>
     </svg>
-  </Spinner>
+  </div>
 )
 
 export default Loading

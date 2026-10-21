@@ -1,5 +1,4 @@
-import { theme } from 'ooni-components'
-import React, { useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import {
   MdArrowDownward,
   MdArrowUpward,
@@ -7,78 +6,9 @@ import {
   MdEdit,
 } from 'react-icons/md'
 import { useFlexLayout, useSortBy, useTable } from 'react-table'
-import styled from 'styled-components'
 
 import { useIntl } from 'react-intl'
 import categories from '../lib/category_codes.json'
-
-const BORDER_COLOR = theme.colors.gray6
-const ODD_ROW_BG = theme.colors.gray2
-const EVEN_ROW_BG = theme.colors.gray0
-
-const Table = styled.table`
-  width: 100%;
-  .secondary {
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-`
-
-const TableHeader = styled.thead`
-  background-color: white;
-  & th {
-    display: flex;
-    align-items: center;
-    text-align: start;
-    margin: 0;
-    padding: 0.5rem;
-  }
-`
-
-const TableRow = styled.tr`
-  &:nth-child(odd) {
-    background-color: ${ODD_ROW_BG};
-  }
-  &:nth-child(even) {
-    background-color: ${EVEN_ROW_BG};
-  }
-  &:first-child {
-    border-top: 1px solid ${BORDER_COLOR};
-  }
-  &:last-child {
-    border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-`
-
-const TableCell = styled.td`
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid ${(props) => props.theme.colors.gray6};
-
-  &:last-child {
-    border-right: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-  &:first-child {
-    border-left: 1px solid ${(props) => props.theme.colors.gray6};
-    word-wrap: break-word;
-  }
-
-  input {
-    font-size: 1rem;
-    padding: 0;
-    margin: 0;
-    border: 0;
-  }
-  /* TODO: Input validation styling */
-`
-
-const Button = styled.button`
-  background-color: transparent;
-  border: 0;
-  padding: 0;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')}
-`
 
 const EditButton = ({ row: { index }, onEdit, submissionState }) => {
   const editRow = useCallback(() => {
@@ -86,9 +16,9 @@ const EditButton = ({ row: { index }, onEdit, submissionState }) => {
   }, [onEdit, index])
 
   return (
-    <Button title='Edit' mx='auto'>
+    <button type="button" className="icon-button mx-auto" title='Edit'>
       <MdEdit onClick={editRow} size={20} />
-    </Button>
+    </button>
   )
 }
 
@@ -98,9 +28,9 @@ const DeleteButton = ({ row: { index }, onDelete, submissionState }) => {
   }, [onDelete, index])
 
   return (
-    <Button title='Delete' onClick={deleteRow}>
+    <button type="button" className="icon-button" title='Delete' onClick={deleteRow}>
       <MdDelete size={18} />
-    </Button>
+    </button>
   )
 }
 
@@ -113,26 +43,24 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) =>
     )
   ) : null
 
-const StyledCategoryCell = styled.span`
-  font-size: medium;
-  cursor: help;
-  margin-top: -6px;
-  position: absolute;
-`
-
-const CategoryCell = React.memo(
+const CategoryCell = memo(
   ({ cell: { value } }) =>
     value in categories && (
       <>
         {categories[value][0]}
-        <StyledCategoryCell title={categories[value][1]}>ℹ</StyledCategoryCell>
+        <span
+          className="absolute -mt-1.5 cursor-help text-base"
+          title={categories[value][1]}
+        >
+          ℹ
+        </span>
       </>
     ),
 )
 
 CategoryCell.displayName = 'CategoryCell'
 
-const DateCell = React.memo(({ cell: { value } }) => {
+const DateCell = memo(({ cell: { value } }) => {
   try {
     const date = new Date(value)
     const formattedDate = new Intl.DateTimeFormat([], {
@@ -239,81 +167,61 @@ const TableView = ({
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     tableInstance
 
-  return (
-    // apply the table props
-    <Table {...getTableProps()}>
-      <TableHeader>
-        {
-          // Loop over the header rows
-          headerGroups.map((headerGroup) => {
-            const { key: headerGroupKey, ...headerGroupProps } =
-              headerGroup.getHeaderGroupProps()
-            // Apply the header row props
-            return (
-              <tr key={headerGroupKey} {...headerGroupProps}>
-                {
-                  // Loop over the headers in each row
-                  headerGroup.headers.map((column) => {
-                    const { key: headerKey, ...headerProps } =
-                      column.getHeaderProps([
-                        column.getSortByToggleProps(),
-                        { className: column.className },
-                      ])
-                    // Apply the header cell props
-                    return (
-                      <th key={headerKey} {...headerProps}>
-                        {
-                          // Render the header
-                          column.render('Header')
-                        }
-                        <TableSortLabel
-                          active={column.isSorted}
-                          direction={column.isSortedDesc ? 'desc' : 'asc'}
-                        />
-                      </th>
-                    )
-                  })
-                }
-              </tr>
-            )
-          })
-        }
-      </TableHeader>
+  const { className: tableClassName, ...tableProps } = getTableProps()
 
-      {/* Apply the table body props */}
+  return (
+    <table className={`data-table ${tableClassName ?? ''}`} {...tableProps}>
+      <thead className="data-table-header">
+        {headerGroups.map((headerGroup) => {
+          const { key: headerGroupKey, ...headerGroupProps } =
+            headerGroup.getHeaderGroupProps()
+          return (
+            <tr key={headerGroupKey} {...headerGroupProps}>
+              {headerGroup.headers.map((column) => {
+                const { key: headerKey, ...headerProps } =
+                  column.getHeaderProps([
+                    column.getSortByToggleProps(),
+                    { className: column.className },
+                  ])
+                return (
+                  <th key={headerKey} {...headerProps}>
+                    {column.render('Header')}
+                    <TableSortLabel
+                      active={column.isSorted}
+                      direction={column.isSortedDesc ? 'desc' : 'asc'}
+                    />
+                  </th>
+                )
+              })}
+            </tr>
+          )
+        })}
+      </thead>
+
       <tbody {...getTableBodyProps()}>
-        {
-          // Loop over the table rows
-          rows.map((row) => {
-            // Prepare the row for display
-            prepareRow(row)
-            const { key: rowKey, ...rowProps } = row.getRowProps()
-            return (
-              // Apply the row props
-              <TableRow key={rowKey} {...rowProps} index={row.index}>
-                {
-                  // Loop over the rows cells
-                  row.cells.map((cell) => {
-                    const { key: cellKey, ...cellProps } = cell.getCellProps([
-                      { className: cell.column.className },
-                    ])
-                    // Apply the cell props
-                    return (
-                      <TableCell key={cellKey} {...cellProps}>
-                        {
-                          // Render the cell contents
-                          cell.render('Cell')
-                        }
-                      </TableCell>
-                    )
-                  })
-                }
-              </TableRow>
-            )
-          })
-        }
+        {rows.map((row) => {
+          prepareRow(row)
+          const { key: rowKey, ...rowProps } = row.getRowProps()
+          return (
+            <tr key={rowKey} className="data-table-row" {...rowProps}>
+              {row.cells.map((cell) => {
+                const { key: cellKey, className: cellClassName, ...cellProps } =
+                  cell.getCellProps([{ className: cell.column.className }])
+                return (
+                  <td
+                    key={cellKey}
+                    className={`data-table-cell ${cellClassName ?? ''}`}
+                    {...cellProps}
+                  >
+                    {cell.render('Cell')}
+                  </td>
+                )
+              })}
+            </tr>
+          )
+        })}
       </tbody>
-    </Table>
+    </table>
   )
 }
 

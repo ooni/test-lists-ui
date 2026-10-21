@@ -1,7 +1,6 @@
 import NLink from 'next/link'
 import { useRouter } from 'next/router'
-import { Box, Flex, Heading, Link, Text } from 'ooni-components'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { useIntl } from 'react-intl'
 import { mutate } from 'swr'
@@ -61,78 +60,56 @@ const Login = () => {
 
   return (
     <Layout title='Login'>
-      <Flex alignItems='center' flexDirection='column'>
-        <Heading h={1} mt={3} mb={1} fontSize={[3, 5]}>
+      <div className="flex flex-col items-center">
+        <h1 className="mb-1 mt-4 text-base md:text-xl">
           {formatMessage({ id: 'Index.Title' })}
-        </Heading>
-        <Heading h={3} mt={1} fontWeight={300} fontSize={[2, 3]}>
+        </h1>
+        <h3 className="mt-1 text-sm font-light md:text-base">
           {formatMessage({ id: 'Index.Subtitle' })}
-        </Heading>
-      </Flex>
-      <Flex mt={4} flexDirection='column'>
-        {/* Before logging In */}
+        </h3>
+      </div>
+      <div className="mt-8 flex flex-col">
         {!token && !submitted && (
           <>
-            <Text
-              fontSize={1}
-              mb={2}
-              textAlign='center'
-              sx={{ whiteSpace: 'pre-line', lineHeight: 1 }}
-            >
+            <p className="mb-2 whitespace-pre-line text-center text-xs leading-none">
               {formatMessage({ id: 'Login.Instructions' })}
-            </Text>
+            </p>
             <LoginForm onLogin={onLoginSubmit} />
           </>
         )}
         {!token && submitted && (
-          <Heading h={3} width={[1, 2 / 3]} textAlign='center' mx='auto'>
+          <h3 className="mx-auto w-full text-center md:w-2/3">
             {formatMessage({ id: 'Login.Submitted' })}
-          </Heading>
+          </h3>
         )}
 
-        {/* While logging In */}
         {token && !loggedIn && !error && (
           <>
             <Loading size={96} dir={-1} speed={2} />
-            <Heading h={2} my={2} mx='auto'>
+            <h2 className="mx-auto my-2">
               {formatMessage({ id: 'Login.LoggingIn' })}
-            </Heading>
+            </h2>
           </>
         )}
 
-        {/* After loggin in */}
         {loggedIn && !error && (
-          <>
-            <Heading h={2} my={2} mx='auto'>
-              {formatMessage({ id: 'Login.LoggedIn' })}
-            </Heading>
-          </>
+          <h2 className="mx-auto my-2">
+            {formatMessage({ id: 'Login.LoggedIn' })}
+          </h2>
         )}
 
-        {/* Errors */}
         {error && (
-          <Box width={[1, 1 / 3]} mx='auto' textAlign={'center'}>
-            <Box mb={3} p={4} bg='red1'>
-              {error}
-            </Box>
+          <div className="mx-auto w-full text-center md:w-1/3">
+            <div className="mb-4 bg-red-100 p-8">{error}</div>
             <NLink href='/login'>
               {formatMessage({ id: 'Login.TryAgain' })}
             </NLink>
-          </Box>
+          </div>
         )}
-      </Flex>
-      <Flex alignItems='center' flexDirection='column'>
-        <Box bg='blue5' mt={5} color='white' px={4} py={4} maxWidth='860px'>
-          <Text
-            fontSize={[1, 2]}
-            sx={{
-              whiteSpace: 'pre-line',
-              lineHeight: 1.2,
-              a: {
-                color: 'white',
-              },
-            }}
-          >
+      </div>
+      <div className="flex flex-col items-center">
+        <div className="mt-8 max-w-[860px] bg-blue-500 px-8 py-8 text-white [&_a]:text-white">
+          <p className="whitespace-pre-line text-xs leading-snug md:text-sm">
             {formatMessage(
               { id: 'Login.CTA' },
               {
@@ -146,9 +123,9 @@ const Login = () => {
                 ),
               },
             )}
-          </Text>
-        </Box>
-      </Flex>
+          </p>
+        </div>
+      </div>
     </Layout>
   )
 }

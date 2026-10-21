@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Box, Button, Flex, Heading, Text } from 'ooni-components'
 import useSWR from 'swr'
 
 import { apiEndpoints, fetcher } from '../components/lib/api'
@@ -27,42 +26,44 @@ export default function Home() {
 
   return (
     <Layout title='URL Prioritization'>
-      <Heading h={1} textAlign='center'>
+      <h1 className="text-center">
         {intl.formatMessage({ id: 'Prioritization.UrlPriorities' })}
-      </Heading>
-      <Flex alignItems='center' mb={3}>
+      </h1>
+      <div className="mb-4 flex items-center">
         <button type='button' onClick={() => mutate()}>
           {intl.formatMessage({ id: 'Prioritization.Refresh' })}
         </button>
-        <Text ml={3}>
+        <span className="ml-4">
           {intl.formatMessage({ id: 'Prioritization.Status' })}{' '}
           {isValidating
             ? intl.formatMessage({ id: 'Prioritization.Status.Loading' })
             : intl.formatMessage({ id: 'Prioritization.Status.Ready' })}
-        </Text>
-      </Flex>
+        </span>
+      </div>
       {isAdminUser ? (
         <AddRule />
       ) : (
-        <a href='https://forms.gle/oEUFkLxWtR6EbZmZ7' target='blank'>
-          <Button>
-            {intl.formatMessage({ id: 'Prioritization.ProposePriorities' })}
-          </Button>
+        <a
+          href='https://forms.gle/oEUFkLxWtR6EbZmZ7'
+          target='blank'
+          className="btn btn-primary"
+        >
+          {intl.formatMessage({ id: 'Prioritization.ProposePriorities' })}
         </a>
       )}
 
       {data && <List data={data} mutateRules={mutate} />}
       {error && !data && (
-        <Flex alignItems='center' p={4} bg='red1' flexDirection='column'>
-          <Box>
+        <div className="flex flex-col items-center bg-red-100 p-8">
+          <p>
             {error.status} {error.message}
-          </Box>
-          <Box>
+          </p>
+          <p>
             <Link href='/login'>
               {intl.formatMessage({ id: 'LoginForm.Login' })}
             </Link>
-          </Box>
-        </Flex>
+          </p>
+        </div>
       )}
     </Layout>
   )

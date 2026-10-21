@@ -1,4 +1,3 @@
-import { Box, Container, Flex, Heading, Link } from 'ooni-components'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 import Loading from '../Loading'
@@ -172,17 +171,17 @@ const UrlList = ({ cc }) => {
   }, [cc])
 
   return (
-    <Flex flexDirection='column' my={2}>
+    <div className="my-2 flex flex-col">
       {!!testList?.length && (
         <>
-          <Box py={2}>
+          <div className="py-2">
             <EditForm
               layout='row'
               onSubmit={handleSubmit}
               oldEntry={{}}
               error={addFormError}
             />
-          </Box>
+          </div>
 
           <Table
             data={testList}
@@ -198,12 +197,7 @@ const UrlList = ({ cc }) => {
               show={editIndex !== null}
               onHideClick={onCancel}
             >
-              <Container
-                sx={{ width: ['90vw', '90vw', '90vw', '50vw'] }}
-                px={[2, 5]}
-                py={[2, 3]}
-                color='gray8'
-              >
+              <div className="w-[90vw] px-4 py-4 text-gray-800 md:w-[50vw] md:px-8 md:py-4">
                 <EditForm
                   layout='column'
                   onSubmit={handleSubmit}
@@ -211,7 +205,7 @@ const UrlList = ({ cc }) => {
                   oldEntry={entryToEdit}
                   error={editFormError}
                 />
-              </Container>
+              </div>
             </ModalWithEsc>
           )}
 
@@ -221,40 +215,35 @@ const UrlList = ({ cc }) => {
               show={deleteIndex !== null}
               onHideClick={onCancelDelete}
             >
-              <Container
-                sx={{ width: ['90vw', '40vw'] }}
-                px={[2, 5]}
-                py={[2, 3]}
-                color='gray8'
-              >
+              <div className="w-[90vw] px-4 py-4 text-gray-800 md:w-[40vw] md:px-8 md:py-4">
                 <DeleteForm
                   oldEntry={entryToEdit}
                   onDelete={handleSubmit}
                   onCancel={onCancelDelete}
                   error={editFormError}
                 />
-              </Container>
+              </div>
             </ModalWithEsc>
           )}
         </>
       )}
       {testList === null && (
-        <Heading h={4} px={[1, 5]} py={4} my={4} bg='white' color='gray9'>
+        <h4 className="my-8 bg-white px-5 py-8 text-gray-900 md:px-8">
           {formatMessage(
             { id: 'UrlList.CountryNotSupported' },
             {
               email_address: (
-                <Link href='mailto:contact@openobservatory.org'>
+                <a href='mailto:contact@openobservatory.org'>
                   <em>contact@openobservatory.org</em>
-                </Link>
+                </a>
               ),
             },
           )}
-        </Heading>
+        </h4>
       )}
       {testList === undefined && <Loading size={200} />}
       {error && <ErrorComponent>{error.message}</ErrorComponent>}
-    </Flex>
+    </div>
   )
 }
 
