@@ -25,7 +25,7 @@ const Home = () => {
   return (
     <Layout title={formatMessage({ id: 'Index.Title' })}>
       <div className="flex flex-col items-center justify-center">
-        <h1 className="mt-4 text-base md:text-xl">
+        <h1 className="mt-4 mb-12">
           {formatMessage({ id: 'Index.Title' })}
         </h1>
         {!loading && isLoggedIn && (
@@ -57,7 +57,7 @@ const Home = () => {
 
         <div className="pt-2">
           {!isLoggedIn && (
-            <NLink href='/login' className="btn btn-primary mr-2">
+            <NLink href='/login' className="btn btn-primary mb-8">
               {formatMessage({ id: 'Index.RegisterButton' })}
             </NLink>
           )}

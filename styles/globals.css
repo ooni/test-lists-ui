@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@config "../tailwind.config.ts";
+
 @source "../node_modules/ooni-components/dist/index.esm.js";
 
 @import '../node_modules/ooni-components/dist/tailwind.css';
@@ -12,7 +14,7 @@
 
   body,
   html {
-    @apply m-0 h-full bg-white p-0 text-sm;
+    @apply m-0 h-full bg-white p-0;
   }
 
   a {
