@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@config "../tailwind.config.ts";
+@config "../tailwind.config.cjs";
 
 @source "../node_modules/ooni-components/dist/index.esm.js";
 

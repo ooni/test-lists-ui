@@ -17,7 +17,6 @@ function getSupportedLanguages() {
 }
 
 module.exports = {
-  output: 'standalone',
   reactStrictMode: true,
   env: {
     LOCALES: JSON.stringify(getSupportedLanguages()),
