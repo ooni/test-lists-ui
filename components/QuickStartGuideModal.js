@@ -12,12 +12,12 @@ const QuickStartGuideModal = ({ show, setShowModal }) => {
 
   return (
     <Modal show onHideClick={onClose} className="min-w-[340px]">
-      <div className="container px-0 md:px-4">
+      <div className="container px-0 md:px-8">
         <div className="flex flex-col">
           <h4 className="text-center">
             {formatMessage({ id: 'QuickStartGuide.Title' })}
           </h4>
-          <ol className="my-0 list-decimal pl-3 px-5 text-xs md:my-2">
+          <ol className="my-0 list-decimal pl-3 px-5 md:my-2">
             {[...Array(6)].map((_, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <li className="my-2" key={i}>

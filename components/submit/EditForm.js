@@ -164,6 +164,7 @@ export const EditForm = ({
                   <Input
                     {...field}
                     required
+                    className='bg-white'
                     label={formatMessage({ id: 'EditForm.Comment' })}
                     placeholder={formatMessage({
                       id: 'EditForm.NotesPlaceholder',
@@ -172,7 +173,7 @@ export const EditForm = ({
                 )}
               />
             </div>
-            <div className="flex self-end">
+            <div className="flex self-end mt-4">
               <button
                 className="btn btn-dark-hollow mr-4"
                 type="button"

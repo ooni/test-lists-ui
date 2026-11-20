@@ -18,7 +18,7 @@ const ModalWithEsc = ({ onHideClick, onCancel, ...rest }) => {
     }
   }, [onKeyPress])
 
-  return <Modal {...rest} />
+  return <Modal onHideClick={onHideClick ?? onCancel} {...rest} />
 }
 
 export default ModalWithEsc

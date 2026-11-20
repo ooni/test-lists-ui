@@ -19,7 +19,7 @@ const DeleteForm = ({ oldEntry, onDelete, onCancel, error }) => {
       <h5 className="my-4">
         {formatMessage({ id: 'DeleteForm.Why' }, { url: oldEntry.url })}
       </h5>
-      <div className="mx-2 my-8 flex flex-col">
+      <div className="my-4 flex flex-col">
         <Input
           name='comment'
           placeholder={formatMessage({ id: 'DeleteForm.Reason' })}

@@ -61,24 +61,24 @@ const Login = () => {
   return (
     <Layout title='Login'>
       <div className="flex flex-col items-center">
-        <h1 className="mb-1 mt-4 text-base md:text-xl">
+        <h1 className="mb-1 mt-4">
           {formatMessage({ id: 'Index.Title' })}
         </h1>
-        <h3 className="mt-1 text-sm font-light md:text-base">
+        <h2 className="mt-1 text-2xl font-light">
           {formatMessage({ id: 'Index.Subtitle' })}
-        </h3>
+        </h2>
       </div>
       <div className="mt-8 flex flex-col">
         {!token && !submitted && (
           <>
-            <p className="mb-2 whitespace-pre-line text-center text-xs leading-none">
+            <p className="mb-2 whitespace-pre-line text-center leading-none">
               {formatMessage({ id: 'Login.Instructions' })}
             </p>
             <LoginForm onLogin={onLoginSubmit} />
           </>
         )}
         {!token && submitted && (
-          <h3 className="mx-auto w-full text-center md:w-2/3">
+          <h3 className="mx-auto w-full text-center md:w-2/3 mb-8">
             {formatMessage({ id: 'Login.Submitted' })}
           </h3>
         )}
@@ -108,8 +108,8 @@ const Login = () => {
         )}
       </div>
       <div className="flex flex-col items-center">
-        <div className="mt-8 max-w-[860px] bg-blue-500 px-8 py-8 text-white [&_a]:text-white">
-          <p className="whitespace-pre-line text-xs leading-snug md:text-sm">
+        <div className="max-w-215 bg-blue-500 px-8 text-white [&_a]:text-white [&_a]:underline">
+          <p className="whitespace-pre-line leading-snug">
             {formatMessage(
               { id: 'Login.CTA' },
               {

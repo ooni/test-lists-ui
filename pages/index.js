@@ -40,12 +40,12 @@ const Home = () => {
         {loading && <Loading size={96} />}
 
         {isLoggedIn && (
-          <div className="mt-8 max-w-[860px] bg-blue-500 px-8 py-8 text-sm text-white [&_a]:text-white">
+          <div className="text-lg mt-8 max-w-215 bg-blue-500 px-6 py-6 text-white [&_a]:text-white [&_a]:underline">
             {formatMessage(
               { id: 'Index.NoticeMessage' },
               {
                 strong: (string) => (
-                  <p className="mb-4 font-bold">{string}</p>
+                  <span className="mb-4 font-bold block">{string}</span>
                 ),
                 link: (string) => (
                   <NLink href='https://ooni.org/install'>{string}</NLink>

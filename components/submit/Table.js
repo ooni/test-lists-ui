@@ -198,7 +198,7 @@ const TableView = ({
         })}
       </thead>
 
-      <tbody {...getTableBodyProps()}>
+      <tbody {...getTableBodyProps()} className='text-sm'>
         {rows.map((row) => {
           prepareRow(row)
           const { key: rowKey, ...rowProps } = row.getRowProps()

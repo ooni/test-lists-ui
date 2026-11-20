@@ -30,7 +30,7 @@ export default function Home() {
         {intl.formatMessage({ id: 'Prioritization.UrlPriorities' })}
       </h1>
       <div className="mb-4 flex items-center">
-        <button type='button' onClick={() => mutate()}>
+        <button type='button' className="btn btn-primary btn-sm" onClick={() => mutate()}>
           {intl.formatMessage({ id: 'Prioritization.Refresh' })}
         </button>
         <span className="ml-4">

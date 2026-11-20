@@ -197,7 +197,7 @@ const UrlList = ({ cc }) => {
               show={editIndex !== null}
               onHideClick={onCancel}
             >
-              <div className="w-[90vw] px-4 py-4 text-gray-800 md:w-[50vw] md:px-8 md:py-4">
+              <div className="w-[90vw] px-4 pb-4 text-gray-800 md:w-[50vw] md:px-8">
                 <EditForm
                   layout='column'
                   onSubmit={handleSubmit}
@@ -215,7 +215,7 @@ const UrlList = ({ cc }) => {
               show={deleteIndex !== null}
               onHideClick={onCancelDelete}
             >
-              <div className="w-[90vw] px-4 py-4 text-gray-800 md:w-[40vw] md:px-8 md:py-4">
+              <div className="w-[90vw] px-4 pb-4 text-gray-800 md:w-[40vw] md:px-8 md:pb-4">
                 <DeleteForm
                   oldEntry={entryToEdit}
                   onDelete={handleSubmit}

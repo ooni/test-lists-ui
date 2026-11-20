@@ -2,7 +2,8 @@
 
 @config "../tailwind.config.cjs";
 
-@source "../node_modules/ooni-components/dist/index.esm.js";
+/* ooni-components Modal utilities (do not @source index.esm.js — it pulls in React) */
+@source inline('hidden fixed relative top-0 bottom-0 left-0 right-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[100vw] max-h-[100vh] overflow-auto z-[9999999] z-[10000000] bg-black opacity-50 transition-opacity rounded flex justify-end appearance-none m-3');
 
 @import '../node_modules/ooni-components/dist/tailwind.css';
 
@@ -40,11 +41,11 @@
   }
 
   .data-table-row:nth-child(odd) {
-    @apply bg-gray-100;
+    @apply bg-gray-200;
   }
 
   .data-table-row:nth-child(even) {
-    @apply bg-white;
+    @apply bg-gray-50;
   }
 
   .data-table-row:first-child {
@@ -68,7 +69,7 @@
   }
 
   .data-table-cell input {
-    @apply m-0 border-0 p-0 text-base;
+    @apply m-0 border-0 p-0 w-full;
   }
 
   .icon-button {

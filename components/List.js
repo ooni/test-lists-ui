@@ -69,6 +69,7 @@ const EditableCell = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        className="bg-white"
       />
     )
   }
@@ -406,7 +407,7 @@ const List = ({ data, mutateRules }) => {
           })
         }
       </thead>
-      <tbody key={tableBodyKey} {...tableBodyProps}>
+      <tbody key={tableBodyKey} {...tableBodyProps} className='text-sm'>
         {
           // Loop over the table rows
           rows.map((row) => {
