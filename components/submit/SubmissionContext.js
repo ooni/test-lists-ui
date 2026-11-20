@@ -1,7 +1,7 @@
-import { createContext, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
+import { createContext, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import { apiEndpoints, fetcher, customErrorRetry } from '../lib/api'
+import { apiEndpoints, customErrorRetry, fetcher } from '../lib/api'
 
 export const SubmissionContext = createContext()
 

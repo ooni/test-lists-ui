@@ -23,9 +23,9 @@ type RowProps = {
 const Row: FunctionComponent<RowProps> = ({ change }) => {
   const { formatMessage } = useIntl()
   return (
-    <div className="changes-row flex py-2" key={change.url}>
-      <div className="flex w-full md:w-1/4 lg:w-[12.5%]">
-        <div className="pr-2">
+    <div className='changes-row flex py-2' key={change.url}>
+      <div className='flex w-full md:w-1/4 lg:w-[12.5%]'>
+        <div className='pr-2'>
           {change.action === 'add' && <MdEdit />}
           {change.action === 'delete' && <MdDelete />}
         </div>
@@ -38,14 +38,14 @@ const Row: FunctionComponent<RowProps> = ({ change }) => {
           )}
         </div>
       </div>
-      <div className="w-full pr-2 md:w-[37.5%]">
+      <div className='w-full pr-2 md:w-[37.5%]'>
         <bdo dir='ltr'>{change.url}</bdo>
       </div>
-      <div className="w-full pr-2 md:w-[12.5%] lg:w-1/4">
+      <div className='w-full pr-2 md:w-[12.5%] lg:w-1/4'>
         {change.category_description}
       </div>
-      <div className="w-full pr-2 md:w-[12.5%]">{change.source}</div>
-      <div className="w-full pr-2 md:w-1/4">{change.notes}</div>
+      <div className='w-full pr-2 md:w-[12.5%]'>{change.source}</div>
+      <div className='w-full pr-2 md:w-1/4'>{change.notes}</div>
     </div>
   )
 }
@@ -63,8 +63,8 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
         : cc.toUpperCase()
   }
   return (
-    <div className="flex flex-col">
-      <div className="mx-4">
+    <div className='flex flex-col'>
+      <div className='mx-4'>
         <h4>{countryName}</h4>
       </div>
       <div>
@@ -95,8 +95,8 @@ const Changes = () => {
   }
 
   return (
-    <div className="mt-2 flex flex-col pb-8">
-      <div className="font-bold">
+    <div className='mt-2 flex flex-col pb-8'>
+      <div className='font-bold'>
         <Row change={headerRow} />
       </div>
       <div>

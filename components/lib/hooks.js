@@ -44,7 +44,7 @@ export const UserProvider = ({ children }) => {
     [router],
   )
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   useEffect(() => {
     if (token && router.pathname === '/login') {
       loginUser(token)
@@ -63,7 +63,7 @@ export const UserProvider = ({ children }) => {
 
   // periodically check if the token need to be refreshed and request a
   // new one if needed
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   useEffect(() => {
     const interval = setInterval(() => {
       const tokenCreatedAt = JSON.parse(
@@ -86,12 +86,12 @@ export const UserProvider = ({ children }) => {
     return () => clearInterval(interval)
   }, [])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   useEffect(() => {
     getUser()
   }, [])
 
-  function login(email, password) {
+  function login() {
     setLoading(true)
     loginUser(token)
       .then((data) => {
@@ -110,7 +110,7 @@ export const UserProvider = ({ children }) => {
     getUser()
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   const memoedValue = useMemo(
     () => ({
       user,

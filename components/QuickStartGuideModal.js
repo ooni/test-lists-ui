@@ -11,29 +11,29 @@ const QuickStartGuideModal = ({ show, setShowModal }) => {
   const onClose = () => setShowModal(false)
 
   return (
-    <Modal show onHideClick={onClose} className="min-w-[340px]">
-      <div className="container px-0 md:px-8">
-        <div className="flex flex-col">
-          <h4 className="text-center">
+    <Modal show onHideClick={onClose} className='min-w-85'>
+      <div className='container px-0 md:px-8'>
+        <div className='flex flex-col'>
+          <h4 className='text-center'>
             {formatMessage({ id: 'QuickStartGuide.Title' })}
           </h4>
-          <ol className="my-0 list-decimal pl-3 px-5 md:my-2">
+          <ol className='my-0 list-decimal pl-3 px-5 md:my-2'>
             {[...Array(6)].map((_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              <li className="my-2" key={i}>
+              // biome-ignore lint/suspicious/noArrayIndexKey: <ignore>
+              <li className='my-2' key={i}>
                 {formatMessage({ id: `QuickStartGuide.${i + 1}` })}
               </li>
             ))}
           </ol>
         </div>
       </div>
-      <div className="my-4 flex justify-center">
+      <div className='my-4 flex justify-center'>
         <button
-          className="btn btn-primary mx-4 w-1/3"
-          type="button"
+          className='btn btn-primary mx-4 w-1/3'
+          type='button'
           onClick={onClose}
         >
-          <span className="font-bold">
+          <span className='font-bold'>
             {formatMessage({ id: 'QuickStartGuide.Close' })}
           </span>
         </button>

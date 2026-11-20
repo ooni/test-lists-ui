@@ -5,30 +5,34 @@ import {
   MdDelete,
   MdEdit,
 } from 'react-icons/md'
-import { useFlexLayout, useSortBy, useTable } from 'react-table'
-
 import { useIntl } from 'react-intl'
+import { useFlexLayout, useSortBy, useTable } from 'react-table'
 import categories from '../lib/category_codes.json'
 
-const EditButton = ({ row: { index }, onEdit, submissionState }) => {
+const EditButton = ({ row: { index }, onEdit, _submissionState }) => {
   const editRow = useCallback(() => {
     onEdit(index)
   }, [onEdit, index])
 
   return (
-    <button type="button" className="icon-button mx-auto" title='Edit'>
+    <button type='button' className='icon-button mx-auto' title='Edit'>
       <MdEdit onClick={editRow} size={20} />
     </button>
   )
 }
 
-const DeleteButton = ({ row: { index }, onDelete, submissionState }) => {
+const DeleteButton = ({ row: { index }, onDelete, _submissionState }) => {
   const deleteRow = useCallback(() => {
     onDelete(index)
   }, [onDelete, index])
 
   return (
-    <button type="button" className="icon-button" title='Delete' onClick={deleteRow}>
+    <button
+      type='button'
+      className='icon-button'
+      title='Delete'
+      onClick={deleteRow}
+    >
       <MdDelete size={18} />
     </button>
   )
@@ -49,7 +53,7 @@ const CategoryCell = memo(
       <>
         {categories[value][0]}
         <span
-          className="absolute -mt-1.5 cursor-help text-base"
+          className='absolute -mt-1.5 cursor-help text-base'
           title={categories[value][1]}
         >
           ℹ
@@ -82,7 +86,7 @@ const TableView = ({
   submissionState,
 }) => {
   const { formatMessage } = useIntl()
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   const columns = useMemo(
     () => [
       {
@@ -171,7 +175,7 @@ const TableView = ({
 
   return (
     <table className={`data-table ${tableClassName ?? ''}`} {...tableProps}>
-      <thead className="data-table-header">
+      <thead className='data-table-header'>
         {headerGroups.map((headerGroup) => {
           const { key: headerGroupKey, ...headerGroupProps } =
             headerGroup.getHeaderGroupProps()
@@ -203,10 +207,13 @@ const TableView = ({
           prepareRow(row)
           const { key: rowKey, ...rowProps } = row.getRowProps()
           return (
-            <tr key={rowKey} className="data-table-row" {...rowProps}>
+            <tr key={rowKey} className='data-table-row' {...rowProps}>
               {row.cells.map((cell) => {
-                const { key: cellKey, className: cellClassName, ...cellProps } =
-                  cell.getCellProps([{ className: cell.column.className }])
+                const {
+                  key: cellKey,
+                  className: cellClassName,
+                  ...cellProps
+                } = cell.getCellProps([{ className: cell.column.className }])
                 return (
                   <td
                     key={cellKey}

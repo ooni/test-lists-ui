@@ -9,10 +9,9 @@ const DEFAULT_LOCALE = 'en'
 function getSupportedLanguages() {
   const supportedLanguages = new Set()
   supportedLanguages.add(DEFAULT_LOCALE) // at least 1 supported language
-  // biome-ignore lint/complexity/noForEach: <explanation>
-  glob
-    .sync(`${LANG_DIR}/**/*.json`)
-    .forEach((f) => supportedLanguages.add(basename(f, '.json')))
+  for (const f of glob.sync(`${LANG_DIR}/**/*.json`)) {
+    supportedLanguages.add(basename(f, '.json'))
+  }
   return [...supportedLanguages]
 }
 

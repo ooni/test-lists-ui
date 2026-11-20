@@ -56,15 +56,15 @@ const AddRule = () => {
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
-      <div className="my-2 flex items-center justify-between">
+      <div className='my-2 flex items-center justify-between'>
         {fields.map((field) => (
           <Input key={field.name} {...field} placeholder={field.name} />
         ))}
-        <button className="btn btn-primary mx-4 p-4" type='submit'>
+        <button className='btn btn-primary mx-4 p-4' type='submit'>
           Add Rule
         </button>
       </div>
-      <small className="text-red-600">
+      <small className='text-red-600'>
         {error ||
           'Note: Page may reload if add/update/delete operations behave unexpectedly.'}
       </small>

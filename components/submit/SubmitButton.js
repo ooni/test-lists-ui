@@ -30,11 +30,9 @@ const SubmitButton = () => {
   }, [mutate, notify])
 
   return (
-    <div className="mb-8 flex flex-col py-4">
-      <div className="my-2">
-        {isClean && (
-          <p>{formatMessage({ id: 'SubmitButton.CleanState' })}</p>
-        )}
+    <div className='mb-8 flex flex-col py-4'>
+      <div className='my-2'>
+        {isClean && <p>{formatMessage({ id: 'SubmitButton.CleanState' })}</p>}
         {isSubmitted && (
           <p>
             {formatMessage(
@@ -54,8 +52,8 @@ const SubmitButton = () => {
       </div>
       <div>
         <button
-          className="btn btn-primary"
-          type="button"
+          className='btn btn-primary'
+          type='button'
           onClick={onSubmit}
           title={`Current state: ${submissionState}`}
           disabled={isSubmitted || isClean}

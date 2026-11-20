@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useIntl } from 'react-intl'
-import { registerUser } from './lib/api'
 import Loading from './Loading'
+import { registerUser } from './lib/api'
 
 export const LoginForm = ({ onLogin }) => {
   const PRODUCTION_URL = 'https://test-lists.ooni.org/'
@@ -53,8 +53,8 @@ export const LoginForm = ({ onLogin }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col items-center">
-        <div className="login-input-container">
+      <div className='flex flex-col items-center'>
+        <div className='login-input-container'>
           <Controller
             render={({ field }) => (
               <Input
@@ -73,22 +73,21 @@ export const LoginForm = ({ onLogin }) => {
             control={control}
           />
         </div>
-        <div className="my-2">
-          {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
-          <small className="login-error text-red-500">
+        <div className='my-2'>
+          <small className='login-error text-red-500'>
             {loginError ?? <>&nbsp;</>}
           </small>
         </div>
-        <div className="my-2">
+        <div className='my-2'>
           <button
-            className="btn btn-primary"
+            className='btn btn-primary'
             type='submit'
             disabled={submitting || !isDirty || !isValid}
           >
             {formatMessage({ id: 'LoginForm.Login' })}
           </button>
         </div>
-        {submitting ? <Loading size={96} /> : <div className="my-[50px]" />}
+        {submitting ? <Loading size={96} /> : <div className='my-[50px]' />}
       </div>
     </form>
   )

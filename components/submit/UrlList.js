@@ -80,7 +80,7 @@ const UrlList = ({ cc }) => {
         } else if (editIndex === null) {
           // Add
           addURL(newEntry, cc, comment)
-            .then((newEntry) => {
+            .then((_newEntry) => {
               setEditIndex(null)
               setAddFormError(null)
               // Revalidate the submission state to show the submit button
@@ -95,7 +95,7 @@ const UrlList = ({ cc }) => {
         } else {
           // Update
           updateURL(cc, comment, entryToEdit, newEntry)
-            .then((updatedEntry) => {
+            .then((_updatedEntry) => {
               setEditIndex(null)
               setEditFormError(null)
               // Revalidate the submission state to show the submit button
@@ -158,12 +158,12 @@ const UrlList = ({ cc }) => {
     setEditFormError(null)
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   useEffect(() => {
     setSkipPageResest(false)
   }, [testList])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   useEffect(() => {
     // NOTE: addFormError isn't reset even when the page navigates to another country list
     // This manually removes the error message under the "Add new URL" section when a new `{cc}` is selected
@@ -171,10 +171,10 @@ const UrlList = ({ cc }) => {
   }, [cc])
 
   return (
-    <div className="my-2 flex flex-col">
+    <div className='my-2 flex flex-col'>
       {!!testList?.length && (
         <>
-          <div className="py-2">
+          <div className='py-2'>
             <EditForm
               layout='row'
               onSubmit={handleSubmit}
@@ -197,7 +197,7 @@ const UrlList = ({ cc }) => {
               show={editIndex !== null}
               onHideClick={onCancel}
             >
-              <div className="w-[90vw] px-4 pb-4 text-gray-800 md:w-[50vw] md:px-8">
+              <div className='w-[90vw] px-4 pb-4 text-gray-800 md:w-[50vw] md:px-8'>
                 <EditForm
                   layout='column'
                   onSubmit={handleSubmit}
@@ -215,7 +215,7 @@ const UrlList = ({ cc }) => {
               show={deleteIndex !== null}
               onHideClick={onCancelDelete}
             >
-              <div className="w-[90vw] px-4 pb-4 text-gray-800 md:w-[40vw] md:px-8 md:pb-4">
+              <div className='w-[90vw] px-4 pb-4 text-gray-800 md:w-[40vw] md:px-8 md:pb-4'>
                 <DeleteForm
                   oldEntry={entryToEdit}
                   onDelete={handleSubmit}
@@ -228,7 +228,7 @@ const UrlList = ({ cc }) => {
         </>
       )}
       {testList === null && (
-        <h4 className="my-8 bg-white px-5 py-8 text-gray-900 md:px-8">
+        <h4 className='my-8 bg-white px-5 py-8 text-gray-900 md:px-8'>
           {formatMessage(
             { id: 'UrlList.CountryNotSupported' },
             {

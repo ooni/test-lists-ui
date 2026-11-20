@@ -69,7 +69,7 @@ const EditableCell = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className="bg-white"
+        className='bg-white'
       />
     )
   }
@@ -114,18 +114,18 @@ const EditButton = ({
   }, [onRowUpdate, index, values, setState])
 
   return (
-    <div className="flex flex-row justify-around">
+    <div className='flex flex-row justify-around'>
       {!isEditing && (
-        <button type="button" className="icon-button mx-auto">
+        <button type='button' className='icon-button mx-auto'>
           <MdEdit onClick={onEdit} size={20} />
         </button>
       )}
       {isEditing && (
         <>
-          <button type="button" className="icon-button" title='Discard Changes'>
+          <button type='button' className='icon-button' title='Discard Changes'>
             <MdClose onClick={onCancel} size={20} />
           </button>
-          <button type="button" className="icon-button" title='Apply Changes'>
+          <button type='button' className='icon-button' title='Apply Changes'>
             <MdCheck onClick={onUpdate} size={20} />
           </button>
         </>
@@ -135,7 +135,7 @@ const EditButton = ({
 }
 
 const DeleteButton = ({ onClick }) => (
-  <button type="button" className="icon-button" onClick={onClick}>
+  <button type='button' className='icon-button' onClick={onClick}>
     <MdDelete size={18} />
   </button>
 )
@@ -160,7 +160,7 @@ const List = ({ data, mutateRules }) => {
 
   const isAdminUser = user?.role === 'admin'
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   const columns = useMemo(
     () => [
       {
@@ -371,7 +371,7 @@ const List = ({ data, mutateRules }) => {
   const { className: tableClassName, ...tableProps } = getTableProps()
   return (
     <table className={`data-table ${tableClassName ?? ''}`} {...tableProps}>
-      <thead className="data-table-header">
+      <thead className='data-table-header'>
         {
           // Loop over the header rows
           headerGroups.map((headerGroup) => {
@@ -415,17 +415,16 @@ const List = ({ data, mutateRules }) => {
             prepareRow(row)
             const { key: rowKey, ...rowProps } = row.getRowProps()
             return (
-              <tr
-                key={rowKey}
-                className="data-table-row"
-                {...rowProps}
-              >
+              <tr key={rowKey} className='data-table-row' {...rowProps}>
                 {
                   // Loop over the rows cells
                   row.cells.map((cell) => {
                     // Apply the cell props
-                    const { key: cellKey, className: cellClassName, ...cellProps } =
-                      cell.getCellProps()
+                    const {
+                      key: cellKey,
+                      className: cellClassName,
+                      ...cellProps
+                    } = cell.getCellProps()
                     return (
                       <td
                         key={cellKey}

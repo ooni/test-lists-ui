@@ -1,7 +1,6 @@
 import NextHead from 'next/head'
-
-import NavBar from './NavBar'
 import Footer from './Footer'
+import NavBar from './NavBar'
 
 const Layout = ({ title = '', children }) => {
   return (
@@ -9,9 +8,9 @@ const Layout = ({ title = '', children }) => {
       <NextHead>
         <title>{title}</title>
       </NextHead>
-      <div className="flex min-h-screen flex-col">
+      <div className='flex min-h-screen flex-col'>
         <NavBar title={title} />
-        <div className="container w-full flex-1">{children}</div>
+        <div className='container w-full flex-1'>{children}</div>
         <Footer />
       </div>
     </>

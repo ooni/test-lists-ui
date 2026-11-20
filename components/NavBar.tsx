@@ -1,14 +1,12 @@
 import Image from 'next/image'
 import NextLink from 'next/link'
-import OONILogo from 'ooni-components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
-
-import { useState } from 'react'
-
 import { useRouter } from 'next/router'
+import OONILogo from 'ooni-components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
+import { useState } from 'react'
 import { useIntl } from 'react-intl'
 import { getLocalisedLanguageName } from '../utils/i18n'
-import QuickStartGuideModal from './QuickStartGuideModal'
 import { useUser } from './lib/hooks'
+import QuickStartGuideModal from './QuickStartGuideModal'
 
 export const getDirection = (locale) => {
   switch (locale) {
@@ -44,8 +42,8 @@ const NavBar = () => {
   return (
     <>
       <QuickStartGuideModal show={showModal} setShowModal={setShowModal} />
-      <header className="flex items-center justify-between bg-blue-500 p-4 text-white">
-        <div className="cursor-pointer text-sm [&_a]:text-inherit [&_a:active]:text-inherit [&_a:hover]:text-inherit [&_a:visited]:text-inherit [&_a]:no-underline">
+      <header className='flex items-center justify-between bg-blue-500 p-4 text-white'>
+        <div className='cursor-pointer text-sm [&_a]:text-inherit [&_a:active]:text-inherit [&_a:hover]:text-inherit [&_a:visited]:text-inherit [&_a]:no-underline'>
           <NextLink href='/' passHref>
             <Image
               alt='OONI Logo'
@@ -56,23 +54,29 @@ const NavBar = () => {
             />
           </NextLink>
         </div>
-        <div className="flex items-center gap-4">
+        <div className='flex items-center gap-4'>
           {user?.logged_in && (
             <>
-              <a
-                href='#logout'
-                className="text-white"
+              <button
+                type='button'
+                className='text-white'
                 onClick={() => setShowModal(true)}
+                aria-label={formatMessage({ id: 'NavBar.Help' })}
               >
                 {formatMessage({ id: 'NavBar.Help' })}
-              </a>
-              <a href='#logout' className="text-white" onClick={onLogout}>
+              </button>
+              <button
+                type='button'
+                className='text-white'
+                onClick={onLogout}
+                aria-label={formatMessage({ id: 'NavBar.Logout' })}
+              >
                 {formatMessage({ id: 'NavBar.Logout' })}
-              </a>
+              </button>
             </>
           )}
           <select
-            className="cursor-pointer appearance-none border-none bg-transparent p-0 text-inherit capitalize outline-none [&>option]:text-inherit [&>option]:opacity-100"
+            className='cursor-pointer appearance-none border-none bg-transparent p-0 text-inherit capitalize outline-none [&>option]:text-inherit [&>option]:opacity-100'
             onChange={handleLocaleChange}
             value={locale}
           >

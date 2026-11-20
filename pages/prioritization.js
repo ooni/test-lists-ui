@@ -1,13 +1,11 @@
 import Link from 'next/link'
-import useSWR from 'swr'
-
-import { apiEndpoints, fetcher } from '../components/lib/api'
-import { useUser } from '../components/lib/hooks'
-
 import { useIntl } from 'react-intl'
+import useSWR from 'swr'
 import AddRule from '../components/AddRule'
 import Layout from '../components/Layout'
 import List from '../components/List'
+import { apiEndpoints, fetcher } from '../components/lib/api'
+import { useUser } from '../components/lib/hooks'
 
 const swrOptions = {
   // dedupingInterval: 10 * 60 * 1000,
@@ -26,14 +24,18 @@ export default function Home() {
 
   return (
     <Layout title='URL Prioritization'>
-      <h1 className="text-center">
+      <h1 className='text-center'>
         {intl.formatMessage({ id: 'Prioritization.UrlPriorities' })}
       </h1>
-      <div className="mb-4 flex items-center">
-        <button type='button' className="btn btn-primary btn-sm" onClick={() => mutate()}>
+      <div className='mb-4 flex items-center'>
+        <button
+          type='button'
+          className='btn btn-primary btn-sm'
+          onClick={() => mutate()}
+        >
           {intl.formatMessage({ id: 'Prioritization.Refresh' })}
         </button>
-        <span className="ml-4">
+        <span className='ml-4'>
           {intl.formatMessage({ id: 'Prioritization.Status' })}{' '}
           {isValidating
             ? intl.formatMessage({ id: 'Prioritization.Status.Loading' })
@@ -46,7 +48,7 @@ export default function Home() {
         <a
           href='https://forms.gle/oEUFkLxWtR6EbZmZ7'
           target='blank'
-          className="btn btn-primary"
+          className='btn btn-primary'
         >
           {intl.formatMessage({ id: 'Prioritization.ProposePriorities' })}
         </a>
@@ -54,7 +56,7 @@ export default function Home() {
 
       {data && <List data={data} mutateRules={mutate} />}
       {error && !data && (
-        <div className="flex flex-col items-center bg-red-100 p-8">
+        <div className='flex flex-col items-center bg-red-100 p-8'>
           <p>
             {error.status} {error.message}
           </p>

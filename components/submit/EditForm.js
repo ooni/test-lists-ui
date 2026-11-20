@@ -76,7 +76,7 @@ export const EditForm = ({
 
   return (
     <form onSubmit={handleSubmit(submit)}>
-      <h4 className="mx-0 px-0">
+      <h4 className='mx-0 px-0'>
         {isEdit
           ? formatMessage({ id: 'EditForm.AddNew' }, { url: oldEntry.url })
           : formatMessage({ id: 'EditForm.AddNew' })}
@@ -85,7 +85,7 @@ export const EditForm = ({
         className={`my-2 flex flex-wrap items-end ${layout === 'row' ? 'flex-row' : 'flex-col'}`}
       >
         <div className={`flex flex-col ${fieldWidthClass}`}>
-          <div className="m-2">
+          <div className='m-2'>
             <Controller
               name='url'
               control={control}
@@ -103,7 +103,7 @@ export const EditForm = ({
         </div>
 
         <div className={`flex flex-col ${fieldWidthClass}`}>
-          <div className="m-2">
+          <div className='m-2'>
             <Controller
               name='category_code'
               control={control}
@@ -136,7 +136,7 @@ export const EditForm = ({
         </div>
 
         <div className={`flex flex-col ${notesWidthClass}`}>
-          <div className="m-2">
+          <div className='m-2'>
             <Controller
               name='notes'
               control={control}
@@ -154,8 +154,8 @@ export const EditForm = ({
         </div>
 
         {isEdit && (
-          <div className="w-full">
-            <hr className="w-full border border-gray-300" />
+          <div className='w-full'>
+            <hr className='w-full border border-gray-300' />
             <div className={`m-2 flex grow flex-col ${fieldWidthClass}`}>
               <Controller
                 name='comment'
@@ -173,15 +173,15 @@ export const EditForm = ({
                 )}
               />
             </div>
-            <div className="flex self-end mt-4">
+            <div className='flex self-end mt-4'>
               <button
-                className="btn btn-dark-hollow mr-4"
-                type="button"
+                className='btn btn-dark-hollow mr-4'
+                type='button'
                 onClick={onCancel}
               >
                 {formatMessage({ id: 'DeleteForm.Cancel' })}
               </button>
-              <button className="btn btn-primary" type='submit'>
+              <button className='btn btn-primary' type='submit'>
                 {formatMessage({ id: 'EditForm.Done' })}
               </button>
             </div>
@@ -190,7 +190,7 @@ export const EditForm = ({
 
         {!isEdit && (
           <button
-            className="btn btn-primary-hollow my-2 ml-auto"
+            className='btn btn-primary-hollow my-2 ml-auto'
             type='submit'
             disabled={submitting}
           >

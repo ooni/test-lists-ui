@@ -8,7 +8,7 @@ export const getLocalisedRegionName = (regionCode, locale) => {
   const l = getLocale(locale)
   try {
     return new Intl.DisplayNames([l], { type: 'region' }).of(String(regionCode))
-  } catch (e) {
+  } catch (_) {
     return regionCode
   }
 }
@@ -20,7 +20,7 @@ export const getLocalisedLanguageName = (regionCode, locale) => {
     return new Intl.DisplayNames([l], { type: 'language' }).of(
       String(regionCode),
     )
-  } catch (e) {
+  } catch (_) {
     return regionCode
   }
 }

@@ -24,14 +24,14 @@ const Home = () => {
 
   return (
     <Layout title={formatMessage({ id: 'Index.Title' })}>
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="mt-4 mb-12">
-          {formatMessage({ id: 'Index.Title' })}
-        </h1>
+      <div className='flex flex-col items-center justify-center'>
+        <h1 className='mt-4 mb-12'>{formatMessage({ id: 'Index.Title' })}</h1>
         {!loading && isLoggedIn && (
-          <div className="my-auto flex flex-col items-center justify-center">
-            <h4 className="my-4">{formatMessage({ id: 'Index.WhichContribution' })}</h4>
-            <div className="my-2">
+          <div className='my-auto flex flex-col items-center justify-center'>
+            <h4 className='my-4'>
+              {formatMessage({ id: 'Index.WhichContribution' })}
+            </h4>
+            <div className='my-2'>
               <CountryList onChange={onCountryChange} />
             </div>
           </div>
@@ -40,12 +40,12 @@ const Home = () => {
         {loading && <Loading size={96} />}
 
         {isLoggedIn && (
-          <div className="text-lg mt-8 max-w-215 bg-blue-500 px-6 py-6 text-white [&_a]:text-white [&_a]:underline">
+          <div className='text-lg mt-8 max-w-215 bg-blue-500 px-6 py-6 text-white [&_a]:text-white [&_a]:underline'>
             {formatMessage(
               { id: 'Index.NoticeMessage' },
               {
                 strong: (string) => (
-                  <span className="mb-4 font-bold block">{string}</span>
+                  <span className='mb-4 font-bold block'>{string}</span>
                 ),
                 link: (string) => (
                   <NLink href='https://ooni.org/install'>{string}</NLink>
@@ -55,13 +55,13 @@ const Home = () => {
           </div>
         )}
 
-        <div className="pt-2">
+        <div className='pt-2'>
           {!isLoggedIn && (
-            <NLink href='/login' className="btn btn-primary mb-8">
+            <NLink href='/login' className='btn btn-primary mb-8'>
               {formatMessage({ id: 'Index.RegisterButton' })}
             </NLink>
           )}
-          <NLink href='/prioritization' className="btn btn-primary-hollow">
+          <NLink href='/prioritization' className='btn btn-primary-hollow'>
             {formatMessage({ id: 'Index.ShowPrioritiesButton' })}
           </NLink>
         </div>
