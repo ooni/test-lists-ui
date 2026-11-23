@@ -59,7 +59,9 @@ export const getAPI = async (endpoint, params = {}, config = {}) => {
       url: endpoint,
       params: params,
       ...config,
-      headers: { Authorization: `Bearer ${getBearerToken()}` },
+      ...(getBearerToken() && {
+        headers: { Authorization: `Bearer ${getBearerToken()}` },
+      }),
     })
     .then((res) => res.data)
     .catch((e) => {
@@ -70,7 +72,7 @@ export const getAPI = async (endpoint, params = {}, config = {}) => {
     })
 }
 
-const postAPI = async (endpoint, params, config) => {
+const postAPI = async (endpoint, params) => {
   return await getAPI(endpoint, null, { method: 'POST', data: params })
 }
 
@@ -94,7 +96,7 @@ export const loginUser = async (token) => {
     })
 }
 
-export const logoutUser = async (token) => {
+export const logoutUser = async () => {
   return await postAPI(apiEndpoints.USER_LOGOUT)
 }
 
@@ -158,7 +160,7 @@ export const submitChanges = async () => {
   return data.pr_id
 }
 
-export const customErrorRetry = (error, key, config, revalidate, opts) => {
+export const customErrorRetry = (error, _key, config, revalidate, opts) => {
   // This overrides the default exponential backoff algorithm
   // Instead it uses the `errorRetryInterval` and `errorRetryCount` configuration to
   // limit the retries

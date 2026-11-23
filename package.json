@@ -8,33 +8,32 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "category_codes": "bash scripts/fetchCategoryCodes.sh",
-    "script:build-translations": "node ./scripts/build-translations.js"
+    "category_codes": "bash scripts/fetchCategoryCodes.sh"
   },
   "dependencies": {
-    "@next/bundle-analyzer": "^14.2.3",
-    "axios": "^1.7.1",
+    "@formatjs/intl-displaynames": "^8.0.3",
+    "@tailwindcss/postcss": "^4.3.5",
+    "axios": "^1.19.0",
     "country-util": "^0.2.0",
-    "next": "^14.2.5",
-    "ooni-components": "0.6.0-alpha.11",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-hook-form": "^7.52.1",
-    "react-hot-toast": "^2.4.1",
-    "react-icons": "^5.2.1",
-    "react-intl": "^6.6.8",
+    "next": "^16.4.6",
+    "ooni-components": "0.8.0-alpha.3",
+    "postcss": "^8.5.26",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.92.0",
+    "react-hot-toast": "^2.6.1",
+    "react-icons": "^5.7.0",
+    "react-intl": "^12.1.7",
     "react-table": "^7.8.0",
-    "styled-components": "^6.1.11",
-    "swr": "^2.2.5"
+    "swr": "^2.5.1",
+    "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
-    "@types/node": "^20.14.10",
-    "@types/react": "^18.3.3",
-    "@types/styled-components": "^5.1.34",
-    "@welldone-software/why-did-you-render": "^8.0.1",
-    "glob": "^11.0.0",
+    "@biomejs/biome": "^2.6.8",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "glob": "^14.0.6",
     "ts-migrate": "^0.1.35",
-    "typescript": "^5.5.3"
+    "typescript": "^7.0.2"
   }
 }

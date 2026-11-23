@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { Heading } from 'ooni-components'
 import { useCallback, useEffect } from 'react'
 
 import { useIntl } from 'react-intl'
@@ -44,7 +43,7 @@ export default function Submit() {
       <Notification />
       <PageContextProvider countryCode={countryCode}>
         <Changes />
-        <Heading h={1}>{formatMessage({ id: 'Country.TestList' })}</Heading>
+        <h1>{formatMessage({ id: 'Country.TestList' })}</h1>
         <CountryList defaultValue={countryCode} onChange={onCountryChange} />
         {countryCode && <UrlList cc={countryCode} />}
       </PageContextProvider>

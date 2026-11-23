@@ -1,6 +1,5 @@
 import NLink from 'next/link'
 import { useRouter } from 'next/router'
-import { Box, Button, Flex, Heading, Text } from 'ooni-components'
 import { useCallback } from 'react'
 
 import { useIntl } from 'react-intl'
@@ -25,74 +24,48 @@ const Home = () => {
 
   return (
     <Layout title={formatMessage({ id: 'Index.Title' })}>
-      <Flex alignItems='center' justifyContent='center' flexDirection='column'>
-        <Heading h={1} mt={3} fontSize={[3, 5]}>
-          {formatMessage({ id: 'Index.Title' })}
-        </Heading>
+      <div className='flex flex-col items-center justify-center'>
+        <h1 className='mt-4 mb-12'>{formatMessage({ id: 'Index.Title' })}</h1>
         {!loading && isLoggedIn && (
-          <Flex
-            alignItems='center'
-            justifyContent='center'
-            flexDirection='column'
-            my='auto'
-          >
-            <Heading h={4} my={4}>
+          <div className='my-auto flex flex-col items-center justify-center'>
+            <h4 className='my-4'>
               {formatMessage({ id: 'Index.WhichContribution' })}
-            </Heading>
-            <Box my={2}>
+            </h4>
+            <div className='my-2'>
               <CountryList onChange={onCountryChange} />
-            </Box>
-          </Flex>
+            </div>
+          </div>
         )}
 
         {loading && <Loading size={96} />}
 
         {isLoggedIn && (
-          <Box
-            bg='blue5'
-            mt={5}
-            color='white'
-            px={4}
-            py={4}
-            fontSize={2}
-            maxWidth='860px'
-            sx={{
-              a: {
-                color: 'white',
-              },
-            }}
-          >
+          <div className='text-lg mt-8 max-w-215 bg-blue-500 px-6 py-6 text-white [&_a]:text-white [&_a]:underline'>
             {formatMessage(
               { id: 'Index.NoticeMessage' },
               {
                 strong: (string) => (
-                  <Text fontWeight='bold' mb={3}>
-                    {string}
-                  </Text>
+                  <span className='mb-4 font-bold block'>{string}</span>
                 ),
                 link: (string) => (
                   <NLink href='https://ooni.org/install'>{string}</NLink>
                 ),
               },
             )}
-          </Box>
+          </div>
         )}
 
-        <Box pt={2}>
+        <div className='pt-2'>
           {!isLoggedIn && (
-            <NLink href='/login'>
-              <Button mr={2}>
-                {formatMessage({ id: 'Index.RegisterButton' })}
-              </Button>
+            <NLink href='/login' className='btn btn-primary mb-8'>
+              {formatMessage({ id: 'Index.RegisterButton' })}
             </NLink>
           )}
-          <NLink href='/prioritization'>
-            <Button hollow>
-              {formatMessage({ id: 'Index.ShowPrioritiesButton' })}
-            </Button>
+          <NLink href='/prioritization' className='btn btn-primary-hollow'>
+            {formatMessage({ id: 'Index.ShowPrioritiesButton' })}
           </NLink>
-        </Box>
-      </Flex>
+        </div>
+      </div>
     </Layout>
   )
 }

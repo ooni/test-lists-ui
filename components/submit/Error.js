@@ -1,18 +1,11 @@
-import { Box, Flex, Heading } from 'ooni-components'
-
-const ErrorComponent = ({ children, ...rest }) => (
-  <Flex
-    my={2}
-    px={4}
-    pb={3}
-    color='gray6'
-    bg='red1'
-    flexDirection='column'
+const ErrorComponent = ({ children, className = '', ...rest }) => (
+  <div
+    className={`my-2 flex flex-col bg-red-100 px-8 pb-4 text-gray-500 ${className}`}
     {...rest}
   >
-    <Heading h={5}>Errors</Heading>
-    <Box as='pre'>{children}</Box>
-  </Flex>
+    <h5>Errors</h5>
+    <pre>{children}</pre>
+  </div>
 )
 
 export default ErrorComponent
