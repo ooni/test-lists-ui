@@ -1,3 +1,9 @@
+import { flexRender } from '@tanstack/react-table'
+import {
+  getCoreRowModel,
+  getSortedRowModel,
+  useLegacyTable as useReactTable,
+} from '@tanstack/react-table/legacy'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -9,28 +15,30 @@ import {
   MdEdit,
 } from 'react-icons/md'
 import { useIntl } from 'react-intl'
-import {
-  defaultRenderer as Cell,
-  useFlexLayout,
-  useRowState,
-  useSortBy,
-  useTable,
-} from 'react-table'
 import { deleteRule, updateRule } from './lib/api'
 import { useUser } from './lib/hooks'
 
+const columnDefaults = {
+  minSize: 0,
+  size: 150,
+  maxSize: Number.MAX_SAFE_INTEGER,
+}
+
+const columnStyle = (column) => ({
+  boxSizing: 'border-box',
+  width: column.getSize(),
+  overflow: 'hidden',
+})
+
+const emptyRowState = { isEditing: false, dirty: false }
+
 // Dynamic Cell renderer shows either raw value or an editable HTMLInput element when editing the row
-const EditableCell = ({
-  value: initialValue,
-  row: {
-    index,
-    original,
-    state: { isEditing },
-    setState,
-  },
-  column: { id, inputAttrs = {} },
-  updateCellData,
-}) => {
+const EditableCell = ({ getValue, row, column, table }) => {
+  const initialValue = getValue()
+  const index = Number(row.id)
+  const inputAttrs = column.columnDef.meta?.inputAttrs ?? {}
+  const { updateCellData, getRowState, setRowState } = table.options.meta
+  const { isEditing } = getRowState(index)
   // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(initialValue)
 
@@ -49,11 +57,11 @@ const EditableCell = ({
         break
     }
     // Update table data only if value changes
-    if (inputValue !== original[id]) {
-      setState({ isEditing, dirty: true })
+    if (inputValue !== row.original[column.id]) {
+      setRowState(index, (state) => ({ ...state, isEditing, dirty: true }))
       // TODO: This is not very optimal because it alters the table data before sending changes to the API.
       // Technically, this means that it is possible that, at times, table state doesn't reflect backend state.
-      updateCellData(index, id, inputValue)
+      updateCellData(index, column.id, inputValue)
     }
   }
 
@@ -73,45 +81,50 @@ const EditableCell = ({
       />
     )
   }
-  return <Cell value={value} />
-}
-
-// Set our editable cell renderer as the default Cell renderer
-const defaultColumn = {
-  Cell: EditableCell,
+  return value ?? ''
 }
 
 // Dynamic button
 // * Starts editing a row
 // * Switches to a two button component to confirm or cancel a row edit operation.
-const EditButton = ({
-  resetRow,
-  onRowUpdate,
-  row: {
-    index,
-    values,
-    state: { isEditing, dirty },
-    setState,
-  },
-}) => {
+const EditButton = ({ row, table }) => {
+  const index = Number(row.id)
+  const { resetRow, onRowUpdate, getRowState, setRowState } = table.options.meta
+  const { isEditing } = getRowState(index)
+
   const onEdit = useCallback(() => {
     // TODO: Don't edit if another row is still being edited
-    setState((state) => ({ ...state, isEditing: true }))
-  }, [setState])
+    setRowState(index, (state) => ({ ...state, isEditing: true }))
+  }, [setRowState, index])
 
   const onCancel = useCallback(() => {
     // TODO: Ensure row state is reset before cancelling edit
     resetRow(index)
-    setState((state) => ({ ...state, isEditing: false, dirty: false }))
-  }, [resetRow, index, setState])
+    setRowState(index, (state) => ({
+      ...state,
+      isEditing: false,
+      dirty: false,
+    }))
+  }, [resetRow, index, setRowState])
 
   const onUpdate = useCallback(() => {
+    const values = {
+      category_code: row.original.category_code,
+      cc: row.original.cc,
+      domain: row.original.domain,
+      url: row.original.url,
+      priority: row.original.priority,
+    }
     async function updateRow() {
       await onRowUpdate(index, values)
-      setState((state) => ({ ...state, isEditing: false, dirty: false }))
+      setRowState(index, (state) => ({
+        ...state,
+        isEditing: false,
+        dirty: false,
+      }))
     }
     updateRow()
-  }, [onRowUpdate, index, values, setState])
+  }, [onRowUpdate, index, row.original, setRowState])
 
   return (
     <div className='flex flex-row justify-around'>
@@ -161,64 +174,93 @@ const List = ({ data, mutateRules }) => {
   const isAdminUser = user?.role === 'admin'
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const dataColumns = [
       {
-        Header: intl.formatMessage({ id: 'Prioritization.List.CategoryCode' }),
-        accessor: 'category_code',
-        width: 50,
-        // minWidth: 100,
-        inputAttrs: {
-          type: 'text',
-          maxLength: 5,
-          size: 10,
-          id: 'category_code',
+        header: intl.formatMessage({ id: 'Prioritization.List.CategoryCode' }),
+        accessorKey: 'category_code',
+        size: 120,
+        meta: {
+          inputAttrs: {
+            type: 'text',
+            maxLength: 5,
+            size: 10,
+            id: 'category_code',
+          },
         },
       },
       {
-        Header: intl.formatMessage({ id: 'Prioritization.List.CountryCode' }),
-        accessor: 'cc',
-        width: 50,
-        inputAttrs: {
-          type: 'text',
-          maxLength: 2,
-          size: 4,
+        header: intl.formatMessage({ id: 'Prioritization.List.CountryCode' }),
+        accessorKey: 'cc',
+        size: 90,
+        meta: {
+          inputAttrs: {
+            type: 'text',
+            maxLength: 2,
+            size: 4,
+          },
         },
       },
       {
-        Header: intl.formatMessage({ id: 'Prioritization.List.Domain' }),
-        accessor: 'domain',
-        width: 100,
-        inputAttrs: {
-          type: 'url',
-          size: 28,
-        },
-        cell: ({ cell }) => <bdo dir='ltr'>{cell.original.domain}</bdo>,
-      },
-      {
-        Header: intl.formatMessage({ id: 'Changes.URL' }),
-        accessor: 'url',
-        // maxWidth: 400,
-        inputAttrs: {
-          type: 'url',
-          size: 44,
+        header: intl.formatMessage({ id: 'Prioritization.List.Domain' }),
+        accessorKey: 'domain',
+        size: 180,
+        meta: {
+          inputAttrs: {
+            type: 'url',
+            size: 28,
+          },
         },
       },
       {
-        Header: intl.formatMessage({ id: 'Prioritization.List.Priority' }),
-        accessor: 'priority',
-        type: 'number',
-        maxWidth: 40,
-        inputAttrs: {
-          type: 'number',
-          maxLength: 2,
-          min: 0,
-          size: 6,
+        header: intl.formatMessage({ id: 'Changes.URL' }),
+        accessorKey: 'url',
+        meta: {
+          inputAttrs: {
+            type: 'url',
+            size: 44,
+          },
         },
       },
-    ],
-    [],
-  )
+      {
+        header: intl.formatMessage({ id: 'Prioritization.List.Priority' }),
+        accessorKey: 'priority',
+        size: 100,
+        meta: {
+          inputAttrs: {
+            type: 'number',
+            maxLength: 2,
+            min: 0,
+            size: 6,
+          },
+        },
+      },
+    ]
+
+    if (!isAdminUser) return dataColumns
+
+    return [
+      {
+        id: 'edit',
+        size: 56,
+        maxSize: 56,
+        enableSorting: false,
+        cell: EditButton,
+      },
+      ...dataColumns,
+      {
+        id: 'delete',
+        size: 48,
+        maxSize: 48,
+        enableSorting: false,
+        cell: ({ row, table }) => (
+          <DeleteButton
+            onClick={() => table.options.meta.onRowDelete(Number(row.id))}
+          />
+        ),
+      },
+    ]
+  }, [isAdminUser])
 
   // Called whenever a cell is changed so that the table data
   // and controlled inputs are in sync
@@ -312,137 +354,109 @@ const List = ({ data, mutateRules }) => {
     [mutateRules, originalData, router, updateOriginalData],
   )
 
-  // This allows useTable to reset the table when data changes
-  // https://react-table.tanstack.com/docs/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes
-  // it should be set to true whenever table data is being altered
+  const [sorting, setSorting] = useState([{ id: 'priority', desc: true }])
+  const [rowState, setRowStateMap] = useState({})
+  const [dataForReset, setDataForReset] = useState(data)
+
+  // Local edits set skipPageResetRef first. Other data changes restore the
+  // initial priority sort and clear per-row editing state.
+  if (data !== dataForReset) {
+    setDataForReset(data)
+    if (!skipPageResetRef.current) {
+      setSorting([{ id: 'priority', desc: true }])
+      setRowStateMap({})
+    }
+  }
+
+  // Clear the flag after the render that consumed it.
   useEffect(() => {
     skipPageResetRef.current = false
   })
 
-  const tableInstance = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
+  const getRowState = useCallback(
+    (index) => rowState[index] ?? emptyRowState,
+    [rowState],
+  )
+
+  const setRowState = useCallback((index, updater) => {
+    setRowStateMap((current) => {
+      const previous = current[index] ?? emptyRowState
+      const next = typeof updater === 'function' ? updater(previous) : updater
+      return { ...current, [index]: next }
+    })
+  }, [])
+
+  const table = useReactTable({
+    data,
+    columns,
+    defaultColumn: { ...columnDefaults, cell: EditableCell },
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getRowId: (_row, index) => String(index),
+    meta: {
       updateCellData,
       onRowUpdate,
       onRowDelete,
       resetRow,
-      initialState: {
-        sortBy: [
-          {
-            id: 'priority',
-            desc: true,
-          },
-        ],
-      },
-      initialRowStateAccessor: () => ({ isEditing: false, dirty: false }),
-      autoResetRowState: !skipPageResetRef.current,
-      autoResetSortBy: !skipPageResetRef.current,
+      getRowState,
+      setRowState,
     },
-    useFlexLayout,
-    useRowState,
-    useSortBy,
-    (hooks) => {
-      if (isAdminUser) {
-        hooks.visibleColumns.push((columns) => [
-          {
-            id: 'edit',
-            maxWidth: 32,
-            Cell: EditButton,
-          },
-          ...columns,
-          {
-            id: 'delete',
-            maxWidth: 16,
-            Cell: ({ row: { index } }) => (
-              <DeleteButton onClick={() => onRowDelete(index)} />
-            ),
-          },
-        ])
-      }
-    },
-  )
+  })
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance
+  const totalSize = table.getTotalSize()
 
-  const { key: tableBodyKey, ...tableBodyProps } = getTableBodyProps()
-  const { className: tableClassName, ...tableProps } = getTableProps()
   return (
-    <table className={`data-table ${tableClassName ?? ''}`} {...tableProps}>
+    <table
+      className='data-table'
+      style={{ width: totalSize, minWidth: '100%', tableLayout: 'fixed' }}
+    >
       <thead className='data-table-header'>
-        {
-          // Loop over the header rows
-          headerGroups.map((headerGroup) => {
-            const { key: headerGroupKey, ...headerGroupProps } =
-              headerGroup.getHeaderGroupProps()
-
-            return (
-              // Apply the header row props
-              <tr key={headerGroupKey} {...headerGroupProps}>
-                {
-                  // Loop over the headers in each row
-                  headerGroup.headers.map((column) => {
-                    const { key: columnHeaderKey, ...columnHeaderProps } =
-                      column.getHeaderProps(column.getSortByToggleProps())
-
-                    return (
-                      // Apply the header cell props
-                      <th key={columnHeaderKey} {...columnHeaderProps}>
-                        {
-                          // Render the header
-                          column.render('Header')
-                        }
-                        <TableSortLabel
-                          active={column.isSorted}
-                          direction={column.isSortedDesc ? 'desc' : 'asc'}
-                        />
-                      </th>
-                    )
-                  })
-                }
-              </tr>
-            )
-          })
-        }
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => {
+              const sorted = header.column.getIsSorted()
+              return (
+                <th
+                  key={header.id}
+                  style={columnStyle(header.column)}
+                  onClick={
+                    header.column.getCanSort()
+                      ? header.column.getToggleSortingHandler()
+                      : undefined
+                  }
+                >
+                  <span className='flex items-center'>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                    <TableSortLabel
+                      active={!!sorted}
+                      direction={sorted === 'asc' ? 'asc' : 'desc'}
+                    />
+                  </span>
+                </th>
+              )
+            })}
+          </tr>
+        ))}
       </thead>
-      <tbody key={tableBodyKey} {...tableBodyProps} className='text-sm'>
-        {
-          // Loop over the table rows
-          rows.map((row) => {
-            // Prepare the row for display
-            prepareRow(row)
-            const { key: rowKey, ...rowProps } = row.getRowProps()
-            return (
-              <tr key={rowKey} className='data-table-row' {...rowProps}>
-                {
-                  // Loop over the rows cells
-                  row.cells.map((cell) => {
-                    // Apply the cell props
-                    const {
-                      key: cellKey,
-                      className: cellClassName,
-                      ...cellProps
-                    } = cell.getCellProps()
-                    return (
-                      <td
-                        key={cellKey}
-                        className={`data-table-cell ${cellClassName ?? ''}`}
-                        {...cellProps}
-                      >
-                        {
-                          // Render the cell contents
-                          cell.render('Cell')
-                        }
-                      </td>
-                    )
-                  })
-                }
-              </tr>
-            )
-          })
-        }
+      <tbody className='text-sm'>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id} className='data-table-row'>
+            {row.getVisibleCells().map((cell) => (
+              <td
+                key={cell.id}
+                className='data-table-cell'
+                style={columnStyle(cell.column)}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </table>
   )

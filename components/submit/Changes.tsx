@@ -34,7 +34,7 @@ const Row: FunctionComponent<RowProps> = ({ change }) => {
             <span>{formatMessage({ id: 'Changes.EditedAdded' })}</span>
           )}
           {change.action === 'delete' && (
-            <span>{formatMessage({ id: 'Deleted' })}</span>
+            <span>{formatMessage({ id: 'Changes.Deleted' })}</span>
           )}
         </div>
       </div>

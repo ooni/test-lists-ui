@@ -1,5 +1,5 @@
 import { Input, Select } from 'ooni-components'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useIntl } from 'react-intl'
 
@@ -32,6 +32,20 @@ export const EditForm = ({
       comment: oldEntry.comment || '',
     },
   })
+
+  const categoryOptions = useMemo(
+    () =>
+      Object.entries(categories)
+        .sort((c1, c2) => (c1[1] > c2[1] ? 1 : -1))
+        .map(([code]) => ({
+          code,
+          name: formatMessage({ id: `CategoryCode.${code}.Name` }),
+          description: formatMessage({
+            id: `CategoryCode.${code}.Description`,
+          }),
+        })),
+    [formatMessage],
+  )
 
   const isEdit = 'url' in oldEntry
 
@@ -116,19 +130,11 @@ export const EditForm = ({
                   <option value=''>
                     {formatMessage({ id: 'CategoryList.Select' })}
                   </option>
-                  {Object.entries(categories)
-                    .sort((c1, c2) => (c1[1] > c2[1] ? 1 : -1))
-                    .map(([code]) => (
-                      <option
-                        key={code}
-                        value={code}
-                        title={formatMessage({
-                          id: `CategoryCode.${code}.Description`,
-                        })}
-                      >
-                        {formatMessage({ id: `CategoryCode.${code}.Name` })}
-                      </option>
-                    ))}
+                  {categoryOptions.map(({ code, name, description }) => (
+                    <option key={code} value={code} title={description}>
+                      {name}
+                    </option>
+                  ))}
                 </Select>
               )}
             />
