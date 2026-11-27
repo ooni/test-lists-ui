@@ -25,7 +25,7 @@
 
 @layer components {
   .data-table {
-    @apply w-full;
+    @apply w-full border-collapse;
   }
 
   .data-table .secondary {
@@ -37,7 +37,8 @@
   }
 
   .data-table-header th {
-    @apply flex items-center p-3 text-start;
+    @apply p-3 text-start align-middle;
+    overflow: hidden;
   }
 
   .data-table-row:nth-child(odd) {
@@ -57,7 +58,8 @@
   }
 
   .data-table-cell {
-    @apply m-0 border-b border-gray-400 p-2;
+    @apply m-0 border-b border-gray-400 p-2 align-middle break-words;
+    overflow: hidden;
   }
 
   .data-table-cell:first-child {

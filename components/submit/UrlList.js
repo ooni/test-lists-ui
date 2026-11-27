@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useIntl } from 'react-intl'
 import Loading from '../Loading'
 import { addURL, deleteURL, updateURL } from '../lib/api'
@@ -22,8 +29,9 @@ const UrlList = ({ cc }) => {
   // holds rowIndex of row being edited
   const [editIndex, setEditIndex] = useState(null)
   const [deleteIndex, setDeleteIndex] = useState(null)
-  // controls when table state can be reset
-  const [skipPageReset, setSkipPageResest] = useState(false)
+  // Read by the table on data updates so sort is kept while a modal is open,
+  // without changing table props (and re-rendering every row) on open/close.
+  const isEditingRef = useRef(false)
   // error to show when the edit form modal is on
   const [editFormError, setEditFormError] = useState(null)
   // error to show when add action fails
@@ -51,7 +59,7 @@ const UrlList = ({ cc }) => {
   }, [testList, editIndex, deleteIndex])
 
   const onEdit = useCallback((index) => {
-    setSkipPageResest(true)
+    isEditingRef.current = true
     setEditIndex(index)
     setEditFormError(null)
   }, [])
@@ -144,10 +152,11 @@ const UrlList = ({ cc }) => {
     ],
   )
 
-  const onCancel = () => {
+  const onCancel = useCallback(() => {
+    isEditingRef.current = false
     setEditIndex(null)
     setEditFormError(null)
-  }
+  }, [])
 
   const onDelete = useCallback((index) => {
     setDeleteIndex(index)
@@ -157,11 +166,6 @@ const UrlList = ({ cc }) => {
     setDeleteIndex(null)
     setEditFormError(null)
   }
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
-  useEffect(() => {
-    setSkipPageResest(false)
-  }, [testList])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   useEffect(() => {
@@ -187,7 +191,7 @@ const UrlList = ({ cc }) => {
             data={testList}
             onEdit={onEdit}
             onDelete={onDelete}
-            skipPageReset={skipPageReset}
+            isEditingRef={isEditingRef}
             submissionState={submissionState}
           />
 

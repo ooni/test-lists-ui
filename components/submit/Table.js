@@ -1,4 +1,10 @@
-import { memo, useCallback, useMemo } from 'react'
+import { flexRender } from '@tanstack/react-table'
+import {
+  getCoreRowModel,
+  getSortedRowModel,
+  useLegacyTable as useReactTable,
+} from '@tanstack/react-table/legacy'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   MdArrowDownward,
   MdArrowUpward,
@@ -6,10 +12,21 @@ import {
   MdEdit,
 } from 'react-icons/md'
 import { useIntl } from 'react-intl'
-import { useFlexLayout, useSortBy, useTable } from 'react-table'
 import categories from '../lib/category_codes.json'
 
-const EditButton = ({ row: { index }, onEdit, _submissionState }) => {
+const defaultColumn = {
+  minSize: 0,
+  size: 150,
+  maxSize: Number.MAX_SAFE_INTEGER,
+}
+
+const columnStyle = (column) => ({
+  boxSizing: 'border-box',
+  width: column.getSize(),
+  overflow: 'hidden',
+})
+
+const EditButton = ({ row: { index }, onEdit }) => {
   const editRow = useCallback(() => {
     onEdit(index)
   }, [onEdit, index])
@@ -21,7 +38,7 @@ const EditButton = ({ row: { index }, onEdit, _submissionState }) => {
   )
 }
 
-const DeleteButton = ({ row: { index }, onDelete, _submissionState }) => {
+const DeleteButton = ({ row: { index }, onDelete }) => {
   const deleteRow = useCallback(() => {
     onDelete(index)
   }, [onDelete, index])
@@ -47,8 +64,9 @@ const TableSortLabel = ({ active = false, direction = 'desc', size = 16 }) =>
     )
   ) : null
 
-const CategoryCell = memo(
-  ({ cell: { value } }) =>
+const CategoryCell = memo(({ getValue }) => {
+  const value = getValue()
+  return (
     value in categories && (
       <>
         {categories[value][0]}
@@ -59,15 +77,17 @@ const CategoryCell = memo(
           ℹ
         </span>
       </>
-    ),
-)
+    )
+  )
+})
 
 CategoryCell.displayName = 'CategoryCell'
 
-const DateCell = memo(({ cell: { value } }) => {
+const DateCell = memo(({ getValue }) => {
+  const value = getValue()
   try {
     const date = new Date(value)
-    const formattedDate = new Intl.DateTimeFormat([], {
+    const formattedDate = new Intl.DateTimeFormat('en', {
       dateStyle: 'medium',
     }).format(date)
     return formattedDate
@@ -78,158 +98,171 @@ const DateCell = memo(({ cell: { value } }) => {
 })
 DateCell.displayName = 'DateCell'
 
-const TableView = ({
-  data,
-  onEdit,
-  onDelete,
-  skipPageReset,
-  submissionState,
-}) => {
+const TableView = ({ data, onEdit, onDelete, isEditingRef }) => {
   const { formatMessage } = useIntl()
+  const [sorting, setSorting] = useState([])
   // biome-ignore lint/correctness/useExhaustiveDependencies: <ignore>
   const columns = useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'Changes.URL' }),
-        accessor: 'url',
-        minWidth: 100,
-        inputAttrs: {
-          type: 'url',
-          size: 44,
+        header: formatMessage({ id: 'Changes.URL' }),
+        accessorKey: 'url',
+        minSize: 100,
+        meta: {
+          inputAttrs: {
+            type: 'url',
+            size: 44,
+          },
         },
-        cell: ({ cell }) => <bdo dir='ltr'>{cell.original.domain}</bdo>,
       },
       {
-        Header: formatMessage({ id: 'Changes.Category' }),
-        accessor: 'category_code',
+        header: formatMessage({ id: 'Changes.Category' }),
+        accessorKey: 'category_code',
         id: 'category_code',
-        Cell: CategoryCell,
-        width: 50,
-        inputAttrs: {
-          type: 'text',
-          maxLength: 5,
-          size: 10,
-          id: 'category_code',
+        cell: CategoryCell,
+        size: 160,
+        meta: {
+          inputAttrs: {
+            type: 'text',
+            maxLength: 5,
+            size: 10,
+            id: 'category_code',
+          },
         },
       },
       {
-        Header: formatMessage({ id: 'Changes.DateAdded' }),
-        accessor: 'date_added',
-        maxWidth: 40,
-        Cell: DateCell,
-        className: 'secondary',
+        header: formatMessage({ id: 'Changes.DateAdded' }),
+        accessorKey: 'date_added',
+        size: 150,
+        cell: DateCell,
+        meta: { className: 'secondary' },
       },
       {
-        Header: formatMessage({ id: 'Changes.Source' }),
-        accessor: 'source',
-        maxWidth: 40,
-        className: 'secondary',
+        header: formatMessage({ id: 'Changes.Source' }),
+        accessorKey: 'source',
+        size: 140,
+        meta: { className: 'secondary' },
       },
       {
-        Header: formatMessage({ id: 'Changes.Notes' }),
-        accessor: 'notes',
-        minWidth: 100,
-        inputAttrs: {
-          type: 'text',
-          maxLength: 20,
-          size: 32,
+        header: formatMessage({ id: 'Changes.Notes' }),
+        accessorKey: 'notes',
+        minSize: 100,
+        meta: {
+          className: 'secondary',
+          inputAttrs: {
+            type: 'text',
+            maxLength: 20,
+            size: 32,
+          },
         },
-        className: 'secondary',
+      },
+      {
+        id: 'edit',
+        size: 48,
+        maxSize: 48,
+        enableSorting: false,
+        cell: ({ row, table }) => (
+          <EditButton
+            row={{ index: Number(row.id) }}
+            onEdit={table.options.meta.onEdit}
+          />
+        ),
+      },
+      {
+        id: 'delete',
+        size: 48,
+        maxSize: 48,
+        enableSorting: false,
+        cell: ({ row, table }) => (
+          <DeleteButton
+            row={{ index: Number(row.id) }}
+            onDelete={table.options.meta.onDelete}
+          />
+        ),
       },
     ],
     [],
   )
 
-  const tableInstance = useTable(
-    {
-      columns,
-      data,
-      onEdit,
-      onDelete,
-      submissionState,
-      autoResetSortBy: !skipPageReset,
-    },
-    useFlexLayout,
-    useSortBy,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        ...columns,
-        {
-          id: 'edit',
-          maxWidth: 16,
-          Cell: EditButton,
-        },
-        {
-          id: 'delete',
-          maxWidth: 16,
-          Cell: DeleteButton,
-        },
-      ])
-    },
-  )
+  // Keep sort through the render that receives a refreshed list, then allow
+  // the next refresh to reset it. Opening the modal does not change `data`.
+  useEffect(() => {
+    if (!data) return
+    if (!isEditingRef.current) {
+      setSorting((current) => (current.length ? [] : current))
+    }
+    isEditingRef.current = false
+  }, [data, isEditingRef])
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance
+  const table = useReactTable({
+    data,
+    columns,
+    defaultColumn,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getRowId: (_row, index) => String(index),
+    meta: { onEdit, onDelete },
+  })
 
-  const { className: tableClassName, ...tableProps } = getTableProps()
+  const totalSize = table.getTotalSize()
 
   return (
-    <table className={`data-table ${tableClassName ?? ''}`} {...tableProps}>
+    <table
+      className='data-table'
+      style={{ width: totalSize, minWidth: '100%', tableLayout: 'fixed' }}
+    >
       <thead className='data-table-header'>
-        {headerGroups.map((headerGroup) => {
-          const { key: headerGroupKey, ...headerGroupProps } =
-            headerGroup.getHeaderGroupProps()
-          return (
-            <tr key={headerGroupKey} {...headerGroupProps}>
-              {headerGroup.headers.map((column) => {
-                const { key: headerKey, ...headerProps } =
-                  column.getHeaderProps([
-                    column.getSortByToggleProps(),
-                    { className: column.className },
-                  ])
-                return (
-                  <th key={headerKey} {...headerProps}>
-                    {column.render('Header')}
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => {
+              const sorted = header.column.getIsSorted()
+              return (
+                <th
+                  key={header.id}
+                  className={header.column.columnDef.meta?.className}
+                  style={columnStyle(header.column)}
+                  onClick={
+                    header.column.getCanSort()
+                      ? header.column.getToggleSortingHandler()
+                      : undefined
+                  }
+                >
+                  <span className='flex items-center'>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                     <TableSortLabel
-                      active={column.isSorted}
-                      direction={column.isSortedDesc ? 'desc' : 'asc'}
+                      active={!!sorted}
+                      direction={sorted === 'asc' ? 'asc' : 'desc'}
                     />
-                  </th>
-                )
-              })}
-            </tr>
-          )
-        })}
+                  </span>
+                </th>
+              )
+            })}
+          </tr>
+        ))}
       </thead>
 
-      <tbody {...getTableBodyProps()} className='text-sm'>
-        {rows.map((row) => {
-          prepareRow(row)
-          const { key: rowKey, ...rowProps } = row.getRowProps()
-          return (
-            <tr key={rowKey} className='data-table-row' {...rowProps}>
-              {row.cells.map((cell) => {
-                const {
-                  key: cellKey,
-                  className: cellClassName,
-                  ...cellProps
-                } = cell.getCellProps([{ className: cell.column.className }])
-                return (
-                  <td
-                    key={cellKey}
-                    className={`data-table-cell ${cellClassName ?? ''}`}
-                    {...cellProps}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
+      <tbody className='text-sm'>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id} className='data-table-row'>
+            {row.getVisibleCells().map((cell) => (
+              <td
+                key={cell.id}
+                className={`data-table-cell ${cell.column.columnDef.meta?.className ?? ''}`}
+                style={columnStyle(cell.column)}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </table>
   )
 }
 
-export default TableView
+export default memo(TableView)

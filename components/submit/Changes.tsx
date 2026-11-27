@@ -23,7 +23,7 @@ type RowProps = {
 const Row: FunctionComponent<RowProps> = ({ change }) => {
   const { formatMessage } = useIntl()
   return (
-    <div className='changes-row flex py-2' key={change.url}>
+    <div className='changes-row flex py-4' key={change.url}>
       <div className='flex w-full md:w-1/4 lg:w-[12.5%]'>
         <div className='pr-2'>
           {change.action === 'add' && <MdEdit />}
@@ -34,7 +34,7 @@ const Row: FunctionComponent<RowProps> = ({ change }) => {
             <span>{formatMessage({ id: 'Changes.EditedAdded' })}</span>
           )}
           {change.action === 'delete' && (
-            <span>{formatMessage({ id: 'Deleted' })}</span>
+            <span>{formatMessage({ id: 'Changes.Deleted' })}</span>
           )}
         </div>
       </div>
@@ -64,9 +64,7 @@ const ChangeSet = ({ cc, changes }: { cc: string; changes: Change[] }) => {
   }
   return (
     <div className='flex flex-col'>
-      <div className='mx-4'>
-        <h4>{countryName}</h4>
-      </div>
+      <h4>{countryName}</h4>
       <div>
         {changes.map((change) => (
           <Row key={change.url} change={change} />
